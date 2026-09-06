@@ -1,13 +1,18 @@
 // Cloudflare deployment for https://navigatorslab.com/tools/
-// Usage: npm run build, then stage dist/ under deploy/tools/ and copy this
-// file to deploy/wrangler.jsonc (assets.directory is relative to it):
-//   mkdir -p deploy && cp -r dist deploy/tools && cp wrangler.tools.jsonc deploy/wrangler.jsonc
+// Usage: npm run build, then stage dist/ under deploy/ and copy worker.js:
+//   mkdir -p deploy && cp -r dist deploy/tools && cp wrangler.tools.jsonc deploy/wrangler.jsonc && cp worker.js deploy/
 //   cd deploy && npx wrangler deploy
+// worker.js runs first for every request (run_worker_first) and stamps the
+// security headers onto each response before it leaves the edge.
 {
   "name": "navigatorslab-tools",
+  "main": "worker.js",
   "compatibility_date": "2026-09-01",
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none"
   },
   "routes": [
     { "pattern": "navigatorslab.com/tools", "zone_name": "navigatorslab.com" },
