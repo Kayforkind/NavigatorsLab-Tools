@@ -86,6 +86,7 @@ function injectExif(jpegBuf) {
   const render = async (w, h, draw, type, quality) => {
     await page.setViewportSize({ width: w, height: h });
     await page.setContent('<body style="margin:0"><canvas id="c"></canvas></body>');
+    // return base64 — stable serialization across playwright versions
     return page.evaluate(async ({ w, h, draw, type, quality }) => {
       const c = document.getElementById('c');
       c.width = w; c.height = h;
@@ -95,8 +96,11 @@ function injectExif(jpegBuf) {
       // eslint-disable-next-line no-new-func
       await new Function('ctx', 'w', 'h', `return (async () => { ${draw} })()`)(ctx, w, h);
       const blob = await new Promise((res) => c.toBlob(res, type, quality));
-      return new Uint8Array(await blob.arrayBuffer());
-    }, { w, h, draw, type, quality });
+      const buf = new Uint8Array(await blob.arrayBuffer());
+      let s = '';
+      for (let i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]);
+      return btoa(s);
+    }, { w, h, draw, type, quality }).then((b64) => Buffer.from(b64, 'base64'));
   };
 
   // 1. plain JPEG (EXIF injected below)
