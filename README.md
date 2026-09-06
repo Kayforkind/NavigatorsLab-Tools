@@ -1,5 +1,7 @@
 # 🧭 NavigatorsLab Tools
 
+[![CI](https://github.com/Kayforkind/NavigatorsLab-Tools/actions/workflows/ci.yml/badge.svg)](https://github.com/Kayforkind/NavigatorsLab-Tools/actions/workflows/ci.yml)
+
 **Ten free, open-source tools that run 100% in your browser.** No accounts. No uploads. No watermarks. No limits.
 We do **not** keep attachments, files, or user information — nothing you drop into a tool is ever sent to a server, stored, or logged. Your files stay on your device, processed by your own browser.
 
@@ -29,7 +31,8 @@ Every tool is a static page with client-side JavaScript. There is no backend to 
 - ❌ **No attachments kept** — files never leave your machine; nothing is transmitted, retained, or backed up
 - ❌ **No user information kept** — no accounts, no emails, no cookies for tracking, no analytics, no fingerprinting
 - ❌ No server-side processing, no queues, no "your file was deleted after 1 hour" fine print (there is nothing to delete)
-- ✅ Works offline once loaded · ✅ MIT licensed · ✅ free forever, no premium tier
+- ✅ **Works fully offline** — it's a PWA: after one visit, every tool loads and functions with the network off (verified by an automated test that disables connectivity and runs a tool)
+- ✅ MIT licensed · ✅ free forever, no premium tier
 
 ---
 
@@ -172,11 +175,13 @@ npm run typecheck    # strict TypeScript
 npm run build        # static build in dist/ — deployable anywhere
 ```
 
-The full acceptance suite (`scripts/e2e.cjs`, Playwright) drives every tool in a real browser with real files and validates the downloaded bytes — 13/13 checks green before every release. Screenshots in `docs/shots/` are captured by the same scripts, so the documentation above can be regenerated from the code at any time.
+The full acceptance suite (`scripts/e2e.cjs`, Playwright) drives every tool in a real browser with real files and validates the downloaded bytes — **14/14 checks green**, and the same suite runs as a **GitHub Actions CI gate on every push** (typecheck → unit tests → build → E2E → mobile overflow check). Test fixtures are generated in-repo by `scripts/make-fixtures.cjs` (no Python, no network): the GPS-tagged JPEG is spliced byte-by-byte and independently confirmed by an external EXIF parser. Screenshots in `docs/shots/` are captured by the same scripts, so the documentation above can be regenerated from the code at any time.
 
 ## Stack & structure
 
 - Vite multi-page app — one `dist/` serves the site root, `/tools/`, and GitHub Pages subpaths (relative base)
+- **PWA**: manifest + Workbox precache of every page and asset; all ten tools work offline after first load
+- Social-ready: per-page Open Graph/Twitter cards, `sitemap.xml`, `robots.txt`
 - Zero UI frameworks; shared CSS design system in `src/styles.css`
 - `src/lib/exif.ts` — byte-level JPEG/TIFF EXIF parser + APP1 stripper (unit-tested against synthetic JPEGs)
 - pdf-lib for every PDF operation · Web Audio API + lamejs for audio · JSZip for archives

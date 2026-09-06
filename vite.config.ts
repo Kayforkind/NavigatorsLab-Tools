@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // base './' keeps every asset URL relative, so the same dist/ works at a site
 // root, under /tools/ on navigatorslab.com, AND on a GitHub Pages project
@@ -9,6 +10,41 @@ const base = process.env.VITE_BASE ?? './';
 
 export default defineConfig({
   base,
+  plugins: [
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'icon.svg', 'og-image.png', 'robots.txt', 'sitemap.xml', 'lamejs/lame.min.js'],
+      manifest: {
+        name: 'NavigatorsLab Tools — private, in-browser utilities',
+        short_name: 'NL Tools',
+        description:
+          'Ten free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads.',
+        theme_color: '#0b0f17',
+        background_color: '#0b0f17',
+        display: 'standalone',
+        start_url: '.',
+        scope: '.',
+        icons: [
+          { src: './pwa-192.png', sizes: '192x192', type: 'image/png' },
+          { src: './pwa-512.png', sizes: '512x512', type: 'image/png' },
+          { src: './pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        // precache every page + asset so all tools work fully offline after first load
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,webmanifest}'],
+        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        navigateFallback: 'index.html',
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.origin === self.location.origin,
+            handler: 'NetworkFirst',
+            options: { cacheName: 'nl-tools-runtime' },
+          },
+        ],
+      },
+    }),
+  ],
   build: {
     rollupOptions: {
       input: {

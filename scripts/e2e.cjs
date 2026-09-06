@@ -4,8 +4,18 @@
 const path = require('node:path');
 const fs = require('node:fs');
 
-const NODE_PATH = process.env.NODE_PATH || 'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules';
-const { chromium } = require(path.join(NODE_PATH, 'playwright'));
+function resolvePlaywright() {
+  const candidates = [
+    process.env.PW_MODULES,
+    'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules',
+    path.resolve(__dirname, '..', 'node_modules'),
+  ].filter(Boolean);
+  for (const c of candidates) {
+    try { return require(path.join(c, 'playwright')); } catch { /* next */ }
+  }
+  throw new Error('playwright not found; set PW_MODULES or npm i -D playwright');
+}
+const { chromium } = resolvePlaywright();
 
 const BASE = 'http://localhost:5178';
 const FX = (f) => path.resolve(__dirname, '..', 'dev-assets', f);
@@ -44,6 +54,28 @@ async function setFiles(page, files) {
 
 (async () => {
   fs.mkdirSync(SHOTS, { recursive: true });
+
+  /* ---------- 0. PWA: service worker registers and works offline ---------- */
+  {
+    const browser = await chromium.launch();
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    await page.goto(`${BASE}/index.html`);
+    let swReady = true;
+    try {
+      await page.waitForFunction(() => navigator.serviceWorker?.controller, { timeout: 15000 });
+    } catch { swReady = false; }
+    if (swReady) {
+      await ctx.setOffline(true);
+      await page.goto(`${BASE}/exif.html`, { waitUntil: 'load' }).catch(() => {});
+      const ok = await page.evaluate(() => document.title.includes('Photo Privacy') && !!document.getElementById('dz'));
+      report('offline-pwa', ok, 'service worker active; exif.html fully loads with network disabled');
+      await ctx.setOffline(false);
+    } else {
+      report('offline-pwa', false, 'service worker did not activate within 15s');
+    }
+    await browser.close();
+  }
 
   /* ---------- 1. Photo Privacy Kit ---------- */
   await withPage(async (page) => {
