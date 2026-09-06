@@ -58,8 +58,22 @@ function render(lines: DiffLine[]): void {
   stat.hidden = true;
 }
 
+async function copyText(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const t = document.createElement('textarea');
+    t.value = text;
+    t.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand('copy');
+    t.remove();
+  }
+}
+
 $('#btnCopy').addEventListener('click', async () => {
-  await navigator.clipboard.writeText(unifiedDiff(diffLines(ta.value, tb.value, { ignoreWs: ignoreWs.checked, caseSensitive: caseSense.checked })));
+  await copyText(unifiedDiff(diffLines(ta.value, tb.value, { ignoreWs: ignoreWs.checked, caseSensitive: caseSense.checked })));
   $('#btnCopy').textContent = 'Copied ✓';
   setTimeout(() => { ($('#btnCopy') as HTMLButtonElement).textContent = 'Copy unified diff'; }, 1500);
 });

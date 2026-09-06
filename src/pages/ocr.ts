@@ -62,8 +62,16 @@ async function run(files: File[]): Promise<void> {
   status(stat, `Reading ${files.length} receipt${files.length === 1 ? '' : 's'} on-device…`, 'info');
   const worker = await getWorker();
   rows.length = 0;
+  let failed = 0;
   for (const f of files) {
-    const { data } = await worker.recognize(f);
+    let data: import('tesseract.js').RecognizeResult['data'];
+    try {
+      ({ data } = await worker.recognize(f));
+    } catch {
+      failed++;
+      status(stat, `Skipping ${f.name} (unreadable image)…`, 'warn');
+      continue;
+    }
     const lines = (data.text || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
     const { total } = pickTotal(lines);
     let date: Date | null = new Date(f.lastModified);
@@ -85,8 +93,13 @@ async function run(files: File[]): Promise<void> {
     status(stat, `${rows.length}/${files.length} read (${f.name})`, 'info');
   }
   render();
+  if (!rows.length) {
+    status(stat, 'No readable receipts. Try sharper, well-lit photos.', 'err');
+    return;
+  }
   const withTotals = rows.filter((r) => r.total != null).length;
-  status(stat, `Read ${rows.length} receipt${rows.length === 1 ? '' : 's'} — ${withTotals} total${withTotals === 1 ? '' : 's'} detected. Review, edit, then export.`, 'ok');
+  const skip = failed ? ` (${failed} unreadable skipped)` : '';
+  status(stat, `Read ${rows.length} receipt${rows.length === 1 ? '' : 's'} — ${withTotals} total${withTotals === 1 ? '' : 's'} detected${skip}. Review, edit, then export.`, withTotals ? 'ok' : 'warn');
   toast('OCR done 🔢');
 }
 

@@ -10,15 +10,17 @@ const totalPill = $('#total');
 function items(): Item[] {
   return Array.from(tbody.querySelectorAll('tr')).map((tr) => ({
     desc: (tr.querySelector('.d') as HTMLInputElement).value,
-    qty: parseFloat((tr.querySelector('.q') as HTMLInputElement).value) || 0,
-    rate: parseFloat((tr.querySelector('.r') as HTMLInputElement).value) || 0,
+    qty: Math.max(0, parseFloat((tr.querySelector('.q') as HTMLInputElement).value) || 0),
+    rate: Math.max(0, parseFloat((tr.querySelector('.r') as HTMLInputElement).value) || 0),
   }));
 }
 
 function totals() {
   const sub = items().reduce((s, it) => s + it.qty * it.rate, 0);
-  const tax = sub * ((parseFloat(($('#tax') as HTMLInputElement).value) || 0) / 100);
-  const disc = sub * ((parseFloat(($('#disc') as HTMLInputElement).value) || 0) / 100);
+  const taxPct = Math.min(100, Math.max(0, parseFloat(($('#tax') as HTMLInputElement).value) || 0));
+  const discPct = Math.min(100, Math.max(0, parseFloat(($('#disc') as HTMLInputElement).value) || 0));
+  const tax = sub * (taxPct / 100);
+  const disc = sub * (discPct / 100);
   return { sub, tax, disc, total: sub + tax - disc };
 }
 
@@ -31,8 +33,8 @@ function addItem(desc = '', qty = 1, rate = 0): void {
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td><input type="text" class="d" value="${desc.replace(/"/g, '&quot;')}" placeholder="What did you do?" style="width:100%" /></td>
-    <td><input type="number" class="q" aria-label="Quantity" value="${qty}" min="0" step="0.25" style="width:70px" /></td>
-    <td><input type="number" class="r" aria-label="Rate" value="${rate}" min="0" step="0.01" style="width:95px" /></td>
+    <td><input type="number" class="q" aria-label="Quantity" value="${Math.max(0, qty)}" min="0" step="0.25" style="width:70px" /></td>
+    <td><input type="number" class="r" aria-label="Rate" value="${Math.max(0, rate)}" min="0" step="0.01" style="width:95px" /></td>
     <td><button class="danger" title="remove">✕</button></td>`;
   tr.querySelector('button')!.addEventListener('click', () => { tr.remove(); render(); });
   tr.querySelectorAll('input').forEach((i) => i.addEventListener('input', render));

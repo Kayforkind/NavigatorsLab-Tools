@@ -118,7 +118,8 @@ async function encode(canvas: HTMLCanvasElement): Promise<Blob> {
   if (type === 'image/png') {
     let blob = await canvasBlob(work, type);
     let w = work.width;
-    while (blob.size > target && w > 32) {
+    let guard = 0;
+    while (blob.size > target && w > 32 && guard++ < 40) {
       w = Math.floor(w * 0.8);
       const c2 = document.createElement('canvas');
       c2.width = w;
@@ -138,14 +139,16 @@ async function encode(canvas: HTMLCanvasElement): Promise<Blob> {
     if (blob.size <= target) { best = blob; lo = q; } else { hi = q; }
   }
   if (!best) {
-    // even lowest quality overshoots → downscale 20% and retry
+    // even lowest quality overshoots → downscale 20% and retry, bounded so
+    // a 4px image can never spin forever
+    if (work.width <= 24 || work.height <= 24) return canvasBlob(work, type, 0.05);
     const c2 = document.createElement('canvas');
     c2.width = Math.max(16, Math.floor(work.width * 0.8));
     c2.height = Math.max(16, Math.floor(work.height * 0.8));
     const ctx = c2.getContext('2d')!;
     ctx.drawImage(work, 0, 0, c2.width, c2.height);
     work = c2;
-    return encode(canvas === work ? canvas : work);
+    return encode(work);
   }
   return best;
 }

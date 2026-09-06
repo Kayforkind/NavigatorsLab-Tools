@@ -62,6 +62,22 @@ const DICT: Record<string, Record<Lang, string>> = {
   'footer.studio': { en: 'PDF Studio', tr: 'PDF Studio', de: 'PDF Studio' },
   'footer.sitemap': { en: 'Sitemap', tr: 'Site haritası', de: 'Sitemap' },
   'lang.label': { en: 'Language', tr: 'Dil', de: 'Sprache' },
+  'brag.title': {
+    en: 'Real examples, real numbers — from the actual verification runs',
+    tr: 'Gerçek örnekler, gerçek sayılar — doğrulama çalıştırmalarından',
+    de: 'Echte Beispiele, echte Zahlen — aus den Verifizierungsläufen',
+  },
+  'brag.sub': {
+    en: "Every claim below is asserted by an automated browser test on every push. These aren't marketing numbers; they're test results.",
+    tr: 'Aşağıdaki her iddia her gönderide otomatik bir tarayıcı testiyle sınanır. Bunlar pazarlama rakamı değil; test sonuçları.',
+    de: 'Jede Aussage wird bei jedem Push durch einen automatisierten Browser-Test geprüft. Keine Marketingzahlen — Testergebnisse.',
+  },
+  'vs.title': { en: "Same tools you'd pay for — without the catch", tr: 'Para ödediğiniz araçlar — aynıları, sürprizsiz', de: 'Tools, für die Sie zahlen — ohne den Haken' },
+  'vs.sub': {
+    en: "The tools you know, minus the uploads, accounts, watermarks, and monthly fees. And unlike them, this suite is verified — every release runs a 92+ check gate that drops real files in and validates the downloaded bytes.",
+    tr: 'Bildiğiniz araçlar; yükleme, hesap, filigran ve abonelik olmadan. Üstelik doğrulanmış: her sürüm, gerçek dosyalarla 92+ kontrolü olan bir kapıdan geçer.',
+    de: 'Die bekannten Tools ohne Uploads, Konten, Wasserzeichen und Abo-Gebühren. Und verifiziert: Jede Version durchläuft eine Prüfung mit 92+ Checks und echten Dateien.',
+  },
 };
 
 export function getLang(): Lang {

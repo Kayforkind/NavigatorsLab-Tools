@@ -16,7 +16,6 @@ const thumbs = $('#thumbs');
 let cropMode = false;
 let dragStart: { x: number; y: number } | null = null;
 let cropRect: { x: number; y: number; w: number; h: number } | null = null;
-let baseImage: HTMLImageElement | null = null; // pristine decode of current page's source for crop math
 
 dz.addEventListener('click', () => void pickAndAdd());
 onDrop(dz, (files) => void add(files));

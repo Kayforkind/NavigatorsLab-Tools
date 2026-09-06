@@ -61,7 +61,13 @@ async function load(files: File[]): Promise<void> {
 }
 
 function render(): void {
-  pageCount.textContent = `${items.filter((i) => i.selected).length} / ${items.length} selected`;
+  const selCount = items.filter((i) => i.selected).length;
+  pageCount.textContent = `${selCount} / ${items.length} selected`;
+  const all = $('#selAll') as HTMLInputElement;
+  if (items.length) {
+    all.checked = selCount === items.length;
+    all.indeterminate = selCount > 0 && selCount < items.length;
+  }
   pagesEl.innerHTML = '';
   items.forEach((it, i) => {
     const cell = document.createElement('div');
@@ -117,6 +123,17 @@ function render(): void {
   });
 }
 
+pagesEl.addEventListener('dragover', (e) => e.preventDefault());
+pagesEl.addEventListener('drop', (e) => {
+  // drop past the last cell (on the grid itself) → move page to the end
+  if (dragIdx < 0 || e.target !== pagesEl) return;
+  e.preventDefault();
+  const [moved] = items.splice(dragIdx, 1);
+  items.push(moved);
+  dragIdx = -1;
+  render();
+});
+
 $('#selAll').addEventListener('change', (e) => {
   const on = (e.target as HTMLInputElement).checked;
   for (const it of items) it.selected = on;
@@ -131,7 +148,8 @@ $('#rotSel').addEventListener('click', () => {
 $('#delSel').addEventListener('click', () => {
   items = items.filter((it) => !it.selected);
   render();
-  if (!items.length) { panel.hidden = true; status(stat, 'All pages removed. Drop PDFs to start over.', 'info'); }
+  if (!items.length) { panel.hidden = true; status(stat, 'All pages removed. Drop PDFs to start over.', 'info'); return; }
+  status(stat, `${items.length} page${items.length === 1 ? '' : 's'} remaining.`, 'info');
 });
 
 $('#rebuild').addEventListener('click', () => void rebuild());

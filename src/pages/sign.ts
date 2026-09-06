@@ -201,11 +201,13 @@ function drawPlacement(): void {
 }
 
 cv.addEventListener('click', (e) => {
+  if (!sigPng) return; // no signature yet — clicks on the preview mean nothing
   const r = cv.getBoundingClientRect();
   placeAt = {
     x: ((e.clientX - r.left) / r.width) * cv.width,
     y: ((e.clientY - r.top) / r.height) * cv.height,
   };
+  stampBtn.disabled = false;
   drawPlacement();
   status(stat, `Placed at ${Math.round(placeAt.x)}, ${Math.round(placeAt.y)} — click again to move, then Flatten.`, 'info');
 });

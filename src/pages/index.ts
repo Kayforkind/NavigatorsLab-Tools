@@ -68,11 +68,13 @@ function applyI18n(): void {
   bind('proofSecurity', 'hero.proof.security');
   bind('toolsHead', 'tools.head');
   bind('noResults', 'search.none');
+  bind('vsTitle', 'vs.title');
+  bind('vsSub', 'vs.sub');
   search.placeholder = t('tools.search', lang);
-  const vis = document.querySelector('.verify-wrap');
-  if (vis) {
-    vis.querySelector('h2')!.textContent = t('verify.title', lang);
-    (vis.querySelector('.sub') as HTMLElement).textContent = t('verify.sub', lang);
+  const brag = document.querySelector('.brag');
+  if (brag) {
+    brag.querySelector('h2')!.textContent = t('brag.title', lang);
+    (brag.querySelector('.sub') as HTMLElement).textContent = t('brag.sub', lang);
   }
   const strip = document.querySelector('.privacy-strip');
   if (strip) {
