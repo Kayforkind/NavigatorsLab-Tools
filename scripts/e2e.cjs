@@ -189,7 +189,7 @@ async function setFiles(page, files) {
       const dt = new DataTransfer();
       dt.items.add(file);
       document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
-    }, 'h-cropbox.pdf');
+    }, 'sample.pdf');
     // fail-soft: resolve when pages render OR the app surfaces an error
     await page.waitForFunction(
       () => document.querySelectorAll('#pageSel option').length > 0 ||

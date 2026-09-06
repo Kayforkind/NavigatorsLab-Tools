@@ -159,6 +159,20 @@ function injectExif(jpegBuf) {
   zip.file('word/document.xml', `<?xml version="1.0"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>Hello hidden-data test</w:t></w:r></w:p></w:body></w:document>`);
   fs.writeFileSync(path.join(DEV, 'secret.docx'), await zip.generateAsync({ type: 'nodebuffer' }));
 
+  // 6. sample PDF for the e-sign tool (self-generated; no external deps)
+  const { PDFDocument: PL, StandardFonts: SF } = require(path.join(__dirname, '..', 'node_modules', 'pdf-lib'));
+  const pdfDoc = await PL.create();
+  const helv = await pdfDoc.embedFont(SF.Helvetica);
+  for (let p = 1; p <= 2; p++) {
+    const page = pdfDoc.addPage([595.28, 841.89]);
+    page.drawText(`NavigatorsLab Tools — sample PDF (page ${p} of 2)`, { x: 60, y: 760, size: 16, font: helv });
+    page.drawText('Sign anywhere on this page with the Local E-Sign Pad.', { x: 60, y: 720, size: 11, font: helv });
+    for (let i = 0; i < 20; i++) {
+      page.drawLine({ start: { x: 60, y: 660 - i * 26 }, end: { x: 535, y: 660 - i * 26 }, thickness: 0.5 });
+    }
+  }
+  fs.writeFileSync(path.join(DEV, 'sample.pdf'), Buffer.from(await pdfDoc.save()));
+
   await browser.close();
 
   // stage into dist/fx for the static server
