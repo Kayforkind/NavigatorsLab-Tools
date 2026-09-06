@@ -1,6 +1,17 @@
 /* Mobile viewport check: no horizontal overflow, usable layout + screenshots. */
 const path = require('node:path');
-const { chromium } = require(path.join('C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules', 'playwright'));
+function resolvePlaywright() {
+  const candidates = [
+    process.env.PW_MODULES,
+    'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules',
+    path.resolve(__dirname, '..', 'node_modules'),
+  ].filter(Boolean);
+  for (const c of candidates) {
+    try { return require(path.join(c, 'playwright')); } catch { /* next */ }
+  }
+  throw new Error('playwright not found; set PW_MODULES or npm i -D playwright');
+}
+const { chromium } = resolvePlaywright();
 
 const BASE = 'http://localhost:5178';
 const SHOTS = path.resolve(__dirname, '..', 'docs', 'shots');
