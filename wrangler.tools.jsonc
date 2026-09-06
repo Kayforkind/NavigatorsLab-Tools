@@ -5,6 +5,7 @@
 // worker.js runs first for every request (run_worker_first) and stamps the
 // security headers onto each response before it leaves the edge.
 {
+  "account_id": "56faf9a57ad29af2d943fdedfb5ecda9",
   "name": "navigatorslab-tools",
   "main": "worker.js",
   "compatibility_date": "2026-09-01",
