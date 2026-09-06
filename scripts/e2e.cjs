@@ -32,8 +32,18 @@ async function withPage(fn) {
   const ctx = await browser.newContext({ acceptDownloads: true, viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
   const errors = [];
+  const consoleMsgs = [];
   page.on('pageerror', (e) => errors.push(String(e)));
-  try { await fn(page, errors); } finally { await browser.close(); }
+  page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') consoleMsgs.push(m.text()); });
+  try {
+    await fn(page, errors);
+  } catch (e) {
+    if (consoleMsgs.length) console.log('  console:', consoleMsgs.slice(0, 6).join(' | ').slice(0, 600));
+    if (errors.length) console.log('  pageerrors:', errors.slice(0, 4).join(' | ').slice(0, 400));
+    throw e;
+  } finally {
+    await browser.close();
+  }
 }
 
 /** wait for a download triggered by clicking selector; returns {name, bytes} */
@@ -180,7 +190,18 @@ async function setFiles(page, files) {
       dt.items.add(file);
       document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
     }, 'h-cropbox.pdf');
-    await page.waitForFunction(() => document.querySelectorAll('#pageSel option').length > 0, { timeout: 30000 });
+    // fail-soft: resolve when pages render OR the app surfaces an error
+    await page.waitForFunction(
+      () => document.querySelectorAll('#pageSel option').length > 0 ||
+        (/Could not open|Failed/i.test(document.querySelector('#stat')?.textContent || '')),
+      { timeout: 30000 },
+    );
+    const optCount = await page.locator('#pageSel option').count();
+    if (optCount === 0) {
+      report('esign', false, 'PDF preview failed: ' + (await page.textContent('#stat')).trim());
+      await page.screenshot({ path: path.join(SHOTS, '04-esign.png') });
+      return;
+    }
     // click the middle of the preview canvas (dispatched at the element so scroll state is irrelevant)
     await page.evaluate(() => {
       const cv = document.getElementById('cv');
