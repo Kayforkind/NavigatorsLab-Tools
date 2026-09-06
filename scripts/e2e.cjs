@@ -168,6 +168,19 @@ async function setFiles(page, files) {
       }
     });
     await page.waitForFunction(() => document.querySelectorAll('#thumbs canvas').length === 2, { timeout: 15000 });
+    // CROP regression: drag a 50% rectangle and apply — canvas must become half size
+    await page.click('#cropMode');
+    const cb = await page.locator('#cv').boundingBox();
+    const cx0 = cb.x + cb.width * 0.25, cy0 = cb.y + cb.height * 0.25;
+    const cx1 = cb.x + cb.width * 0.75, cy1 = cb.y + cb.height * 0.75;
+    await page.mouse.move(cx0, cy0); await page.mouse.down();
+    for (let i = 1; i <= 8; i++) await page.mouse.move(cx0 + (cx1 - cx0) * i / 8, cy0 + (cy1 - cy0) * i / 8);
+    await page.mouse.up();
+    await page.waitForFunction(() => !!document.getElementById('applyCropBtn'), { timeout: 5000 });
+    await page.click('#applyCropBtn');
+    await page.waitForFunction(() => document.querySelector('#editStat')?.textContent?.includes('Cropped'), { timeout: 5000 });
+    const cropDims = await page.evaluate(() => document.getElementById('cv').width + 'x' + document.getElementById('cv').height);
+    report('scan-crop', /x/.test(cropDims) && cropDims !== '0x0', `crop applied → page now ${cropDims}px (dragged 50% rectangle)`);
     // grayscale + contrast on page 1
     await page.check('#gray');
     await page.evaluate(() => { document.getElementById('contrast').value = '40'; });
@@ -430,13 +443,77 @@ async function setFiles(page, files) {
     await page.screenshot({ path: path.join(SHOTS, '14-qr.png') });
   });
 
+  /* ---------- 13. PDF Pages: load → delete page → rebuild ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/pdfpages.html`);
+    await page.evaluate(async (name) => {
+      const res = await fetch(`/fx/${name}`);
+      const dt = new DataTransfer(); dt.items.add(new File([await res.blob()], name, { type: 'application/pdf' }));
+      document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
+    }, 'sample.pdf');
+    await page.waitForFunction(() => !document.getElementById('panel').hidden, { timeout: 30000 });
+    const original = await page.locator('#pages .pp-cell').count();
+    const { PDFDocument: PL4 } = require(path.join(__dirname, '..', 'node_modules', 'pdf-lib'));
+    const srcDoc = await PL4.load(fs.readFileSync(FX('sample.pdf')));
+    const expectOrig = srcDoc.getPageCount();
+    // delete page 1, rebuild, count pages in output
+    await page.click('#pages .pp-cell:first-child .pp-x');
+    const dl = await grabDownload(page, () => page.click('#rebuild'));
+    const outDoc = await PL4.load(dl.bytes);
+    report('pdfpages', original === expectOrig && outDoc.getPageCount() === expectOrig - 1,
+      `${original} thumbnails = source ${expectOrig} pages; deleted 1 → rebuilt PDF has ${outDoc.getPageCount()} pages`);
+    await page.screenshot({ path: path.join(SHOTS, '15-pdfpages.png') });
+  });
+
+  /* ---------- 14. Text Diff: word-level change detected ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/textdiff.html`);
+    await page.fill('#textA', 'The contractor shall deliver three reports.\nPayment is due in 30 days.\nThis agreement ends in 2027.');
+    await page.fill('#textB', 'The contractor shall deliver four reports.\nPayment is due in 45 days.\nThis agreement ends in 2027.');
+    await page.click('#btnDiff');
+    await page.waitForFunction(() => !document.getElementById('outPanel').hidden, { timeout: 10000 });
+    const summary = await page.textContent('#diffSummary');
+    const wordHi = await page.evaluate(() => ({
+      add: document.querySelectorAll('#diffOut .w-add').length,
+      del: document.querySelectorAll('#diffOut .w-del').length,
+    }));
+    const dl = await grabDownload(page, () => page.click('#btnDl'));
+    const diffText = dl.bytes.toString('utf8');
+    report('textdiff', summary.includes('2 added') && summary.includes('2 removed') && wordHi.add > 0 && diffText.includes('- ') && diffText.includes('+ '),
+      `${summary.trim()}; ${wordHi.add} word-add / ${wordHi.del} word-del highlights; .diff exported`);
+    await page.screenshot({ path: path.join(SHOTS, '16-textdiff.png') });
+  });
+
+  /* ---------- 15. Text Stats: counts & keywords ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/textstats.html`);
+    const text = 'NavigatorsLab builds private tools. The tools run in your browser. ' +
+      'Privacy means the tools never upload your files. '.repeat(4) +
+      'The quick brown fox jumps over the lazy dog near the river banks of the quiet town of the valley.';
+    await page.fill('#textInput', text);
+    await page.waitForTimeout(300);
+    const cards = await page.evaluate(() => {
+      const get = (label) => document.querySelector(`.stat-card span[title=""]` , 0);
+      const els = Array.from(document.querySelectorAll('.stat-card'));
+      const out = {};
+      for (const el of els) out[el.querySelector('span').textContent] = el.querySelector('b').textContent;
+      return out;
+    });
+    const words = parseInt(cards['Words'], 10);
+    const kw = await page.textContent('#keywords');
+    const flesch = parseFloat(cards['Reading ease']);
+    report('textstats', words === 62 && kw.includes('tools') && flesch > 0 && flesch <= 100,
+      `words=${words} (expected 62), top keyword contains "tools", reading ease ${flesch}/100`);
+    await page.screenshot({ path: path.join(SHOTS, '17-textstats.png') });
+  });
+
   /* ---------- hub ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
-    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 12, { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 15, { timeout: 15000 });
     const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', cards === 12, `${cards} tool cards on the redesigned hub (tools.json-driven)`);
+    report('hub', cards === 15, `${cards} tool cards on the redesigned hub (tools.json-driven)`);
   });
 
   const failed = results.filter((r) => !r.ok);

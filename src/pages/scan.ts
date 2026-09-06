@@ -55,17 +55,28 @@ $('#cropMode').addEventListener('click', () => {
 });
 $('#cropMode').addEventListener('cropApply' as never, () => applyCrop());
 
-// crop interactions on the preview canvas
+// crop interactions on the preview canvas.
+// the canvas is CSS-scaled to fit (max-width/max-height), so toCanvasPx() maps
+// pointer coords through getBoundingClientRect — drags work at any zoom.
+// touch-action:none stops the browser from hijacking touch drags to scroll.
 cv.addEventListener('pointerdown', (e) => {
   if (!cropMode) return;
+  e.preventDefault();
   const p = toCanvasPx(e);
   dragStart = p;
-  cv.setPointerCapture(e.pointerId);
+  cropRect = null;
+  try { cv.setPointerCapture(e.pointerId); } catch { /* released already */ }
 });
 cv.addEventListener('pointermove', (e) => {
   if (!cropMode || !dragStart) return;
   const p = toCanvasPx(e);
   cropRect = norm(dragStart, p);
+  draw();
+});
+cv.addEventListener('pointercancel', () => {
+  // browser took the gesture (scroll/selection) — abandon the stroke cleanly
+  dragStart = null;
+  cropRect = null;
   draw();
 });
 cv.addEventListener('pointerup', () => {
@@ -80,6 +91,9 @@ cv.addEventListener('pointerup', () => {
       b.addEventListener('click', applyCrop);
       $('#cropMode').parentElement!.appendChild(b);
     }
+  } else {
+    cropRect = null;
+    draw();
   }
 });
 
@@ -132,6 +146,10 @@ function draw(): void {
   cv.width = p.width; cv.height = p.height;
   const ctx = cv.getContext('2d')!;
   ctx.drawImage(p, 0, 0);
+  // whole image visible at once (CSS scales it down); drags map through the rect
+  cv.style.touchAction = 'none';
+  cv.style.cursor = cropMode ? 'crosshair' : '';
+  cv.style.maxHeight = '62vh';
   if (cropMode && cropRect) {
     ctx.strokeStyle = '#4f8cff';
     ctx.lineWidth = Math.max(2, p.width / 300);

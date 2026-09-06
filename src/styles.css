@@ -262,3 +262,79 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   .hero-visual { display: none; }
   .tools-head h2 { font-size: 20px; }
 }
+
+/* --- Text Stats --- */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.stat-card {
+  background: #0d1320; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.stat-card b { font-size: 20px; color: var(--txt); word-break: break-all; }
+.stat-card span { font-size: 12px; color: var(--mut); }
+.kw-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.kw {
+  background: #0d1320; border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  font-size: 13px; color: var(--txt); border-color: color-mix(in srgb, var(--acc) calc(var(--w) * 1%), var(--line));
+}
+.kw i { font-style: normal; color: var(--acc); font-weight: 700; margin-left: 4px; }
+
+/* --- Text Diff --- */
+.diff-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.diff-inputs textarea { width: 100%; font-family: ui-monospace, monospace; font-size: 13px; }
+.diff-out { max-height: 56vh; overflow: auto; background: #0a0e16; border: 1px solid var(--line); border-radius: 10px; padding: 10px 0; font-size: 13px; }
+.dl { padding: 1px 12px; white-space: pre-wrap; word-break: break-word; }
+.dl-num { display: inline-block; width: 64px; color: #55647d; user-select: none; }
+.dl.add { background: rgba(60, 180, 110, .12); }
+.dl.del { background: rgba(220, 80, 90, .12); }
+.w-add { background: rgba(60, 180, 110, .28); border-radius: 3px; }
+.w-del { background: rgba(220, 80, 90, .28); border-radius: 3px; text-decoration: line-through; }
+
+/* --- PDF Pages grid --- */
+.pp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 14px; }
+.pp-cell {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  border: 1px dashed var(--line); border-radius: 10px; padding: 8px; cursor: grab;
+}
+.pp-cell.dragging { opacity: 0.4; }
+.pp-cell.off .pp-thumb { opacity: 0.35; }
+.pp-thumb { position: relative; }
+.pp-thumb canvas { border-radius: 6px; border: 1px solid var(--line); max-width: 110px; }
+.pp-num {
+  position: absolute; top: 4px; left: 4px; background: rgba(11,15,23,.85); color: var(--txt);
+  font-size: 11px; border-radius: 6px; padding: 1px 6px;
+}
+.pp-x {
+  position: absolute; top: 4px; right: 4px; background: #3a1520; color: #ff9a9d;
+  border: 1px solid #5c2333; border-radius: 6px; font-size: 11px; cursor: pointer; padding: 1px 6px;
+}
+.pp-r {
+  background: #101828; color: var(--txt); border: 1px solid var(--line);
+  border-radius: 6px; font-size: 12px; cursor: pointer; padding: 1px 8px;
+}
+.pp-cell input[type=checkbox] { accent-color: var(--acc); }
+
+/* --- language switcher --- */
+.lang-sel { display: inline-flex; gap: 4px; margin: 0 6px; }
+.lang-btn {
+  background: transparent; border: 1px solid var(--line); color: var(--mut);
+  border-radius: 8px; padding: 3px 9px; font: inherit; font-size: 12px; cursor: pointer;
+}
+.lang-btn:hover { color: var(--txt); border-color: var(--acc); }
+.lang-btn.on { background: var(--acc); border-color: var(--acc); color: #081226; font-weight: 700; }
+
+/* --- what's-new toast --- */
+.whats-new {
+  position: fixed; right: 18px; bottom: 18px; z-index: 60;
+  width: min(360px, calc(100vw - 36px));
+  background: #0e1626; border: 1px solid #2a3b55; border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.55); padding: 14px 16px;
+  opacity: 0; transform: translateY(14px); transition: all .3s ease;
+  font-size: 13.5px;
+}
+.whats-new.show { opacity: 1; transform: translateY(0); }
+.whats-new .wn-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.whats-new .wn-x { background: none; border: none; color: var(--mut); font-size: 18px; cursor: pointer; padding: 0 4px; }
+.whats-new ul { margin: 0; padding-left: 18px; color: var(--txt); }
+.whats-new li { margin: 5px 0; }
+.whats-new .wn-foot { margin-top: 8px; text-align: right; }
+.whats-new .wn-foot a { color: var(--acc); text-decoration: none; }

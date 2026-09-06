@@ -60,15 +60,15 @@ const tools = JSON.parse(fs.readFileSync(path.join(ROOT, 'public', 'tools.json')
     h1 { font-size:72px; margin:0; line-height:1.03; }
     h1 span { color:#7ce0ae; }
     .sub { font-size:26px; color:#9fb0c8; margin:18px 0 0; max-width:900px; line-height:1.4; }
-    .icons { font-size:44px; letter-spacing:14px; margin-top:8px; }
+    .icons { font-size:36px; letter-spacing:10px; margin-top:8px; }
     .foot { display:flex; justify-content:space-between; color:#6d7f99; font-size:20px; }
     .pill { border:1px solid #2a3b55; border-radius:999px; padding:8px 18px; font-size:18px; color:#7ce0ae; }
   </style></head><body>
     <div class="brand">🧭 NavigatorsLab <b>Tools</b> · free · open source</div>
     <div>
-      <h1>Twelve tools that<br /><span>never phone home.</span></h1>
-      <p class="sub">Strip GPS · shrink images · clean scans · sign PDFs · OCR receipts · QR codes · trim audio · invoices · rename · print prep — all inside your browser tab.</p>
-      <div class="icons">🛡️🔍🗜️📄✍️🧾🔢🔳🎧🧮🗂️🖨️</div>
+      <h1>Fifteen tools that<br /><span>never phone home.</span></h1>
+      <p class="sub">Strip GPS · shrink images · clean scans · sign PDFs · organize PDF pages · OCR receipts · QR codes · diff texts · text stats · trim audio · invoices · rename · print prep — all inside your browser tab.</p>
+      <div class="icons">🛡️🔍🗜️📄✍️🧾🔢🔳📑🔬📊🎧🧮🗂️🖨️</div>
     </div>
     <div class="foot"><span>navigatorslab.com/tools</span><span class="pill">✓ no uploads · no accounts · nothing retained</span></div>
   </body></html>`;

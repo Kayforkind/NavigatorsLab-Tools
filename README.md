@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="docs/banner.png" alt="NavigatorsLab Tools — twelve private, in-browser utilities" width="800" />
+<img src="docs/banner.png" alt="NavigatorsLab Tools — fifteen private, in-browser utilities" width="800" />
 
 **By NavigatorsLab** · free & open source · nothing you drop in ever leaves your device
 
@@ -12,7 +12,7 @@
 ![No uploads](https://img.shields.io/badge/uploads-none-red.svg)
 ![Offline ready](https://img.shields.io/badge/offline-ready-8a6fd1.svg)
 
-**Twelve tools. Zero uploads. Zero accounts. Zero telemetry.**
+**Fifteen tools. Zero uploads. Zero accounts. Zero telemetry.**
 
 </div>
 
@@ -30,6 +30,9 @@
 | 🧾 | [**Receipts → One PDF**](#-receipts--one-pdf) | A shoebox of receipts at tax time | 3 pages, EXIF date order |
 | 🔢 | [**Receipt OCR → CSV**](#-receipt-ocr--csv) | Expense-tracking data entry | Same-origin engine, CSV out |
 | 🔳 | [**QR Studio**](#-qr-studio) | Sketchy generator sites and upload-to-decode scanners | Generate → decode round-trip matches |
+| 📑 | [**PDF Pages**](#-pdf-pages) | "How do I even delete one page of a PDF?" | Rebuilt PDF has exactly the kept pages |
+| 🔬 | [**Text Diff**](#-text-diff) | "What actually changed in this contract?" | 2 added · 2 removed with word highlights |
+| 📊 | [**Text Stats**](#-text-stats) | Word limits and unreadable drafts | 62-word fixture counted exactly |
 | 🎧 | [**Audio Trimmer**](#-audio-trimmer) | Cutting clips without uploading them | WAV data chunk = exact 1.000 s |
 | 🧮 | [**Invoice Generator**](#-invoice--quote-generator) | Monthly fees for "text on a PDF" | $408.00 total in exported PDF |
 | 🗂️ | [**Batch Rename & Sort**](#️-batch-rename--sort) | `IMG_5847.jpg` forever | `2026-09-05-home-depot.jpg` in ZIP |
@@ -159,6 +162,36 @@ Open devtools → Network while using any tool and watch it stay silent after lo
 - Custom foreground/background colors (contrast-safe defaults)
 - SVG export stays vector-crisp at any print size
 
+## 📑 PDF Pages
+
+**The problem:** deleting, rotating, or reordering PDF pages usually means paid software or an upload-to-a-server service — with your documents as the price.
+
+**How it works:** pages render to thumbnails locally with pdf.js, you drag to reorder, rotate/delete per page or in bulk, and the output PDF is rebuilt with pdf-lib by copying pages in visual order — rotations applied as real page attributes. Multiple dropped documents merge into one grid.
+
+**Verified example:** a 2-page fixture → delete page 1 → rebuilt PDF contains exactly the remaining page.
+
+![PDF Pages](docs/shots/15-pdfpages.png)
+
+## 🔬 Text Diff
+
+**The problem:** comparing contract revisions means either squinting or pasting confidential text into a web service.
+
+**How it works:** an LCS dynamic-programming engine (unit-tested, pure TypeScript) aligns lines; adjacent removed/added line pairs get **word-level inner highlights** so the actual change inside a line is visible. Whitespace and case options, unified-diff copy/download.
+
+**Verified example:** "30 days → 45 days" style edits produce `2 added · 2 removed` with the changed words highlighted.
+
+![Text Diff](docs/shots/16-textdiff.png)
+
+## 📊 Text Stats
+
+**The problem:** word counters online are fine until you paste something private — or want more than a count.
+
+**How it works:** a pure stats engine counts words/sentences/paragraphs (Unicode-aware), estimates reading (238 wpm) and speaking (140 wpm) time, computes the **Flesch Reading Ease** score with a grade interpretation, and extracts top keywords with stopwords removed. All live, all local.
+
+**Verified example:** a 62-word fixture counted exactly, top keyword surfaced, reading ease bounded 0–100.
+
+![Text Stats](docs/shots/17-textstats.png)
+
 ## 🎧 Audio Trimmer
 
 **The problem:** you need the first 40 seconds of a voice note, and every online cutter wants the upload first.
@@ -214,11 +247,11 @@ The suite is fully responsive — the redesigned hub and every tool verified at 
 
 ## 🔐 Security & verification gate
 
-Every push runs a **37-check automated gate** in GitHub Actions before anything ships:
+Every push runs a **44-check automated gate** in GitHub Actions before anything ships:
 
-**Functional (16 checks)** — Playwright drives every tool with real files and validates the downloaded bytes: page counts via pdf-lib, WAV data-chunk math against the header's own sample rate, APP1 absence in stripped JPEGs, MediaBox points, invoice totals, CSV structure, ZIP entries, and a full QR generate→export→decode round-trip.
+**Functional (20 checks)** — Playwright drives every tool with real files and validates the downloaded bytes: page counts via pdf-lib, WAV data-chunk math against the header's own sample rate, APP1 absence in stripped JPEGs, MediaBox points, invoice totals, CSV structure, ZIP entries, a full QR generate→export→decode round-trip, and a PDF delete→rebuild page-count check.
 
-**Security (21 checks)** — `scripts/security.cjs`:
+**Security (24 checks)** — `scripts/security.cjs`:
 
 - **Network silence** — on every page, zero requests to any non-self origin, at load and idle
 - **Exfil scan** — no non-GET request (fetch/POST/beacon) is even attempted
@@ -230,10 +263,10 @@ Every push runs a **37-check automated gate** in GitHub Actions before anything 
 - **Dependency audit** — `npm audit` on production dependencies (currently **0 vulnerabilities**)
 
 ```text
-E2E:       16/16 ✅   (offline-PWA, exif, shrink, scan, esign, receipts, metadata,
+E2E:       20/20 ✅   (offline-PWA, exif, shrink, scan, esign, receipts, metadata,
                       audio, invoice, rename, printprep, ocr, qr, hub)
-Security:  21/21 ✅   (headers, traversal, secrets, net×13, storage, fuzz×3, xss)
-Units:     30/30 ✅   (EXIF parser, EXIF fuzzing, WAV math, receipt totals)
+Security:  24/24 ✅   (headers, traversal, secrets, net×13, storage, fuzz×3, xss)
+Units:     48/48 ✅   (EXIF parser + fuzzing, WAV math, receipt totals, diff engine, text stats)
 Mobile:    0px  ✅    (horizontal overflow, 390×844, 5 pages)
 Lighthouse: 98–100 ✅ (perf / a11y / best-practices / SEO, all 13 pages)
 ```
@@ -244,7 +277,7 @@ Lighthouse: 98–100 ✅ (perf / a11y / best-practices / SEO, all 13 pages)
 
 ```bash
 npm install
-npm run dev          # http://localhost:5177 — the hub with all 11 tools
+npm run dev          # http://localhost:5177 — the hub with all 15 tools
 npm test             # unit tests incl. EXIF fuzzing
 npm run typecheck    # strict TypeScript
 npm run build        # static build in dist/ — deployable anywhere
@@ -253,8 +286,8 @@ npm run serve:dist   # serve dist/ with correct MIME types
 # full gate (needs playwright + fixtures):
 node scripts/make-fixtures.cjs
 node scripts/serve.cjs &      # serves dist/ on :5178
-node scripts/e2e.cjs          # 16 functional checks
-node scripts/security.cjs     # 21 security checks (serves itself on :5199)
+node scripts/e2e.cjs          # 20 functional checks
+node scripts/security.cjs     # 24 security checks (serves itself on :5199)
 node scripts/mobile-shot.cjs  # mobile overflow check
 ```
 
@@ -266,9 +299,10 @@ Test fixtures are generated in-repo by `scripts/make-fixtures.cjs` — the GPS-t
 - **PWA**: Workbox precache of every page, asset, and engine — all eleven tools work offline after first load; images can be opened straight from the OS via `file_handlers`
 - Hub rendered from a single `public/tools.json` (one source of truth for names, taglines, categories)
 - Social-ready: per-page Open Graph/Twitter cards, `sitemap.xml`, `robots.txt`
+- Hub chrome speaks **English, Türkçe, and Deutsch** (EN/TR/DE switcher, persisted locally)
 - Zero UI frameworks; shared CSS design system in `src/styles.css`
 - `src/lib/exif.ts` — byte-level JPEG/TIFF EXIF parser + APP1 stripper (fuzz-tested)
-- pdf-lib for every PDF operation · Web Audio API + lamejs for audio · JSZip for archives · self-hosted Tesseract WASM for OCR · qrcode-generator + jsQR for QR
+- pdf-lib for every PDF operation · Web Audio API + lamejs for audio · JSZip for archives · self-hosted Tesseract WASM for OCR · qrcode-generator + jsQR for QR · pdf.js for local page rendering
 - Each tool ships its own Open Graph preview image (`og-<tool>.png`) — every page looks right when shared
 - **Lighthouse 98–100** on all 13 pages (performance, accessibility, best-practices, SEO)
 - Strict CSP on every response — `public/_headers` in production, the same policy asserted by the security suite

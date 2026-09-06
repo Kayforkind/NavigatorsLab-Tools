@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Text Stats — words, reading time, readability — NavigatorsLab Tools</title>
+  <meta name="description" content="Word/character counts, reading time, readability scores and keyword density — computed entirely in your browser." />
+  <meta name="theme-color" content="#0b0f17" />
+  <meta property="og:title" content="Text Stats — words, reading time, readability — NavigatorsLab Tools" />
+  <meta property="og:description" content="Word counts, reading time, readability scores, keyword density. Nothing is uploaded." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-textstats.png" />
+  <meta property="og:url" content="https://navigatorslab.com/tools/textstats" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Text Stats — words, reading time, readability" />
+  <meta name="twitter:description" content="Word counts, reading time, readability scores, keyword density. Nothing is uploaded." />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-textstats.png" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>📊 Text Stats</h1>
+    <p class="sub">
+      Count words and characters, estimate reading time, score readability (Flesch), and see keyword
+      density — for essays, applications, and posts. Drafts stay on your device.
+    </p>
+
+    <div class="panel">
+      <label for="textInput">Your text (or drop a .txt / .md file)</label>
+      <textarea id="textInput" rows="12" placeholder="Paste or type here — stats update as you write…"></textarea>
+      <div id="dz" class="drop" style="margin-top:10px">
+        <b>Drop a .txt or .md file</b> <span class="meta">to fill the box</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="stats-grid" id="cards"></div>
+      <h2 style="margin:18px 0 8px; font-size:16px">Top keywords</h2>
+      <div id="keywords" class="kw-row"></div>
+    </div>
+  </main>
+
+  <footer class="nl-foot">
+    <span>🔒 runs entirely in your browser — nothing is uploaded, stored, or logged</span>
+    <span>·</span>
+    <a href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub</a>
+    <span>·</span>
+    <a href="./index.html">All tools</a>
+  </footer>
+  <script type="module" src="/src/pages/textstats.ts"></script>
+</body>
+</html>

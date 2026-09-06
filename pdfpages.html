@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Pages — reorder, rotate, delete, extract — NavigatorsLab Tools</title>
+  <meta name="description" content="Reorder, rotate, delete and extract pages of any PDF entirely in your browser. No uploads." />
+  <meta name="theme-color" content="#0b0f17" />
+  <meta property="og:title" content="PDF Pages — reorder, rotate, delete, extract — NavigatorsLab Tools" />
+  <meta property="og:description" content="Reorganize any PDF's pages locally. No uploads." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-pdfpages.png" />
+  <meta property="og:url" content="https://navigatorslab.com/tools/pdfpages" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PDF Pages — reorder, rotate, delete, extract" />
+  <meta name="twitter:description" content="Reorganize any PDF's pages locally. No uploads." />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-pdfpages.png" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📑</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>📑 PDF Pages</h1>
+    <p class="sub">
+      Reorder, rotate, delete, and extract pages of any PDF — rendered and rebuilt entirely in your
+      browser. Merge two documents? Drop them together and drag pages into one order.
+    </p>
+
+    <div id="dz" class="drop">
+      <span class="big">📑</span>
+      <b>Drop PDFs here</b> or click to pick — pages appear as thumbnails
+    </div>
+
+    <div class="panel" id="panel" hidden>
+      <div class="row">
+        <span class="pill" id="pageCount"></span>
+        <label><input type="checkbox" id="selAll" checked /> select all</label>
+        <span class="grow" style="flex:1"></span>
+        <button id="rotSel">↻ Rotate selected</button>
+        <button id="delSel" class="danger">🗑 Delete selected</button>
+        <button id="rebuild" class="primary">📄 Rebuild &amp; download</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+      <div id="pages" class="pp-grid"></div>
+    </div>
+  </main>
+
+  <footer class="nl-foot">
+    <span>🔒 runs entirely in your browser — nothing is uploaded, stored, or logged</span>
+    <span>·</span>
+    <a href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub</a>
+    <span>·</span>
+    <a href="./index.html">All tools</a>
+  </footer>
+  <script type="module" src="/src/pages/pdfpages.ts"></script>
+</body>
+</html>

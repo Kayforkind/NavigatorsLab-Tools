@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Text Diff — compare two texts, locally — NavigatorsLab Tools</title>
+  <meta name="description" content="Compare two texts or files line by line with word-level highlights, entirely in your browser. Nothing is uploaded." />
+  <meta name="theme-color" content="#0b0f17" />
+  <meta property="og:title" content="Text Diff — compare two texts, locally — NavigatorsLab Tools" />
+  <meta property="og:description" content="Compare two texts or files line by line. Nothing is uploaded." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-textdiff.png" />
+  <meta property="og:url" content="https://navigatorslab.com/tools/textdiff" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Text Diff — compare two texts, locally" />
+  <meta name="twitter:description" content="Compare two texts or files line by line. Nothing is uploaded." />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-textdiff.png" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔤</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>🔤 Text Diff</h1>
+    <p class="sub">
+      Paste two versions (or drop two files) and see exactly what changed — line-level with word-level
+      highlights. Diffing happens on your device: contracts, NDAs, and drafts never leave the tab.
+    </p>
+
+    <div class="panel">
+      <div class="diff-inputs">
+        <div>
+          <label for="textA">Original</label>
+          <textarea id="textA" rows="10" placeholder="Paste the original text… or drop a file here"></textarea>
+        </div>
+        <div>
+          <label for="textB">Changed</label>
+          <textarea id="textB" rows="10" placeholder="Paste the changed text… or drop a file here"></textarea>
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <label><input type="checkbox" id="ignoreWs" /> ignore leading/trailing whitespace</label>
+        <label><input type="checkbox" id="caseSense" /> case-sensitive</label>
+        <span class="grow" style="flex:1"></span>
+        <button id="btnDiff" class="primary">Compare</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+    </div>
+
+    <div class="panel" id="outPanel" hidden>
+      <div class="row">
+        <span class="pill" id="diffSummary"></span>
+        <span class="grow" style="flex:1"></span>
+        <button id="btnCopy">Copy unified diff</button>
+        <button id="btnDl">Download .diff</button>
+      </div>
+      <div id="diffOut" class="diff-out mono"></div>
+    </div>
+  </main>
+
+  <footer class="nl-foot">
+    <span>🔒 runs entirely in your browser — nothing is uploaded, stored, or logged</span>
+    <span>·</span>
+    <a href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub</a>
+    <span>·</span>
+    <a href="./index.html">All tools</a>
+  </footer>
+  <script type="module" src="/src/pages/textdiff.ts"></script>
+</body>
+</html>

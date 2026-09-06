@@ -106,5 +106,32 @@
     "detail": "4×6 to A4 at true 300 DPI, warns before you pay for a blurry print, MediaBox at exact physical size.",
     "category": "images",
     "keywords": "print bleed dpi 4x6 a4 letter resize photo shop 300dpi"
+  },
+  {
+    "id": "pdfpages",
+    "icon": "📑",
+    "name": "PDF Pages",
+    "tagline": "Reorder, rotate, delete and extract PDF pages",
+    "detail": "Thumbnail grid, drag to reorder, per-page rotate/delete, rebuild any subset — multi-document merges included.",
+    "category": "documents",
+    "keywords": "pdf pages reorder rotate delete extract merge organize split"
+  },
+  {
+    "id": "textdiff",
+    "icon": "🔬",
+    "name": "Text Diff",
+    "tagline": "Compare two texts with word-level highlights",
+    "detail": "Line diff with LCS + word-level inner highlights, whitespace/case options, unified-diff export. Contracts stay on your device.",
+    "category": "documents",
+    "keywords": "diff compare texts changes contract nda merge lines words"
+  },
+  {
+    "id": "textstats",
+    "icon": "📊",
+    "name": "Text Stats",
+    "tagline": "Words, reading time, readability, keyword density",
+    "detail": "Live counts, Flesch reading ease with grade level, reading/speaking time, top keywords. For essays, applications, posts.",
+    "category": "documents",
+    "keywords": "word count characters reading time flesch readability keywords essay density"
   }
 ]

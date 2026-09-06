@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NavigatorsLab Tools — 12 private, in-browser utilities</title>
-  <meta name="description" content="Twelve free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, OCR expenses, make & decode QR codes, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads." />
+  <title>NavigatorsLab Tools — 15 private, in-browser utilities</title>
+  <meta name="description" content="Fifteen free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, OCR expenses, make & decode QR codes, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads." />
   <meta name="theme-color" content="#0b0f17" />
-  <meta property="og:title" content="NavigatorsLab Tools — 12 private, in-browser utilities" />
+  <meta property="og:title" content="NavigatorsLab Tools — 15 private, in-browser utilities" />
   <meta property="og:description" content="Eleven free tools that run entirely in your browser. No accounts. No uploads. Nothing retained." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://navigatorslab.com/tools/og-image.png" />
   <meta property="og:url" content="https://navigatorslab.com/tools/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="NavigatorsLab Tools — 12 private, in-browser utilities" />
+  <meta name="twitter:title" content="NavigatorsLab Tools — 15 private, in-browser utilities" />
   <meta name="twitter:description" content="Eleven free tools that run entirely in your browser. No accounts. No uploads. Nothing retained." />
   <meta name="twitter:image" content="https://navigatorslab.com/tools/og-image.png" />
   <link rel="manifest" href="./manifest.webmanifest" />
@@ -22,8 +22,9 @@
 <body>
   <header class="nl-top">
     <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
-    <span class="tagline">free · open source · everything stays on your device</span>
+    <span class="tagline" id="tagline">free · open source · everything stays on your device</span>
     <span class="spacer"></span>
+    <span id="langSel" class="lang-sel" aria-label="Language"></span>
     <a class="plain" href="https://navigatorslab.com/">PDF Studio ↗</a>
     <a class="plain" href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub ↗</a>
   </header>
@@ -32,22 +33,22 @@
     <section class="hero">
       <div class="hero-inner">
         <div class="hero-copy">
-          <div class="hero-kicker"><span class="lock">🔒</span> No uploads · No accounts · Nothing retained</div>
-          <h1>Twelve tools that<br /><span>never phone home.</span></h1>
+          <div class="hero-kicker" id="heroKicker"><span class="lock">🔒</span> No uploads · No accounts · Nothing retained</div>
+          <h1><span id="heroT1">Fifteen tools that</span><br /><span id="heroT2">never phone home.</span></h1>
           <p class="hero-sub">
             Strip the GPS from vacation photos. Shrink a scan to hit a 2&nbsp;MB portal limit. Sign a lease at 11pm.
-            OCR a month of receipts. Make — or decode — a QR code without a sketchy generator site. Every tool runs <b>inside this browser tab</b> — your files are processed by your
+            OCR a month of receipts. Reorganize a PDF. Diff two contract drafts. Make — or decode — a QR code without a sketchy generator site. Every tool runs <b>inside this browser tab</b> — your files are processed by your
             own device and never sent anywhere. <b>Free &amp; open source (MIT).</b>
           </p>
           <div class="hero-cta">
-            <a class="btn-hero primary" href="#tools">Browse the tools ↓</a>
-            <a class="btn-hero" href="https://github.com/Kayforkind/NavigatorsLab-Tools">★ Source on GitHub</a>
+            <a class="btn-hero primary" href="#tools" id="ctaBrowse">Browse the tools ↓</a>
+            <a class="btn-hero" href="https://github.com/Kayforkind/NavigatorsLab-Tools" id="ctaGithub">★ Source on GitHub</a>
             <button class="btn-hero" id="installBtn" hidden>📲 Install as app</button>
           </div>
           <div class="hero-proof">
-            <span>✓ Works offline (PWA)</span>
-            <span>✓ Verified by 16 automated browser tests</span>
-            <span>✓ Security-audited: zero network calls after load</span>
+            <span id="proofOffline">✓ Works offline (PWA)</span>
+            <span id="proofTests">✓ Verified by 17 automated browser tests</span>
+            <span id="proofSecurity">✓ Security-audited: zero network calls after load</span>
           </div>
         </div>
         <div class="hero-visual" aria-hidden="true">
@@ -61,7 +62,7 @@
 
     <section class="wrap" id="tools">
       <div class="tools-head">
-        <h2>The toolbox</h2>
+        <h2 id="toolsHead">The toolbox</h2>
         <input type="search" id="search" placeholder="Search — try “gps”, “2 mb”, “invoice”…" autocomplete="off" />
       </div>
       <div class="chips" id="chips"></div>
@@ -69,7 +70,7 @@
       <p class="no-results" id="noResults" hidden>Nothing matches — try a different word.</p>
     </section>
 
-    <section class="wrap">
+    <section class="wrap verify-wrap">
       <h2>Same files in, same files out — verified</h2>
       <p class="sub" style="margin-bottom:18px">
         Every release is gated by a browser automation suite that drops real files into each tool and checks the downloaded bytes.
@@ -86,6 +87,9 @@
             <tr><td>🧾 Receipts → PDF</td><td>EXIF + pdf-lib</td><td class="ok">nothing</td><td>3 stamped pages, correct order</td></tr>
             <tr><td>🔢 Receipt OCR → CSV</td><td>Tesseract (self-hosted WASM)</td><td class="ok">nothing*</td><td>Line items parsed in CSV</td></tr>
             <tr><td>🔳 QR Studio</td><td>qrcode-generator + jsQR</td><td class="ok">nothing</td><td>Generate → decode round-trip matches</td></tr>
+            <tr><td>📑 PDF Pages</td><td>pdf.js render + pdf-lib rebuild</td><td class="ok">nothing</td><td>Page order &amp; rotations in rebuilt PDF</td></tr>
+            <tr><td>🔬 Text Diff</td><td>LCS engine (unit-tested)</td><td class="ok">nothing</td><td>Word-level spans asserted</td></tr>
+            <tr><td>📊 Text Stats</td><td>Stats engine (unit-tested)</td><td class="ok">nothing</td><td>Counts &amp; keywords asserted</td></tr>
             <tr><td>🎧 Audio Trimmer</td><td>Web Audio + lamejs</td><td class="ok">nothing</td><td>WAV data-chunk = exact selection</td></tr>
             <tr><td>🧮 Invoice Generator</td><td>Canvas + pdf-lib</td><td class="ok">nothing</td><td>$408.00 total in exported PDF</td></tr>
             <tr><td>🗂️ Batch Rename</td><td>EXIF + JSZip</td><td class="ok">nothing</td><td>Renamed entries inside ZIP</td></tr>
