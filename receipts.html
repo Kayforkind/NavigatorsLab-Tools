@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Receipts → One PDF — NavigatorsLab Tools</title>
+  <meta name="description" content="Turn phone photos of receipts into one date-sorted PDF. Free, private, in-browser." />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap narrow">
+    <h1>🧾 Receipts → One PDF</h1>
+    <p class="sub">
+      Drop the phone photos; get one <b>PDF sorted by date taken</b> (from EXIF, falling back to file date),
+      each page stamped with its date and filename. Freelancers and landlords: your weekly chore just got shorter.
+    </p>
+
+    <div class="drop" id="dz">
+      <span class="big">🧾</span>
+      <b>Drop receipt photos</b> or click to pick — JPG/PNG, any count
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <label><input type="checkbox" id="stamp" checked /> Stamp date + filename on each page</label>
+        <label>Page size</label>
+        <select id="size">
+          <option value="A4">A4</option>
+          <option value="LETTER">US Letter</option>
+        </select>
+        <label><input type="checkbox" id="fit" checked /> Fit whole receipt on page</label>
+        <span class="grow" style="flex:1"></span>
+        <button id="sort" class="primary" disabled>↕️ Sort by date</button>
+        <button id="pdf" class="primary" disabled>📄 Build PDF</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+    </div>
+
+    <div id="list"></div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 runs 100% in your browser — no uploads, no storage, no logs</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/receipts.ts"></script>
+</body>
+</html>

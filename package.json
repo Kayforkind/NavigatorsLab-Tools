@@ -1,0 +1,26 @@
+{
+  "name": "navigatorslab-tools",
+  "private": false,
+  "license": "MIT",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5177 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview --port 5177 --strictPort",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json --pretty false",
+    "serve:dist": "node scripts/serve.cjs"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "lamejs": "1.2.1",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "pdfjs-dist": "^4.10.38",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0",
+    "vitest": "^5.0.0"
+  }
+}

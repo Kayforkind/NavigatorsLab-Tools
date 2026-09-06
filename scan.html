@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan &amp; Screenshot Cleaner — NavigatorsLab Tools</title>
+  <meta name="description" content="Crop, straighten and enhance phone photos of documents, then export a clean PDF. Runs entirely in your browser." />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>📄 Scan &amp; Screenshot Cleaner</h1>
+    <p class="sub">
+      Photographed a document with your phone? Crop it, straighten it, make it black-and-white crisp,
+      stack pages, export one PDF. <b>No scanner, no upload.</b>
+    </p>
+
+    <div class="drop" id="dz">
+      <span class="big">📸</span>
+      <b>Drop photos here</b> or click to pick — each becomes a page
+    </div>
+
+    <div class="panel" id="editor" hidden>
+      <h2>Edit page <span id="pageIdx" class="pill">1 / 1</span></h2>
+      <div class="row">
+        <button id="straighten">🧮 Auto-straighten</button>
+        <button id="rotL">↺ Rotate left</button>
+        <button id="rotR">↻ Rotate right</button>
+        <label><input type="checkbox" id="gray" /> Grayscale</label>
+        <label>Brightness <input type="range" id="bright" min="-80" max="80" value="0" style="width:110px" /></label>
+        <label>Contrast <input type="range" id="contrast" min="-80" max="80" value="0" style="width:110px" /></label>
+        <button id="applyEnh" class="primary">✨ Apply to page</button>
+        <button id="cropMode">✂️ Crop mode</button>
+      </div>
+      <div class="stat" id="editStat" hidden></div>
+      <div style="overflow:auto; max-height:62vh; text-align:center; background:#0d1320; border-radius:10px; padding:8px;">
+        <canvas id="cv" class="prev" style="max-width:100%;"></canvas>
+      </div>
+      <p class="sub" style="margin:8px 0 0; font-size:12.5px;">
+        Crop mode: drag a rectangle on the image, then press <b>Apply crop</b>. Changes edit the current page only.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <button id="prev">← Prev</button>
+        <button id="next">Next →</button>
+        <button id="remove" class="danger">🗑 Remove page</button>
+        <span class="grow" style="flex:1"></span>
+        <button id="pdf" class="primary" disabled>📄 Export PDF</button>
+        <button id="png" disabled>🖼 Save this page as PNG</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+      <div id="thumbs" class="shots"></div>
+    </div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 runs 100% in your browser — no uploads, no storage, no logs</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/scan.ts"></script>
+</body>
+</html>

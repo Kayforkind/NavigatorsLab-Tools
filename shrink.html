@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image Shrinker — NavigatorsLab Tools</title>
+  <meta name="description" content="Compress images to a target file size, resize, and convert between JPG, PNG and WebP — entirely in your browser." />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗜️</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap narrow">
+    <h1>🗜️ Image Shrinker</h1>
+    <p class="sub">
+      “This portal only accepts <b>2&nbsp;MB</b>.” Compress to an exact target size, resize, convert —
+      no TinyPNG upload, everything happens in this tab.
+    </p>
+
+    <div class="drop" id="dz">
+      <span class="big">🖼️</span>
+      <b>Drop images here</b> or click to pick — JPG / PNG / WebP / HEIC (if your browser decodes it)
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <label>Mode</label>
+        <select id="mode">
+          <option value="target">Target file size</option>
+          <option value="quality">Quality slider</option>
+        </select>
+        <span id="targetWrap" class="row tight">
+          <input type="number" id="targetKB" value="500" min="10" max="20000" step="10" style="width:110px" /> KB
+        </span>
+        <span id="qualityWrap" class="row tight" hidden>
+          <input type="range" id="quality" min="10" max="95" value="80" style="width:160px" />
+          <span id="qVal" class="mono">80%</span>
+        </span>
+      </div>
+      <div class="row">
+        <label>Max width</label>
+        <input type="number" id="maxW" placeholder="original" min="16" style="width:110px" /> px
+        <label>Format</label>
+        <select id="fmt">
+          <option value="image/jpeg">JPG</option>
+          <option value="image/webp">WebP (smaller)</option>
+          <option value="image/png">PNG (lossless)</option>
+        </select>
+        <button class="primary" id="go" disabled>🗜️ Shrink &amp; download</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+    </div>
+
+    <div id="list"></div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 runs 100% in your browser — no uploads, no storage, no logs</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/shrink.ts"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Local E-Sign Pad — NavigatorsLab Tools</title>
+  <meta name="description" content="Draw or type a signature, place it on a PDF, flatten and download. Everything stays on your device." />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✍️</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>✍️ Local E-Sign Pad</h1>
+    <p class="sub">
+      Not DocuSign — just “sign this lease tonight.” Draw or type your signature, click where it goes on the
+      PDF, flatten, download. <b>Zero uploads.</b>
+    </p>
+
+    <div class="panel">
+      <h2>1 · Make your signature</h2>
+      <div class="row">
+        <select id="mode">
+          <option value="draw">Draw</option>
+          <option value="type">Type</option>
+        </select>
+        <span id="typeWrap" hidden>
+          <input type="text" id="typed" placeholder="Your name" style="width:200px" />
+          <select id="font">
+            <option value="cursive">Handwriting</option>
+            <option value="serif">Serif</option>
+          </select>
+          <label>Size <input type="number" id="fontSize" value="46" min="12" max="120" style="width:70px" /></label>
+        </span>
+      </div>
+      <canvas id="pad" width="520" height="180" style="touch-action:none; cursor:crosshair; background:#f4f6fa; border-radius:10px; max-width:100%;"></canvas>
+      <div class="row">
+        <label>Ink <input type="color" id="ink" value="#0b25c4" style="width:40px;height:30px;padding:0;border:none;background:none" /></label>
+        <label>Thickness <input type="range" id="thick" min="1" max="6" value="2" style="width:110px" /></label>
+        <button id="clear">🧽 Clear</button>
+        <button id="useSig" class="primary" disabled>2 · Use this signature →</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>3 · Place it on the PDF</h2>
+      <div class="drop" id="dz">
+        <span class="big">📕</span>
+        <b>Drop a PDF</b> or click to pick
+      </div>
+      <div class="row" id="pagesRow" hidden>
+        <label>Page</label>
+        <select id="pageSel"></select>
+        <label>Size</label>
+        <input type="number" id="sigW" value="140" min="40" max="500" style="width:80px" /> pt wide
+        <span class="grow" style="flex:1"></span>
+        <button id="stamp" class="primary" disabled>✅ Flatten &amp; download</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+      <div style="overflow:auto; max-height:60vh; text-align:center;">
+        <canvas id="cv" class="prev" style="max-width:100%; cursor:copy;"></canvas>
+      </div>
+      <p class="sub" style="margin-top:8px; font-size:12.5px;">
+        After picking a PDF, click on the page where the signature should go (its center).
+      </p>
+    </div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 runs 100% in your browser — no uploads, no storage, no logs</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/sign.ts"></script>
+</body>
+</html>

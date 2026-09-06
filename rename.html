@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Batch Rename &amp; Sort — NavigatorsLab Tools</title>
+  <meta name="description" content="IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg. EXIF-date batch renaming, free and in-browser." />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗂️</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>🗂️ Batch Rename &amp; Sort</h1>
+    <p class="sub">
+      Turn camera filenames into something findable: <span class="mono">IMG_5847.jpg</span> →
+      <span class="mono">2026-09-05-receipt-home-depot.jpg</span>, dated from <b>EXIF</b> (or file date).
+      Preview, tweak, download as <b>renamed zip</b> (or individually).
+    </p>
+
+    <div class="drop" id="dz">
+      <span class="big">📁</span>
+      <b>Drop files here</b> or click — photos, scans, anything
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <label>Pattern</label>
+        <select id="pat">
+          <option value="{date}-{slug}">date-slug</option>
+          <option value="{date}-{n}">date-number</option>
+          <option value="{date} {slug}">date + original name</option>
+          <option value="{n}-{slug}">number-slug</option>
+        </select>
+        <label>Slug from</label>
+        <select id="slugSrc">
+          <option value="orig">original name (cleaned)</option>
+          <option value="fixed">fixed text</option>
+        </select>
+        <input type="text" id="slugText" placeholder="slug text" style="width:140px" hidden />
+        <label>Date</label>
+        <select id="dateStyle">
+          <option value="iso">2026-09-05</option>
+          <option value="compact">20260905</option>
+          <option value="month">2026-09</option>
+        </select>
+        <label><input type="checkbox" id="lower" checked /> lowercase</label>
+      </div>
+      <div class="row">
+        <span class="grow" style="flex:1"></span>
+        <button class="primary" id="apply">↻ Regenerate names</button>
+        <button id="zip" class="primary" disabled>⬇️ Download renamed .zip</button>
+        <button id="each" disabled>⬇️ Download individually</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+    </div>
+
+    <div id="list"></div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 runs 100% in your browser — no uploads, no storage, no logs</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/rename.ts"></script>
+</body>
+</html>

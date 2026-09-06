@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Print-Shop Prep — NavigatorsLab Tools</title>
+  <meta name="description" content="Resize images to 4×6, 5×7, A4, Letter; add bleed; check DPI; export print-ready PDF. Free and private." />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>🖨️ Print-Shop Prep</h1>
+    <p class="sub">
+      Get a photo actually ready for the printer: exact output size, optional <b>bleed</b>,
+      a <b>DPI warning</b> before you waste money, and a print-ready PDF.
+    </p>
+
+    <div class="drop" id="dz">
+      <span class="big">🖼️</span>
+      <b>Drop images here</b> or click to pick — each becomes a print item
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <label>Output size</label>
+        <select id="size">
+          <option value="4x6">4 × 6 in (photo)</option>
+          <option value="5x7">5 × 7 in (photo)</option>
+          <option value="A4">A4 (210 × 297 mm)</option>
+          <option value="LETTER">US Letter (8.5 × 11 in)</option>
+          <option value="SQUARE8">8 × 8 in (square)</option>
+        </select>
+        <label>Orientation</label>
+        <select id="orient">
+          <option value="auto">auto</option>
+          <option value="portrait">portrait</option>
+          <option value="landscape">landscape</option>
+        </select>
+        <label>Bleed <input type="number" id="bleed" value="0" min="0" max="6" step="0.125" style="width:70px" /> in</label>
+        <label><input type="checkbox" id="fitCrop" checked /> center-crop to fill (else white bars)</label>
+      </div>
+      <div class="row">
+        <span class="grow" style="flex:1"></span>
+        <button class="primary" id="prep">⚙️ Prep images</button>
+        <button id="pdf" class="primary" disabled>📄 Export print PDF</button>
+        <button id="pngs" disabled>⬇️ Download PNGs</button>
+      </div>
+      <div class="stat" id="stat" hidden></div>
+    </div>
+
+    <div id="list"></div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 runs 100% in your browser — no uploads, no storage, no logs</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/printprep.ts"></script>
+</body>
+</html>

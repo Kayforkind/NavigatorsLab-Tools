@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Metadata &amp; Hidden-Data Checker — NavigatorsLab Tools</title>
+  <meta name="description" content="See what's really inside your files: GPS in photos, PDF author fields, Word revision history. Then strip it. 100% local." />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>🔍 Metadata &amp; Hidden-Data Checker</h1>
+    <p class="sub">
+      “What's inside this file?” Photo GPS, camera and timestamps; PDF author, producer, and creation dates;
+      Word/Excel <b>author + revision history</b>. Shown first — then strip it and download clean copies.
+    </p>
+
+    <div class="drop" id="dz">
+      <span class="big">🗂️</span>
+      <b>Drop files here</b> or click — images (EXIF), PDF, .docx / .xlsx (OOXML core properties)
+    </div>
+
+    <div class="row">
+      <button class="primary" id="stripAll" disabled>🧹 Strip everything &amp; download</button>
+      <button id="rezip" disabled>⬇️ Download cleaned as .zip</button>
+    </div>
+    <div class="stat" id="stat" hidden></div>
+
+    <div id="list"></div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 runs 100% in your browser — no uploads, no storage, no logs</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/metadata.ts"></script>
+</body>
+</html>
