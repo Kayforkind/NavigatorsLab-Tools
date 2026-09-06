@@ -404,13 +404,39 @@ async function setFiles(page, files) {
     await page.screenshot({ path: path.join(SHOTS, '13-ocr.png') });
   });
 
+  /* ---------- 12. QR Studio (generate → decode round-trip) ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/qr.html`);
+    const secret = `navigatorslab-roundtrip-${Date.now()}`;
+    await page.fill('#qrText', secret);
+    await page.click('#qrMake');
+    await page.waitForFunction(() => !document.getElementById('qrOut').hidden, { timeout: 10000 });
+    const meta = await page.textContent('#qrMeta');
+    // export a real PNG, then feed those exact bytes to the decoder
+    const dl = await grabDownload(page, () => page.click('#qrPng'));
+    const isPng = dl.bytes[0] === 0x89 && dl.bytes[1] === 0x50;
+    await page.evaluate(async (bytesB64) => {
+      const bin = atob(bytesB64);
+      const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      const file = new File([u8], 'roundtrip.png', { type: 'image/png' });
+      const dt = new DataTransfer(); dt.items.add(file);
+      document.getElementById('tabRead').click();
+      document.getElementById('qrDz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
+    }, dl.bytes.toString('base64'));
+    await page.waitForFunction(() => !document.getElementById('qrResult').hidden, { timeout: 15000 });
+    const decoded = await page.inputValue('#qrData');
+    report('qr', isPng && decoded === secret, `round-trip: ${secret.slice(0, 24)}… encoded (${meta.trim()}), PNG exported ${dl.bytes.length}B, decoded payload matches`);
+    await page.screenshot({ path: path.join(SHOTS, '14-qr.png') });
+  });
+
   /* ---------- hub ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
-    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 11, { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 12, { timeout: 15000 });
     const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', cards === 11, `${cards} tool cards on the redesigned hub (tools.json-driven)`);
+    report('hub', cards === 12, `${cards} tool cards on the redesigned hub (tools.json-driven)`);
   });
 
   const failed = results.filter((r) => !r.ok);

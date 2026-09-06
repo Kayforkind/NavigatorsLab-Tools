@@ -24,7 +24,7 @@ export default defineConfig({
         name: 'NavigatorsLab Tools — private, in-browser utilities',
         short_name: 'NL Tools',
         description:
-          'Eleven free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, OCR expenses, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads.',
+          'Twelve free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, OCR expenses, make & decode QR codes, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads.',
         theme_color: '#0b0f17',
         background_color: '#0b0f17',
         display: 'standalone',
@@ -47,6 +47,7 @@ export default defineConfig({
             },
           },
         ],
+        // (informational) images can also be routed to the QR decoder the same way
       },
       workbox: {
         // precache every page + asset so all tools work fully offline after first load
@@ -78,6 +79,7 @@ export default defineConfig({
         rename: resolve(__dirname, 'rename.html'),
         printprep: resolve(__dirname, 'printprep.html'),
         ocr: resolve(__dirname, 'ocr.html'),
+        qr: resolve(__dirname, 'qr.html'),
       },
     },
   },

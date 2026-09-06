@@ -20,7 +20,7 @@ const SHOTS = path.resolve(__dirname, '..', 'docs', 'shots');
   const browser = await chromium.launch();
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   const page = await ctx.newPage();
-  const pages = ['index.html', 'invoice.html', 'audio.html'];
+  const pages = ['index.html', 'invoice.html', 'audio.html', 'qr.html', 'ocr.html'];
   let allOk = true;
   for (const p of pages) {
     await page.goto(`${BASE}/${p}`);

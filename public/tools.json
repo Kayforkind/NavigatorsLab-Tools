@@ -63,6 +63,15 @@
     "keywords": "ocr receipt totals csv expenses tracking tesseract scan amounts"
   },
   {
+    "id": "qr",
+    "icon": "🔳",
+    "name": "QR Studio",
+    "tagline": "Generate QR codes and decode QR images — no site sees them",
+    "detail": "Text or URLs in, crisp PNG/SVG out. Decode any QR photo on-device: Wi-Fi passwords, links, ticket codes — nothing leaves the tab.",
+    "category": "files",
+    "keywords": "qr code generate decode scan wifi url png svg barcode"
+  },
+  {
     "id": "audio",
     "icon": "🎧",
     "name": "Audio Trimmer",

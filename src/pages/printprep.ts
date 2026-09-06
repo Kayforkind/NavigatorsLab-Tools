@@ -1,5 +1,4 @@
 import { $, pickFiles, onDrop, download, status, fmtBytes, canvasBlob, toast } from '../lib/dom';
-import { PDFDocument } from 'pdf-lib';
 
 interface Item {
   file: File;
@@ -124,6 +123,7 @@ async function exportPdf(): Promise<void> {
   const withCanvas = rows.filter((r) => r.canvas);
   if (!withCanvas.length) return;
   status(stat, 'Building print PDF…', 'info');
+  const { PDFDocument } = await import('pdf-lib'); // lazy
   const doc = await PDFDocument.create();
   for (const r of withCanvas) {
     const png = await canvasBlob(r.canvas!, 'image/png');

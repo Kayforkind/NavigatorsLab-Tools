@@ -61,6 +61,7 @@ h1 { font-size: 26px; margin: 4px 0 6px; letter-spacing: .2px; }
   display: block; transition: border-color .15s, transform .15s;
 }
 .cards:hover { border-color: var(--acc); transform: translateY(-1px); }
+.chip.on { background: var(--acc); border-color: var(--acc); color: #081226; font-weight: 700; }
 .cards .ico { font-size: 26px; }
 .cards h3 { margin: 8px 0 4px; font-size: 16px; }
 .cards p { margin: 0; color: var(--mut); font-size: 13.5px; }
@@ -93,7 +94,7 @@ button, .btn {
   transition: border-color .15s, background .15s;
 }
 button:hover, .btn:hover { border-color: var(--acc); }
-button.primary { background: var(--acc); border-color: var(--acc); color: #fff; font-weight: 600; }
+button.primary { background: var(--acc); border-color: var(--acc); color: #081226; font-weight: 700; }
 button.primary:hover { filter: brightness(1.1); }
 button:disabled { opacity: .45; cursor: not-allowed; }
 button.danger { border-color: #7a2c30; color: #ff8589; }
@@ -193,7 +194,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   font-size: 15px; font-weight: 600; cursor: pointer; transition: border-color .15s, transform .15s;
 }
 .btn-hero:hover { border-color: var(--acc); transform: translateY(-1px); }
-.btn-hero.primary { background: var(--acc); border-color: var(--acc); color: #fff; }
+.btn-hero.primary { background: var(--acc); border-color: var(--acc); color: #081226; font-weight: 700; }
 .hero-proof { display: flex; gap: 18px; flex-wrap: wrap; color: var(--mut); font-size: 12.5px; }
 .hero-proof span::before { content: ''; }
 
@@ -228,7 +229,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   border-radius: 999px; padding: 7px 15px; font: inherit; font-size: 13.5px; cursor: pointer;
 }
 .chip:hover { color: var(--txt); border-color: var(--acc); }
-.chip.on { background: var(--acc); border-color: var(--acc); color: #fff; font-weight: 600; }
+.chip.on { background: var(--acc); border-color: var(--acc); color: #081226; font-weight: 700; }
 
 .grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
 .cards { padding: 18px; position: relative; }
@@ -253,7 +254,7 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 }
 .privacy-strip h2 { font-size: 24px; margin: 0 0 12px; }
 .privacy-strip p { max-width: 720px; margin: 0 auto 10px; color: var(--mut); }
-.privacy-strip .dim { color: #5d6b83; font-size: 12px; }
+.privacy-strip .dim { color: #7d90a8; font-size: 12px; }
 
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; padding: 44px 16px 40px; }

@@ -1,5 +1,4 @@
 import { $, pickFiles, onDrop, download, status, toast } from '../lib/dom';
-import { PDFDocument } from 'pdf-lib';
 import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 
 /* ---------- signature pad ---------- */
@@ -90,7 +89,7 @@ const sigW = $('#sigW') as HTMLInputElement;
 const stampBtn = $('#stamp') as HTMLButtonElement;
 
 let pdfBytes: Uint8Array | null = null;
-let doc: PDFDocument | null = null;
+let doc: import('pdf-lib').PDFDocument | null = null;
 let pageCanvases: HTMLCanvasElement[] = [];
 let sigPng: Blob | null = null;
 let sigAspect = 1;
@@ -132,6 +131,7 @@ async function pickPdf(): Promise<void> {
 async function loadPdf(f: File): Promise<void> {
   try {
     pdfBytes = new Uint8Array(await f.arrayBuffer());
+    const { PDFDocument } = await import('pdf-lib'); // lazy
     doc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
     pageCanvases = [];
     pageSel.innerHTML = '';
@@ -220,6 +220,7 @@ async function doStamp(): Promise<void> {
     return;
   }
   try {
+    const { PDFDocument } = await import('pdf-lib'); // lazy
     const fresh = await PDFDocument.load(pdfBytes.slice(0), { ignoreEncryption: true });
     const png = await fresh.embedPng(new Uint8Array(await sigPng.arrayBuffer()));
     const pageIdx = parseInt(pageSel.value || '0', 10);

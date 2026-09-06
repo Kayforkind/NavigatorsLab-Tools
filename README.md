@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="docs/banner.png" alt="NavigatorsLab Tools — eleven private, in-browser utilities" width="800" />
+<img src="docs/banner.png" alt="NavigatorsLab Tools — twelve private, in-browser utilities" width="800" />
 
 **By NavigatorsLab** · free & open source · nothing you drop in ever leaves your device
 
@@ -12,7 +12,7 @@
 ![No uploads](https://img.shields.io/badge/uploads-none-red.svg)
 ![Offline ready](https://img.shields.io/badge/offline-ready-8a6fd1.svg)
 
-**Eleven tools. Zero uploads. Zero accounts. Zero telemetry.**
+**Twelve tools. Zero uploads. Zero accounts. Zero telemetry.**
 
 </div>
 
@@ -29,6 +29,7 @@
 | ✍️ | [**Local E-Sign Pad**](#️-local-e-sign-pad) | "Just sign and send it back" at 11pm | Flattened signature inside the PDF |
 | 🧾 | [**Receipts → One PDF**](#-receipts--one-pdf) | A shoebox of receipts at tax time | 3 pages, EXIF date order |
 | 🔢 | [**Receipt OCR → CSV**](#-receipt-ocr--csv) | Expense-tracking data entry | Same-origin engine, CSV out |
+| 🔳 | [**QR Studio**](#-qr-studio) | Sketchy generator sites and upload-to-decode scanners | Generate → decode round-trip matches |
 | 🎧 | [**Audio Trimmer**](#-audio-trimmer) | Cutting clips without uploading them | WAV data chunk = exact 1.000 s |
 | 🧮 | [**Invoice Generator**](#-invoice--quote-generator) | Monthly fees for "text on a PDF" | $408.00 total in exported PDF |
 | 🗂️ | [**Batch Rename & Sort**](#️-batch-rename--sort) | `IMG_5847.jpg` forever | `2026-09-05-home-depot.jpg` in ZIP |
@@ -144,6 +145,20 @@ Open devtools → Network while using any tool and watch it stay silent after lo
 - Amounts are editable in the table before export — OCR proposes, you decide
 - CSV opens directly in Excel, Numbers, Google Sheets, or any accounting import
 
+## 🔳 QR Studio
+
+**The problem:** every "free QR generator" site logs what you encode (a Wi-Fi password is a secret), and every "scan this QR" web app wants camera or upload access to your images.
+
+**How it works:** generation uses `qrcode-generator` locally — text or URLs in, auto-sized module grids out, rendered crisp at 256–1024 px with optional quiet zone, exported as PNG (nearest-neighbor, perfectly square modules) or infinite-resolution SVG. Decoding uses jsQR on canvas pixel data with both inversion attempts, so dark-on-light and light-on-dark codes both read. Nothing touches the network.
+
+**Verified example:** a unique payload was encoded → a 29×29-module PNG exported (6 KB) → that exact PNG fed to the decoder → the decoded text **matched the original payload character-for-character**.
+
+![QR Studio](docs/shots/14-qr.png)
+
+- Wi-Fi credentials, payment links, tickets — encoded and decoded on-device
+- Custom foreground/background colors (contrast-safe defaults)
+- SVG export stays vector-crisp at any print size
+
 ## 🎧 Audio Trimmer
 
 **The problem:** you need the first 40 seconds of a voice note, and every online cutter wants the upload first.
@@ -199,11 +214,11 @@ The suite is fully responsive — the redesigned hub and every tool verified at 
 
 ## 🔐 Security & verification gate
 
-Every push runs a **35-check automated gate** in GitHub Actions before anything ships:
+Every push runs a **37-check automated gate** in GitHub Actions before anything ships:
 
-**Functional (15 checks)** — Playwright drives every tool with real files and validates the downloaded bytes: page counts via pdf-lib, WAV data-chunk math against the header's own sample rate, APP1 absence in stripped JPEGs, MediaBox points, invoice totals, CSV structure, ZIP entries.
+**Functional (16 checks)** — Playwright drives every tool with real files and validates the downloaded bytes: page counts via pdf-lib, WAV data-chunk math against the header's own sample rate, APP1 absence in stripped JPEGs, MediaBox points, invoice totals, CSV structure, ZIP entries, and a full QR generate→export→decode round-trip.
 
-**Security (20 checks)** — `scripts/security.cjs`:
+**Security (21 checks)** — `scripts/security.cjs`:
 
 - **Network silence** — on every page, zero requests to any non-self origin, at load and idle
 - **Exfil scan** — no non-GET request (fetch/POST/beacon) is even attempted
@@ -215,11 +230,12 @@ Every push runs a **35-check automated gate** in GitHub Actions before anything 
 - **Dependency audit** — `npm audit` on production dependencies (currently **0 vulnerabilities**)
 
 ```text
-E2E:       15/15 ✅   (offline-PWA, exif, shrink, scan, esign, receipts,
-                      metadata, audio, invoice, rename, printprep, ocr, hub)
-Security:  20/20 ✅   (headers, traversal, secrets, net×12, storage, fuzz×3, xss)
+E2E:       16/16 ✅   (offline-PWA, exif, shrink, scan, esign, receipts, metadata,
+                      audio, invoice, rename, printprep, ocr, qr, hub)
+Security:  21/21 ✅   (headers, traversal, secrets, net×13, storage, fuzz×3, xss)
 Units:     30/30 ✅   (EXIF parser, EXIF fuzzing, WAV math, receipt totals)
-Mobile:    0px  ✅    (horizontal overflow, 390×844)
+Mobile:    0px  ✅    (horizontal overflow, 390×844, 5 pages)
+Lighthouse: 98–100 ✅ (perf / a11y / best-practices / SEO, all 13 pages)
 ```
 
 ---
@@ -237,8 +253,8 @@ npm run serve:dist   # serve dist/ with correct MIME types
 # full gate (needs playwright + fixtures):
 node scripts/make-fixtures.cjs
 node scripts/serve.cjs &      # serves dist/ on :5178
-node scripts/e2e.cjs          # 15 functional checks
-node scripts/security.cjs     # 20 security checks (serves itself on :5199)
+node scripts/e2e.cjs          # 16 functional checks
+node scripts/security.cjs     # 21 security checks (serves itself on :5199)
 node scripts/mobile-shot.cjs  # mobile overflow check
 ```
 
@@ -252,7 +268,9 @@ Test fixtures are generated in-repo by `scripts/make-fixtures.cjs` — the GPS-t
 - Social-ready: per-page Open Graph/Twitter cards, `sitemap.xml`, `robots.txt`
 - Zero UI frameworks; shared CSS design system in `src/styles.css`
 - `src/lib/exif.ts` — byte-level JPEG/TIFF EXIF parser + APP1 stripper (fuzz-tested)
-- pdf-lib for every PDF operation · Web Audio API + lamejs for audio · JSZip for archives · self-hosted Tesseract WASM for OCR
+- pdf-lib for every PDF operation · Web Audio API + lamejs for audio · JSZip for archives · self-hosted Tesseract WASM for OCR · qrcode-generator + jsQR for QR
+- Each tool ships its own Open Graph preview image (`og-<tool>.png`) — every page looks right when shared
+- **Lighthouse 98–100** on all 13 pages (performance, accessibility, best-practices, SEO)
 - Strict CSP on every response — `public/_headers` in production, the same policy asserted by the security suite
 
 ## License

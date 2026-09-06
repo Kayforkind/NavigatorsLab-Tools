@@ -1,7 +1,6 @@
 import { $, pickFiles, onDrop, download, status, fmtBytes, fmtDate, toast } from '../lib/dom';
 import { parseExif } from '../lib/exif';
 import { fileToImage } from '../lib/dom';
-import { PDFDocument, rgb } from 'pdf-lib';
 
 interface Row {
   file: File;
@@ -78,6 +77,7 @@ async function build(): Promise<void> {
   if (!rows.length) return;
   status(stat, 'Building PDF…', 'info');
   try {
+    const { PDFDocument, rgb } = await import('pdf-lib'); // lazy: keeps first paint fast
     const doc = await PDFDocument.create();
     const font = await doc.embedFont('Helvetica');
     const bold = await doc.embedFont('Helvetica-Bold');

@@ -13,9 +13,11 @@
     "serve:dist": "node scripts/serve.cjs"
   },
   "dependencies": {
+    "jsqr": "^1.4.0",
     "jszip": "^3.10.1",
     "lamejs": "1.2.1",
     "pdf-lib": "^1.17.1",
+    "qrcode-generator": "^2.0.4",
     "tesseract.js": "^5.1.1"
   },
   "devDependencies": {

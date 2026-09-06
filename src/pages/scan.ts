@@ -1,6 +1,5 @@
 import { $, pickFiles, onDrop, download, status, fmtBytes, fileToImage, canvasBlob, toast } from '../lib/dom';
 import { enhance, autoStraighten, canvasJpeg } from '../lib/canvasp';
-import { PDFDocument } from 'pdf-lib';
 
 const pages: HTMLCanvasElement[] = [];
 let idx = 0;
@@ -206,6 +205,7 @@ $('#png').addEventListener('click', async () => {
 async function exportPdf(): Promise<void> {
   if (!pages.length) return;
   status(stat, 'Building PDF…', 'info');
+  const { PDFDocument } = await import('pdf-lib'); // lazy
   const doc = await PDFDocument.create();
   for (let i = 0; i < pages.length; i++) {
     const jpg = await canvasJpeg(pages[i], 0.85);

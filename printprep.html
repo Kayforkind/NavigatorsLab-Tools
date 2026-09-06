@@ -9,12 +9,12 @@
   <meta property="og:title" content="Print-Shop Prep — NavigatorsLab Tools" />
   <meta property="og:description" content="Resize images to 4×6, 5×7, A4, Letter; add bleed; check DPI; export print-ready PDF. Free and private." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-printprep.png" />
   <meta property="og:url" content="https://navigatorslab.com/tools/printprep" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Print-Shop Prep — NavigatorsLab Tools" />
   <meta name="twitter:description" content="Resize images to 4×6, 5×7, A4, Letter; add bleed; check DPI; export print-ready PDF. Free and private." />
-  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-printprep.png" />
   <link rel="stylesheet" href="./src/styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>" />
 </head>
@@ -40,7 +40,7 @@
     <div class="panel">
       <div class="row">
         <label>Output size</label>
-        <select id="size">
+        <select id="size" aria-label="Output size">
           <option value="4x6">4 × 6 in (photo)</option>
           <option value="5x7">5 × 7 in (photo)</option>
           <option value="A4">A4 (210 × 297 mm)</option>
@@ -48,7 +48,7 @@
           <option value="SQUARE8">8 × 8 in (square)</option>
         </select>
         <label>Orientation</label>
-        <select id="orient">
+        <select id="orient" aria-label="Orientation">
           <option value="auto">auto</option>
           <option value="portrait">portrait</option>
           <option value="landscape">landscape</option>

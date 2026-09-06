@@ -9,12 +9,12 @@
   <meta property="og:title" content="Batch Rename & Sort — NavigatorsLab Tools" />
   <meta property="og:description" content="IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg. EXIF-date batch renaming, free and in-browser." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-rename.png" />
   <meta property="og:url" content="https://navigatorslab.com/tools/rename" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Batch Rename & Sort — NavigatorsLab Tools" />
   <meta name="twitter:description" content="IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg. EXIF-date batch renaming, free and in-browser." />
-  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-rename.png" />
   <link rel="stylesheet" href="./src/styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗂️</text></svg>" />
 </head>
@@ -41,20 +41,20 @@
     <div class="panel">
       <div class="row">
         <label>Pattern</label>
-        <select id="pat">
+        <select id="pat" aria-label="Naming pattern">
           <option value="{date}-{slug}">date-slug</option>
           <option value="{date}-{n}">date-number</option>
           <option value="{date} {slug}">date + original name</option>
           <option value="{n}-{slug}">number-slug</option>
         </select>
         <label>Slug from</label>
-        <select id="slugSrc">
+        <select id="slugSrc" aria-label="Slug source">
           <option value="orig">original name (cleaned)</option>
           <option value="fixed">fixed text</option>
         </select>
         <input type="text" id="slugText" placeholder="slug text" style="width:140px" hidden />
         <label>Date</label>
-        <select id="dateStyle">
+        <select id="dateStyle" aria-label="Date format">
           <option value="iso">2026-09-05</option>
           <option value="compact">20260905</option>
           <option value="month">2026-09</option>

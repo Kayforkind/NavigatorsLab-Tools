@@ -1,5 +1,4 @@
 import { $, download, status, toast } from '../lib/dom';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 interface Item { desc: string; qty: number; rate: number; }
 
@@ -32,8 +31,8 @@ function addItem(desc = '', qty = 1, rate = 0): void {
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td><input type="text" class="d" value="${desc.replace(/"/g, '&quot;')}" placeholder="What did you do?" style="width:100%" /></td>
-    <td><input type="number" class="q" value="${qty}" min="0" step="0.25" style="width:70px" /></td>
-    <td><input type="number" class="r" value="${rate}" min="0" step="0.01" style="width:95px" /></td>
+    <td><input type="number" class="q" aria-label="Quantity" value="${qty}" min="0" step="0.25" style="width:70px" /></td>
+    <td><input type="number" class="r" aria-label="Rate" value="${rate}" min="0" step="0.01" style="width:95px" /></td>
     <td><button class="danger" title="remove">✕</button></td>`;
   tr.querySelector('button')!.addEventListener('click', () => { tr.remove(); render(); });
   tr.querySelectorAll('input').forEach((i) => i.addEventListener('input', render));
@@ -184,6 +183,7 @@ function wrapText(ctx: CanvasRenderingContext2D, s: string, x: number, y: number
 async function exportPdf(): Promise<void> {
   try {
     const m = model();
+    const { PDFDocument, StandardFonts, rgb } = await import('pdf-lib'); // lazy: keeps first paint fast
     const doc = await PDFDocument.create();
     const font = await doc.embedFont(StandardFonts.Helvetica);
     const bold = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -250,7 +250,7 @@ async function exportPdf(): Promise<void> {
 
 function drawLines(
   page: import('pdf-lib').PDFPage, font: import('pdf-lib').PDFFont,
-  s: string, x: number, y: number, maxW: number, size: number, color: ReturnType<typeof rgb>,
+  s: string, x: number, y: number, maxW: number, size: number, color: import('pdf-lib').RGB,
 ): void {
   if (!s) return;
   const words = s.split(/\s+/);

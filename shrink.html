@@ -9,12 +9,12 @@
   <meta property="og:title" content="Image Shrinker — NavigatorsLab Tools" />
   <meta property="og:description" content="Compress images to a target file size, resize, and convert between JPG, PNG and WebP — entirely in your browser." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-shrink.png" />
   <meta property="og:url" content="https://navigatorslab.com/tools/shrink" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Image Shrinker — NavigatorsLab Tools" />
   <meta name="twitter:description" content="Compress images to a target file size, resize, and convert between JPG, PNG and WebP — entirely in your browser." />
-  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-shrink.png" />
   <link rel="stylesheet" href="./src/styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗜️</text></svg>" />
 </head>
@@ -40,15 +40,15 @@
     <div class="panel">
       <div class="row">
         <label>Mode</label>
-        <select id="mode">
+        <select id="mode" aria-label="Compression mode">
           <option value="target">Target file size</option>
           <option value="quality">Quality slider</option>
         </select>
         <span id="targetWrap" class="row tight">
-          <input type="number" id="targetKB" value="500" min="10" max="20000" step="10" style="width:110px" /> KB
+          <input type="number" id="targetKB" aria-label="Target size in kilobytes" value="500" min="10" max="20000" step="10" style="width:110px" /> KB
         </span>
         <span id="qualityWrap" class="row tight" hidden>
-          <input type="range" id="quality" min="10" max="95" value="80" style="width:160px" />
+          <input type="range" id="quality" aria-label="JPEG quality percent" min="10" max="95" value="80" style="width:160px" />
           <span id="qVal" class="mono">80%</span>
         </span>
       </div>
@@ -56,7 +56,7 @@
         <label>Max width</label>
         <input type="number" id="maxW" placeholder="original" min="16" style="width:110px" /> px
         <label>Format</label>
-        <select id="fmt">
+        <select id="fmt" aria-label="Output format">
           <option value="image/jpeg">JPG</option>
           <option value="image/webp">WebP (smaller)</option>
           <option value="image/png">PNG (lossless)</option>

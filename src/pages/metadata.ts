@@ -1,7 +1,6 @@
 import { $, pickFiles, onDrop, download, status, fmtBytes, fmtDate, toast } from '../lib/dom';
 import { parseExif, stripExif, exifSummary } from '../lib/exif';
 import { readOoxml, stripOoxml } from '../lib/ooxml';
-import { PDFDocument } from 'pdf-lib';
 
 interface Findings {
   file: File;
@@ -49,6 +48,7 @@ async function scan(files: File[]): Promise<void> {
     } else if (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) {
       row.kind = 'pdf';
       try {
+        const { PDFDocument } = await import('pdf-lib'); // lazy
         const doc = await PDFDocument.load(await f.arrayBuffer(), { ignoreEncryption: true });
         const t = doc.getTitle(), a = doc.getAuthor(), s = doc.getSubject();
         const cr = doc.getCreator(), pr = doc.getProducer();
@@ -113,6 +113,7 @@ function render(): void {
 async function clean(r: Findings): Promise<Blob> {
   if (r.kind === 'image-exif') return stripExif(r.file);
   if (r.kind === 'pdf') {
+    const { PDFDocument } = await import('pdf-lib'); // lazy
     const doc = await PDFDocument.load(await r.file.arrayBuffer(), { ignoreEncryption: true });
     doc.setTitle(''); doc.setAuthor(''); doc.setSubject(''); doc.setKeywords([]);
     doc.setProducer(''); doc.setCreator('');

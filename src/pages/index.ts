@@ -16,7 +16,7 @@ interface Tool {
 }
 
 const CATS: [string, string][] = [
-  ['all', 'All 11'],
+  ['all', 'All 12'],
   ['privacy', '🛡️ Privacy'],
   ['documents', '📄 Documents'],
   ['money', '🧾 Money'],
