@@ -1,3 +1,20 @@
+/* PWA file handling: when the OS opens images with NavigatorsLab Tools
+ * (installed app -> right-click a photo -> open with), consume them via launchQueue.
+ * Everything stays local, same as drag & drop. */
+if ('launchQueue' in window) {
+  (window as unknown as { launchQueue: { setConsumer: (cb: (params: { files: FileSystemFileHandle[] }) => void) => void } }).launchQueue.setConsumer(async ({ files }) => {
+    if (!files?.length) return;
+    const picked: File[] = [];
+    for (const h of files) {
+      try { picked.push(await h.getFile()); } catch { /* skip unreadable handle */ }
+    }
+    if (!picked.length) return;
+    const dt = new DataTransfer();
+    for (const f of picked) dt.items.add(f);
+    document.getElementById('dz')?.dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
+  });
+}
+
 import { $, pickFiles, onDrop, download, status, fmtBytes, toast } from '../lib/dom';
 import { parseExif, stripExif, exifSummary, type ExifData } from '../lib/exif';
 

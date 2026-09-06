@@ -15,7 +15,8 @@
   "dependencies": {
     "jszip": "^3.10.1",
     "lamejs": "1.2.1",
-    "pdf-lib": "^1.17.1"
+    "pdf-lib": "^1.17.1",
+    "tesseract.js": "^5.1.1"
   },
   "devDependencies": {
     "pdfjs-dist": "^4.10.38",

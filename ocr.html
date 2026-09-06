@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Receipt OCR → CSV — NavigatorsLab Tools</title>
+  <meta name="description" content="Run OCR on receipt photos entirely in your browser, extract totals and dates, export a CSV for expense tracking. No uploads." />
+  <meta name="theme-color" content="#0b0f17" />
+  <meta property="og:title" content="Receipt OCR → CSV — NavigatorsLab Tools" />
+  <meta property="og:description" content="Run OCR on receipt photos entirely in your browser, extract totals and dates, export a CSV for expense tracking. No uploads." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <meta property="og:url" content="https://navigatorslab.com/tools/ocr" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Receipt OCR → CSV — NavigatorsLab Tools" />
+  <meta name="twitter:description" content="Run OCR on receipt photos entirely in your browser, extract totals and dates, export a CSV for expense tracking. No uploads." />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-image.png" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>🔢 Receipt OCR → CSV</h1>
+    <p class="sub">
+      Photograph receipts all month; let this page read them. Tesseract runs <b>fully on-device</b>
+      (engine and English model are served from this site — the only network use is the one-time download of those files).
+      Dates come from EXIF when present; amounts are parsed line-by-line and <b>you confirm the total</b> before export.
+    </p>
+
+    <div class="drop" id="dz">
+      <span class="big">🧾</span>
+      <b>Drop receipt photos</b> or click to pick — JPG/PNG, any count
+    </div>
+
+    <div class="panel" id="enginePanel" hidden>
+      <div class="row">
+        <span id="engineStat" class="mono">Loading OCR engine…</span>
+      </div>
+    </div>
+
+    <div class="panel" id="resultsPanel" hidden>
+      <h2>Extracted expenses <span class="pill" id="rowCount"></span></h2>
+      <table class="tbl" id="tbl">
+        <thead><tr>
+          <th style="width:44px">✓</th><th>File</th><th>Date</th><th>Merchant (first line)</th><th>Detected total</th><th>Confidence</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="row">
+        <span class="grow" style="flex:1"></span>
+        <button class="primary" id="csv">⬇️ Export selected as CSV</button>
+      </div>
+      <p class="sub" style="font-size:12.5px; margin-bottom:0;">
+        OCR is imperfect on crumpled receipts — every row is editable, and the confidence column tells you which ones to double-check.
+      </p>
+    </div>
+
+    <div class="stat" id="stat" hidden></div>
+    <div id="list"></div>
+  </main>
+
+  <footer class="nl-foot">
+    <span class="lock">🔒 OCR runs on this device — receipt images are never uploaded anywhere</span>
+    <span>·</span><a href="./index.html">all tools</a>
+    <span>·</span><a href="https://github.com/Kayforkind/NavigatorsLab-Tools">source (MIT)</a>
+  </footer>
+
+  <script type="module" src="/src/pages/ocr.ts"></script>
+</body>
+</html>

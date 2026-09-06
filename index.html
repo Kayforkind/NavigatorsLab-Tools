@@ -3,22 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NavigatorsLab Tools — private, in-browser utilities</title>
-  <meta name="description" content="Ten free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads." />
+  <title>NavigatorsLab Tools — 11 private, in-browser utilities</title>
+  <meta name="description" content="Eleven free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, OCR expenses, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads." />
   <meta name="theme-color" content="#0b0f17" />
-  <meta property="og:title" content="NavigatorsLab Tools — private, in-browser utilities" />
-  <meta property="og:description" content="Ten free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads." />
+  <meta property="og:title" content="NavigatorsLab Tools — 11 private, in-browser utilities" />
+  <meta property="og:description" content="Eleven free tools that run entirely in your browser. No accounts. No uploads. Nothing retained." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://navigatorslab.com/tools/og-image.png" />
   <meta property="og:url" content="https://navigatorslab.com/tools/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="NavigatorsLab Tools — private, in-browser utilities" />
-  <meta name="twitter:description" content="Ten free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads." />
+  <meta name="twitter:title" content="NavigatorsLab Tools — 11 private, in-browser utilities" />
+  <meta name="twitter:description" content="Eleven free tools that run entirely in your browser. No accounts. No uploads. Nothing retained." />
   <meta name="twitter:image" content="https://navigatorslab.com/tools/og-image.png" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./src/styles.css" />
-  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 </head>
 <body>
   <header class="nl-top">
@@ -26,67 +25,87 @@
     <span class="tagline">free · open source · everything stays on your device</span>
     <span class="spacer"></span>
     <a class="plain" href="https://navigatorslab.com/">PDF Studio ↗</a>
+    <a class="plain" href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub ↗</a>
   </header>
 
-  <main class="wrap">
-    <h1>Tools that never phone home</h1>
-    <p class="sub">
-      Ten small, sharp utilities. <b>No accounts. No uploads. No watermarks.</b> Open the page, drop your file,
-      get the result — the file never leaves your device. <b>Free &amp; open source (MIT).</b>
-    </p>
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="hero-kicker"><span class="lock">🔒</span> No uploads · No accounts · Nothing retained</div>
+          <h1>Eleven tools that<br /><span>never phone home.</span></h1>
+          <p class="hero-sub">
+            Strip the GPS from vacation photos. Shrink a scan to hit a 2&nbsp;MB portal limit. Sign a lease at 11pm.
+            OCR a month of receipts. Every tool runs <b>inside this browser tab</b> — your files are processed by your
+            own device and never sent anywhere. <b>Free &amp; open source (MIT).</b>
+          </p>
+          <div class="hero-cta">
+            <a class="btn-hero primary" href="#tools">Browse the tools ↓</a>
+            <a class="btn-hero" href="https://github.com/Kayforkind/NavigatorsLab-Tools">★ Source on GitHub</a>
+            <button class="btn-hero" id="installBtn" hidden>📲 Install as app</button>
+          </div>
+          <div class="hero-proof">
+            <span>✓ Works offline (PWA)</span>
+            <span>✓ Verified by 15 automated browser tests</span>
+            <span>✓ Security-audited: zero network calls after load</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hv-card hv-1">🛡️ <span>GPS stripped</span><em>41.0000, 29.0000 → removed</em></div>
+          <div class="hv-card hv-2">🗜️ <span>16.0 MB → 297 KB</span><em>under a 300 KB target</em></div>
+          <div class="hv-card hv-3">✍️ <span>Signed &amp; flattened</span><em>lease.pdf · 6 KB</em></div>
+          <div class="hv-card hv-4">🔢 <span>$408.00 → expenses.csv</span><em>OCR on-device</em></div>
+        </div>
+      </div>
+    </section>
 
-    <div class="grid">
-      <a class="cards" href="./exif.html">
-        <div class="ico">🛡️</div>
-        <h3>Photo Privacy Kit</h3>
-        <p>Strip GPS, camera model and timestamps from photos before posting. Bulk, one click.</p>
-      </a>
-      <a class="cards" href="./shrink.html">
-        <div class="ico">🗜️</div>
-        <h3>Image Shrinker</h3>
-        <p>Hit “max 2 MB” portal limits: compress, resize, convert HEIC/JPG/PNG/WebP right in the tab.</p>
-      </a>
-      <a class="cards" href="./scan.html">
-        <div class="ico">📄</div>
-        <h3>Scan &amp; Screenshot Cleaner</h3>
-        <p>Crop, straighten, grayscale, boost contrast — phone photos of documents become clean PDFs.</p>
-      </a>
-      <a class="cards" href="./sign.html">
-        <div class="ico">✍️</div>
-        <h3>Local E-Sign Pad</h3>
-        <p>Draw or type a signature, place it on any PDF, flatten and download tonight's lease.</p>
-      </a>
-      <a class="cards" href="./receipts.html">
-        <div class="ico">🧾</div>
-        <h3>Receipts → One PDF</h3>
-        <p>Drop phone photos of receipts; sorted by date taken, stamped, exported as one dated PDF.</p>
-      </a>
-      <a class="cards" href="./metadata.html">
-        <div class="ico">🔍</div>
-        <h3>Metadata &amp; Hidden-Data Checker</h3>
-        <p>What's really inside this file? GPS, author fields, revision history — shown, then stripped.</p>
-      </a>
-      <a class="cards" href="./audio.html">
-        <div class="ico">🎧</div>
-        <h3>Audio Trimmer</h3>
-        <p>Cut a voice note or podcast clip on a waveform. Export WAV or MP3. No CloudConvert.</p>
-      </a>
-      <a class="cards" href="./invoice.html">
-        <div class="ico">🧮</div>
-        <h3>Invoice / Quote Generator</h3>
-        <p>Fill hours and rates, pick a template, download a clean PDF invoice. Built for one-person shops.</p>
-      </a>
-      <a class="cards" href="./rename.html">
-        <div class="ico">🗂️</div>
-        <h3>Batch Rename &amp; Sort</h3>
-        <p>IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg from EXIF dates. Zip and download.</p>
-      </a>
-      <a class="cards" href="./printprep.html">
-        <div class="ico">🖨️</div>
-        <h3>Print-Shop Prep</h3>
-        <p>Resize to 4×6/A4/Letter, add bleed, check DPI, export print-ready PDF or PNG.</p>
-      </a>
-    </div>
+    <section class="wrap" id="tools">
+      <div class="tools-head">
+        <h2>The toolbox</h2>
+        <input type="search" id="search" placeholder="Search — try “gps”, “2 mb”, “invoice”…" autocomplete="off" />
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="grid" id="grid"></div>
+      <p class="no-results" id="noResults" hidden>Nothing matches — try a different word.</p>
+    </section>
+
+    <section class="wrap">
+      <h2>Same files in, same files out — verified</h2>
+      <p class="sub" style="margin-bottom:18px">
+        Every release is gated by a browser automation suite that drops real files into each tool and checks the downloaded bytes.
+      </p>
+      <div class="ttable-wrap">
+        <table class="tbl ttable">
+          <thead><tr><th>Tool</th><th>Runs on</th><th>Network after load</th><th>Output verified by</th></tr></thead>
+          <tbody>
+            <tr><td>🛡️ Photo Privacy Kit</td><td>Byte-level EXIF parser</td><td class="ok">nothing</td><td>APP1-segment absence in output JPEG</td></tr>
+            <tr><td>🔍 Metadata Checker</td><td>EXIF + PDF + OOXML readers</td><td class="ok">nothing</td><td>Cleaned files re-inspected</td></tr>
+            <tr><td>🗜️ Image Shrinker</td><td>Canvas + binary search</td><td class="ok">nothing</td><td>297 KB ≤ 300 KB target</td></tr>
+            <tr><td>📄 Scan Cleaner</td><td>Canvas + pdf-lib</td><td class="ok">nothing</td><td>Page count in exported PDF</td></tr>
+            <tr><td>✍️ E-Sign Pad</td><td>pdf-lib (+ pdf.js preview)</td><td class="ok">nothing</td><td>Signature image in PDF resources</td></tr>
+            <tr><td>🧾 Receipts → PDF</td><td>EXIF + pdf-lib</td><td class="ok">nothing</td><td>3 stamped pages, correct order</td></tr>
+            <tr><td>🔢 Receipt OCR → CSV</td><td>Tesseract (self-hosted WASM)</td><td class="ok">nothing*</td><td>Line items parsed in CSV</td></tr>
+            <tr><td>🎧 Audio Trimmer</td><td>Web Audio + lamejs</td><td class="ok">nothing</td><td>WAV data-chunk = exact selection</td></tr>
+            <tr><td>🧮 Invoice Generator</td><td>Canvas + pdf-lib</td><td class="ok">nothing</td><td>$408.00 total in exported PDF</td></tr>
+            <tr><td>🗂️ Batch Rename</td><td>EXIF + JSZip</td><td class="ok">nothing</td><td>Renamed entries inside ZIP</td></tr>
+            <tr><td>🖨️ Print-Shop Prep</td><td>Canvas + pdf-lib</td><td class="ok">nothing</td><td>MediaBox = 306 pt (4.25 in)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="font-size:12.5px">* OCR downloads the Tesseract engine and English model from this same site on first use — after that it's cached and fully offline. No third party ever sees your images.</p>
+    </section>
+
+    <section class="privacy-strip">
+      <div>
+        <h2>Privacy isn't a promise here. It's the architecture.</h2>
+        <p>
+          These are static pages. There is <b>no server that could receive your files</b> — no upload endpoint, no queue,
+          no storage bucket, no analytics, no cookies, no accounts. We keep <b>no attachments and no user information</b>,
+          ever. Open devtools → Network, load any tool, and watch it stay silent after the initial load.
+        </p>
+        <p class="mono dim">CSP: default-src 'none' · script-src 'self' · connect-src 'self' · no third-party origins, ever</p>
+      </div>
+    </section>
   </main>
 
   <footer class="nl-foot">
@@ -97,6 +116,8 @@
     <a href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub</a>
     <span>·</span>
     <a href="https://navigatorslab.com/">PDF Studio</a>
+    <span>·</span>
+    <a href="./sitemap.xml">Sitemap</a>
   </footer>
   <script type="module" src="/src/pages/index.ts"></script>
 </body>

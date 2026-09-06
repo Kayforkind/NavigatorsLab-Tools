@@ -13,12 +13,18 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icon.svg', 'og-image.png', 'robots.txt', 'sitemap.xml', 'lamejs/lame.min.js'],
+      includeAssets: [
+        'favicon.svg', 'icon.svg', 'og-image.png', 'robots.txt', 'sitemap.xml',
+        'tools.json', 'lamejs/lame.min.js', 'tess/worker.min.js',
+        'tess/tesseract-core-lstm.wasm.js', 'tess/tesseract-core-lstm.wasm',
+        'tess/tesseract-core-simd-lstm.wasm.js', 'tess/tesseract-core-simd-lstm.wasm',
+        'tessdata/eng.traineddata.gz',
+      ],
       manifest: {
         name: 'NavigatorsLab Tools — private, in-browser utilities',
         short_name: 'NL Tools',
         description:
-          'Ten free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads.',
+          'Eleven free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, merge receipts, OCR expenses, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads.',
         theme_color: '#0b0f17',
         background_color: '#0b0f17',
         display: 'standalone',
@@ -29,11 +35,23 @@ export default defineConfig({
           { src: './pwa-512.png', sizes: '512x512', type: 'image/png' },
           { src: './pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
+        // supporting OSes can offer "open with → NavigatorsLab Tools" for images;
+        // exif.html consumes them via launchQueue (all processing stays local)
+        file_handlers: [
+          {
+            action: './exif.html',
+            accept: {
+              'image/jpeg': ['.jpg', '.jpeg'],
+              'image/png': ['.png'],
+              'image/webp': ['.webp'],
+            },
+          },
+        ],
       },
       workbox: {
         // precache every page + asset so all tools work fully offline after first load
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,webmanifest}'],
-        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,webmanifest,json,gz,wasm}'],
+        maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
         navigateFallback: 'index.html',
         runtimeCaching: [
           {
@@ -59,6 +77,7 @@ export default defineConfig({
         invoice: resolve(__dirname, 'invoice.html'),
         rename: resolve(__dirname, 'rename.html'),
         printprep: resolve(__dirname, 'printprep.html'),
+        ocr: resolve(__dirname, 'ocr.html'),
       },
     },
   },

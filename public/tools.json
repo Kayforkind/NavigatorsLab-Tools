@@ -1,0 +1,101 @@
+[
+  {
+    "id": "exif",
+    "icon": "🛡️",
+    "name": "Photo Privacy Kit",
+    "tagline": "Strip GPS, camera model and timestamps before posting",
+    "detail": "Vacation pics leak your home address. Drop photos in, see exactly what leaks, download clean copies — bulk, zero re-compression.",
+    "category": "privacy",
+    "keywords": "exif gps metadata photo privacy strip location camera vacation"
+  },
+  {
+    "id": "metadata",
+    "icon": "🔍",
+    "name": "Metadata & Hidden-Data Checker",
+    "tagline": "See what's really inside a file — then strip it",
+    "detail": "Photo GPS, PDF author fields, Word revision history, company names, editing time. Shown first, stripped second.",
+    "category": "privacy",
+    "keywords": "metadata hidden data docx xlsx pdf author company inspect ooxml"
+  },
+  {
+    "id": "shrink",
+    "icon": "🗜️",
+    "name": "Image Shrinker",
+    "tagline": "Hit “max 2 MB” portal limits without TinyPNG",
+    "detail": "Binary-searches quality until your image lands under an exact target size. Resize and convert JPG/PNG/WebP.",
+    "category": "images",
+    "keywords": "compress shrink resize convert jpeg png webp target size email"
+  },
+  {
+    "id": "scan",
+    "icon": "📄",
+    "name": "Scan & Screenshot Cleaner",
+    "tagline": "Phone photos of documents → clean, straight PDFs",
+    "detail": "Auto-straighten, crop, grayscale, contrast. Stack pages and export one PDF — no scanner needed.",
+    "category": "documents",
+    "keywords": "scan document straighten deskew crop grayscale pdf screenshot"
+  },
+  {
+    "id": "sign",
+    "icon": "✍️",
+    "name": "Local E-Sign Pad",
+    "tagline": "Sign this lease tonight — not DocuSign",
+    "detail": "Draw or type a signature, click where it lands on any PDF, flatten, download. Zero uploads.",
+    "category": "documents",
+    "keywords": "signature sign pdf sign flatten lease contract draw"
+  },
+  {
+    "id": "receipts",
+    "icon": "🧾",
+    "name": "Receipts → One PDF",
+    "tagline": "Shoebox of receipt photos → one date-sorted PDF",
+    "detail": "Sorted by EXIF date taken, each page stamped with date and filename. Freelancers and landlords: weekly chore, gone.",
+    "category": "money",
+    "keywords": "receipts pdf expenses sort dates bookkeeping landlord freelancer"
+  },
+  {
+    "id": "ocr",
+    "icon": "🔢",
+    "name": "Receipt OCR → CSV",
+    "tagline": "Read totals off receipt photos, export for expenses",
+    "detail": "On-device Tesseract (engine served from this site), EXIF dates, per-receipt confidence, editable amounts, CSV export.",
+    "category": "money",
+    "keywords": "ocr receipt totals csv expenses tracking tesseract scan amounts"
+  },
+  {
+    "id": "audio",
+    "icon": "🎧",
+    "name": "Audio Trimmer",
+    "tagline": "Cut voice notes and clips on a waveform",
+    "detail": "Drag region handles, add fades, export WAV or MP3 — all decoded and encoded in your tab.",
+    "category": "media",
+    "keywords": "audio trim cut waveform voice podcast mp3 wav clip"
+  },
+  {
+    "id": "invoice",
+    "icon": "🧮",
+    "name": "Invoice / Quote Generator",
+    "tagline": "One-person shops: hours in, clean PDF out",
+    "detail": "Live preview mirrors the PDF exactly. Tax, discount, line items, two templates, five currencies.",
+    "category": "money",
+    "keywords": "invoice quote billing pdf freelance tax hours template"
+  },
+  {
+    "id": "rename",
+    "icon": "🗂️",
+    "name": "Batch Rename & Sort",
+    "tagline": "IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg",
+    "detail": "Dates from EXIF shutter time, patterns, slugs, collision-safe. Ships a renamed ZIP.",
+    "category": "files",
+    "keywords": "rename batch exif date organize files photos sort zip"
+  },
+  {
+    "id": "printprep",
+    "icon": "🖨️",
+    "name": "Print-Shop Prep",
+    "tagline": "Exact sizes, bleed, DPI checks, print-ready PDF",
+    "detail": "4×6 to A4 at true 300 DPI, warns before you pay for a blurry print, MediaBox at exact physical size.",
+    "category": "images",
+    "keywords": "print bleed dpi 4x6 a4 letter resize photo shop 300dpi"
+  }
+]

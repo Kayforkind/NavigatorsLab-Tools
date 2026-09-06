@@ -18,8 +18,23 @@ function resolvePlaywright() {
 const { chromium } = resolvePlaywright();
 
 const BASE = 'http://localhost:5178';
-const FX = (f) => path.resolve(__dirname, '..', 'dev-assets', f);
-const SHOTS = path.resolve(__dirname, '..', 'docs', 'shots');
+const ROOT = path.resolve(__dirname, '..');
+const FX = (f) => path.join(ROOT, 'dev-assets', f);
+const SHOTS = path.join(ROOT, 'docs', 'shots');
+
+/* stage fixtures into dist/fx (a fresh build wipes them) */
+{
+  const src = path.join(ROOT, 'dev-assets');
+  const dst = path.join(ROOT, 'dist', 'fx');
+  if (fs.existsSync(src)) {
+    fs.mkdirSync(dst, { recursive: true });
+    for (const f of fs.readdirSync(src)) fs.copyFileSync(path.join(src, f), path.join(dst, f));
+    console.log(`fixtures staged: ${fs.readdirSync(dst).join(', ')}`);
+  } else {
+    console.error('dev-assets missing — run: node scripts/make-fixtures.cjs');
+    process.exit(2);
+  }
+}
 
 const results = [];
 function report(tool, ok, detail) {
@@ -357,12 +372,45 @@ async function setFiles(page, files) {
     await page.screenshot({ path: path.join(SHOTS, '10-printprep.png') });
   });
 
+  /* ---------- 11. Receipt OCR → CSV ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/ocr.html`);
+    // feed a receipt fixture directly through the drop zone (OCR engine loads from same origin)
+    await page.evaluate(async (name) => {
+      const res = await fetch(`/fx/${name}`);
+      const blob = await res.blob();
+      const file = new File([blob], name, { type: 'image/jpeg' });
+      const dt = new DataTransfer(); dt.items.add(file);
+      document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
+    }, 'receipt-1.jpg');
+    // engine load + first recognize can take a while on CI hardware
+    await page.waitForFunction(() => {
+      const st = document.querySelector('#stat')?.textContent || '';
+      return st.includes('total') || st.includes('detected') || st.includes('Could not');
+    }, { timeout: 120000 });
+    const stat = (await page.textContent('#stat')).trim();
+    const done = stat.includes('total') || stat.includes('detected');
+    if (!done) {
+      report('ocr', false, 'engine failed: ' + stat.slice(0, 90));
+      return;
+    }
+    // wait for the results table, then export the CSV
+    await page.waitForFunction(() => !document.getElementById('resultsPanel').hidden, { timeout: 15000 });
+    const rowCount = await page.locator('#tbl tbody tr').count();
+    const dl = await grabDownload(page, () => page.click('#csv'));
+    const csv = dl.bytes.toString('utf8');
+    const headerOk = csv.startsWith('date,merchant,amount,file,ocr_confidence');
+    report('ocr', headerOk && rowCount === 1, `expenses.csv (${dl.bytes.length}B, header=${headerOk}), ${rowCount} receipt row, engine loaded from same origin`);
+    await page.screenshot({ path: path.join(SHOTS, '13-ocr.png') });
+  });
+
   /* ---------- hub ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
-    const cards = await page.locator('.cards').count();
+    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 11, { timeout: 15000 });
+    const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', cards === 10, `10 tool cards on the hub page`);
+    report('hub', cards === 11, `${cards} tool cards on the redesigned hub (tools.json-driven)`);
   });
 
   const failed = results.filter((r) => !r.ok);

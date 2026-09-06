@@ -15,9 +15,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Dependency audit (prod)
+        run: npm audit --omit=dev
       - name: Typecheck
         run: npm run typecheck
-      - name: Unit tests
+      - name: Unit tests (incl. EXIF fuzzing)
         run: npm test
       - name: Build
         run: npm run build
@@ -27,11 +29,13 @@ jobs:
           npx playwright install chromium --with-deps
       - name: Generate test fixtures
         run: node scripts/make-fixtures.cjs
-      - name: E2E (all 10 tools, byte-validated)
+      - name: E2E (all 11 tools, byte-validated)
         run: |
           node scripts/serve.cjs &
           sleep 2
           node scripts/e2e.cjs
+      - name: Security suite (network silence, exfil, storage, fuzz, headers, secrets)
+        run: node scripts/security.cjs
       - name: Mobile overflow check
         run: node scripts/mobile-shot.cjs
       - uses: actions/upload-artifact@v4

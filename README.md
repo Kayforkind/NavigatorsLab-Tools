@@ -1,38 +1,55 @@
 # 🧭 NavigatorsLab Tools
 
+<div align="center">
+
+<img src="docs/banner.png" alt="NavigatorsLab Tools — eleven private, in-browser utilities" width="800" />
+
+**By NavigatorsLab** · free & open source · nothing you drop in ever leaves your device
+
 [![CI](https://github.com/Kayforkind/NavigatorsLab-Tools/actions/workflows/ci.yml/badge.svg)](https://github.com/Kayforkind/NavigatorsLab-Tools/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3fb27f.svg)](LICENSE)
+[![Live site](https://img.shields.io/badge/live-navigatorslab.com%2Ftools-4f8dd9.svg)](https://navigatorslab.com/tools/)
+![No uploads](https://img.shields.io/badge/uploads-none-red.svg)
+![Offline ready](https://img.shields.io/badge/offline-ready-8a6fd1.svg)
 
-**Ten free, open-source tools that run 100% in your browser.** No accounts. No uploads. No watermarks. No limits.
-We do **not** keep attachments, files, or user information — nothing you drop into a tool is ever sent to a server, stored, or logged. Your files stay on your device, processed by your own browser.
+**Eleven tools. Zero uploads. Zero accounts. Zero telemetry.**
 
-**Live suite → https://navigatorslab.com/tools/**
-
-| | Tool | What it solves |
-|---|------|----------------|
-| 🛡️ | [Photo Privacy Kit](#-photo-privacy-kit) | Strip GPS, camera model and timestamps before posting |
-| 🗜️ | [Image Shrinker](#-image-shrinker) | Hit "this portal only accepts 2 MB" limits without TinyPNG |
-| 📄 | [Scan & Screenshot Cleaner](#-scan--screenshot-cleaner) | Phone photos of documents → clean, straight PDFs |
-| ✍️ | [Local E-Sign Pad](#-local-e-sign-pad) | Draw or type a signature, stamp it on a PDF, flatten, done |
-| 🧾 | [Receipts → One PDF](#-receipts--one-pdf) | Shoebox of receipt photos → one date-sorted PDF |
-| 🔍 | [Metadata & Hidden-Data Checker](#-metadata--hidden-data-checker) | See what's really inside a file — then strip it |
-| 🎧 | [Audio Trimmer](#-audio-trimmer) | Cut voice notes and clips on a waveform → WAV/MP3 |
-| 🧮 | [Invoice / Quote Generator](#-invoice--quote-generator) | One-person shops: hours in, clean PDF invoice out |
-| 🗂️ | [Batch Rename & Sort](#-batch-rename--sort) | `IMG_5847.jpg` → `2026-09-05-receipt-home-depot.jpg` |
-| 🖨️ | [Print-Shop Prep](#-print-shop-prep) | Exact sizes, bleed, DPI checks, print-ready PDF |
-
-Companion project: **[PDF Studio](https://github.com/Kayforkind/NavigatorsLab-PDF-Studio)** — the full in-browser PDF editor (edit PDF text in place, OCR, forms, AI).
+</div>
 
 ---
 
-## The privacy model is the architecture, not a promise
+## The toolbox
 
-Every tool is a static page with client-side JavaScript. There is no backend to receive your files. Open your browser's network tab while using any tool and watch it stay silent after load. Concretely:
+| | Tool | The problem it kills | Verified in CI |
+|---|------|----------------------|----------------|
+| 🛡️ | [**Photo Privacy Kit**](#️-photo-privacy-kit) | Vacation photos that leak your GPS location | APP1 segment absent in output JPEG |
+| 🔍 | [**Metadata Checker**](#-metadata--hidden-data-checker) | Word/PDF files that remember every author | `docx` author shown, then stripped |
+| 🗜️ | [**Image Shrinker**](#️-image-shrinker) | "This portal only accepts 2 MB" | 16 MB → 294 KB under a 300 KB target |
+| 📄 | [**Scan & Screenshot Cleaner**](#-scan--screenshot-cleaner) | Crooked phone photos of documents | 2-page straight PDF out |
+| ✍️ | [**Local E-Sign Pad**](#️-local-e-sign-pad) | "Just sign and send it back" at 11pm | Flattened signature inside the PDF |
+| 🧾 | [**Receipts → One PDF**](#-receipts--one-pdf) | A shoebox of receipts at tax time | 3 pages, EXIF date order |
+| 🔢 | [**Receipt OCR → CSV**](#-receipt-ocr--csv) | Expense-tracking data entry | Same-origin engine, CSV out |
+| 🎧 | [**Audio Trimmer**](#-audio-trimmer) | Cutting clips without uploading them | WAV data chunk = exact 1.000 s |
+| 🧮 | [**Invoice Generator**](#-invoice--quote-generator) | Monthly fees for "text on a PDF" | $408.00 total in exported PDF |
+| 🗂️ | [**Batch Rename & Sort**](#️-batch-rename--sort) | `IMG_5847.jpg` forever | `2026-09-05-home-depot.jpg` in ZIP |
+| 🖨️ | [**Print-Shop Prep**](#️-print-shop-prep) | Bleed? DPI? What the shop actually needs | MediaBox = 306 pt (4.25 in) |
+
+Every "Verified" cell is asserted by an automated browser test on every push — see [the security & verification gate](#-security--verification-gate).
+
+Companion project: **[PDF Studio](https://github.com/Kayforkind/NavigatorsLab-PDF-Studio)** — the full in-browser PDF editor (edit PDF text in place, OCR, forms, redaction).
+
+---
+
+## Privacy is the architecture, not a promise
+
+These are static pages. There is **no server that could receive your files** — no upload endpoint, no queue, no storage bucket, no analytics, no cookies, no accounts. We keep **no attachments and no user information**, ever. What you drop in is processed by your own device and forgotten when you close the tab.
 
 - ❌ **No attachments kept** — files never leave your machine; nothing is transmitted, retained, or backed up
-- ❌ **No user information kept** — no accounts, no emails, no cookies for tracking, no analytics, no fingerprinting
-- ❌ No server-side processing, no queues, no "your file was deleted after 1 hour" fine print (there is nothing to delete)
-- ✅ **Works fully offline** — it's a PWA: after one visit, every tool loads and functions with the network off (verified by an automated test that disables connectivity and runs a tool)
-- ✅ MIT licensed · ✅ free forever, no premium tier
+- ❌ **No user information kept** — no accounts, no emails, no tracking cookies, no analytics, no fingerprinting
+- ✅ **Free to use, open source (MIT)** — no premium tier, no watermarks, no file-size limits
+- ✅ **Works fully offline** — PWA precaches every page and engine (including the 24 MB OCR model); verified by a test that disables the network and runs a tool
+
+Open devtools → Network while using any tool and watch it stay silent after load. Or don't take our word for it — the test suite asserts it on every release.
 
 ---
 
@@ -42,13 +59,24 @@ Every tool is a static page with client-side JavaScript. There is no backend to 
 
 **How it works:** drop one or a hundred photos. Each is scanned locally with a byte-level EXIF parser that reads the JPEG APP1 segment; GPS coordinates are decoded from degrees-minutes-seconds rationals, camera and dates from the IFD chains. Stripping rewrites the JPEG by removing every APP1 Exif segment while keeping the image data byte-identical — no re-encode, zero quality loss.
 
-**Verified example (this exact run):** a fixture photo tagged at 41.0°N 29.0°E with camera "NavCam Pixel 99" was scanned → GPS leak flagged → stripped → the 67.9 KB output JPEG contains no APP1 segment at all.
+**Verified example (this exact run):** a fixture photo tagged at 41.0°N 29.0°E with camera "NavCam Pixel 99" was scanned → GPS leak flagged → stripped → the output JPEG contains no APP1 segment at all.
 
 ![Photo Privacy Kit](docs/shots/01-privacy-kit.png)
 
 - Bulk: drop the whole camera folder, get one ZIP of clean copies
 - GPS detected? The file is flagged red before you export anything
 - Non-JPEG formats pass through untouched (no wasteful re-compression)
+- Installed as an app? Right-click any photo on your desktop → *Open with → NavigatorsLab Tools* — it lands straight in the privacy kit
+
+## 🔍 Metadata & Hidden-Data Checker
+
+**The problem:** files carry more than you think — Word documents remember every author and revision, spreadsheets remember the company name and total editing time, photos remember where you stood.
+
+**How it works:** three parsers run locally — the JPEG EXIF reader, pdf-lib's info dictionary (Title/Author/Subject/Keywords/Creator/Producer/dates), and an OOXML reader that unzips `.docx/.xlsx/.pptx` in memory and reads `docProps/core.xml` + `app.xml`. Stripping rewrites what's safe: PDF info fields are blanked via pdf-lib re-save; OOXML core/app properties are emptied and re-zipped, leaving document content byte-faithful.
+
+**Verified example:** a fixture `.docx` authored by "J. Hidden", last modified by "Editor Person", at company "Stealth Co" with 240 editing minutes — all shown in the UI; the GPS fixture photo showed `GPS 41.000000, 29.000000`. Stripped downloads were produced for both.
+
+![Metadata Checker](docs/shots/06-metadata.png)
 
 ## 🗜️ Image Shrinker
 
@@ -56,7 +84,7 @@ Every tool is a static page with client-side JavaScript. There is no backend to 
 
 **How it works:** the image is decoded in your browser to canvas pixels, optionally downscaled to your max width, then binary-searched across JPEG/WebP quality levels — 8 iterations of encode-and-measure — until the output lands **under your exact target size**. PNG (lossless, no quality knob) is handled by progressive downscaling until it fits.
 
-**Verified example:** a ~16 MB 4000×3000 PNG was compressed to a **297 KB JPEG under a 300 KB target**, downloaded as `big-photo-shrunk.jpg`.
+**Verified example:** a ~16 MB 4000×3000 PNG was compressed to a **294 KB JPEG under a 300 KB target**, downloaded as `big-photo-shrunk.jpg`.
 
 ![Image Shrinker](docs/shots/02-shrinker.png)
 
@@ -68,9 +96,9 @@ Every tool is a static page with client-side JavaScript. There is no backend to 
 
 **The problem:** you photographed a 3-page contract with your phone. It's crooked, grayish, and 8 MB per page.
 
-**How it works:** each photo becomes a canvas page. Auto-straighten estimates skew by correlating column darkness profiles across a ±4° search and rotates to cancel it. Grayscale uses proper luma weights (0.299/0.587/0.114); contrast uses the classic factor formula. Pages stack into a single PDF at ~150 DPI via pdf-lib — text stays selectable-image-free, pages sized to the content.
+**How it works:** each photo becomes a canvas page. Auto-straighten estimates skew by correlating column darkness profiles across a ±4° search and rotates to cancel it. Grayscale uses proper luma weights (0.299/0.587/0.114); contrast uses the classic factor formula. Pages stack into a single PDF at ~150 DPI via pdf-lib — pages sized to the content.
 
-**Verified example:** two receipt photos → grayscale + contrast 40 applied → exported as a **2-page 33 KB PDF**.
+**Verified example:** two receipt photos → grayscale + contrast 40 applied → exported as a **2-page 70 KB PDF**.
 
 ![Scan Cleaner](docs/shots/03-scan-cleaner.png)
 
@@ -98,19 +126,23 @@ Every tool is a static page with client-side JavaScript. There is no backend to 
 
 **How it works:** every dropped photo's capture date is read from EXIF `DateTimeOriginal` (the real date taken — not the copy date), falling back to the file modification date. Rows sort oldest→newest and can be nudged manually. Export builds one PDF with each receipt fitted to the page (A4/Letter), stamped with its date and original filename — auditable without opening the photos again.
 
-**Verified example:** three receipts dropped in shuffled order (3, 1, 2) exported as a **3-page 80 KB PDF, correctly ordered**, each page stamped `9/5/2026 · receipt-N.jpg`.
+**Verified example:** three receipts dropped in shuffled order (3, 1, 2) exported as a **3-page 108 KB PDF, correctly ordered**, each page stamped with its date and filename.
 
 ![Receipts to PDF](docs/shots/05-receipts.png)
 
-## 🔍 Metadata & Hidden-Data Checker
+## 🔢 Receipt OCR → CSV
 
-**The problem:** files carry more than you think — Word documents remember every author and revision, spreadsheets remember the company name and total editing time, photos remember where you stood.
+**The problem:** expense tracking dies at data entry. Twelve paper receipts, one spreadsheet, zero motivation.
 
-**How it works:** three parsers run locally — the JPEG EXIF reader, pdf-lib's info dictionary (Title/Author/Subject/Keywords/Creator/Producer/dates), and an OOXML reader that unzips `.docx/.xlsx/.pptx` in memory and reads `docProps/core.xml` + `app.xml`. Stripping rewrites what's safe: PDF info fields are blanked via pdf-lib re-save; OOXML core/app properties are emptied and re-zipped, leaving document content byte-faithful.
+**How it works:** the Tesseract OCR engine (WASM build) runs **inside your browser** — engine, WASM core and English model are served from this same site and precached by the service worker, so after the first visit it works fully offline. Each receipt photo is recognized on-device, and a domain parser picks the merchant (first meaningful line) and the most plausible total from candidates like `TOTAL $23.98` and `AMOUNT DUE`. EXIF `DateTimeOriginal` provides the expense date; every row shows its OCR confidence and stays editable before you export.
 
-**Verified example:** a fixture `.docx` authored by "J. Hidden", last modified by "Editor Person", at company "Stealth Co" with 240 editing minutes — all shown in the UI; the GPS fixture photo showed `GPS 41.000000, 29.000000`. Stripped downloads were produced for both.
+**Verified example:** a receipt fixture was recognized entirely locally → `expenses.csv` exported with the correct header (`date,merchant,amount,file,ocr_confidence`) and one editable row — no byte ever left the browser.
 
-![Metadata Checker](docs/shots/06-metadata.png)
+![Receipt OCR](docs/shots/13-ocr.png)
+
+- Confidence badges (green ≥80%, amber ≥55%) show which rows deserve a human glance
+- Amounts are editable in the table before export — OCR proposes, you decide
+- CSV opens directly in Excel, Numbers, Google Sheets, or any accounting import
 
 ## 🎧 Audio Trimmer
 
@@ -159,9 +191,36 @@ Every tool is a static page with client-side JavaScript. There is no backend to 
 
 ## Works on your phone
 
-The suite is fully responsive — verified at a 390×844 mobile viewport with **zero horizontal overflow**:
+The suite is fully responsive — the redesigned hub and every tool verified at a 390×844 mobile viewport with **zero horizontal overflow**:
 
 ![Mobile](docs/shots/11-mobile-hub.png)
+
+---
+
+## 🔐 Security & verification gate
+
+Every push runs a **35-check automated gate** in GitHub Actions before anything ships:
+
+**Functional (15 checks)** — Playwright drives every tool with real files and validates the downloaded bytes: page counts via pdf-lib, WAV data-chunk math against the header's own sample rate, APP1 absence in stripped JPEGs, MediaBox points, invoice totals, CSV structure, ZIP entries.
+
+**Security (20 checks)** — `scripts/security.cjs`:
+
+- **Network silence** — on every page, zero requests to any non-self origin, at load and idle
+- **Exfil scan** — no non-GET request (fetch/POST/beacon) is even attempted
+- **Storage hygiene** — no cookies ever; localStorage limited to recents, the invoice draft, and SW cache keys
+- **Malicious inputs** — garbage "JPEG"s, corrupt ZIP/DOCX, malformed PDFs, and `<img onerror>`-payload filenames are dropped into the tools; nothing crashes, nothing executes
+- **Parser fuzzing** — 14 property-based tests hammer the EXIF parser with random buffers and adversarial TIFF offsets (`0x7fffffff`, lying lengths, out-of-bounds IFD pointers); it never throws
+- **Headers** — a strict CSP (`default-src 'none'`, no third-party origins, `frame-ancestors 'none'`) plus HSTS, nosniff, no-referrer, and a locked-down Permissions-Policy, delivered on every page
+- **Secrets scan** — every shipped file checked against key/token patterns
+- **Dependency audit** — `npm audit` on production dependencies (currently **0 vulnerabilities**)
+
+```text
+E2E:       15/15 ✅   (offline-PWA, exif, shrink, scan, esign, receipts,
+                      metadata, audio, invoice, rename, printprep, ocr, hub)
+Security:  20/20 ✅   (headers, traversal, secrets, net×12, storage, fuzz×3, xss)
+Units:     30/30 ✅   (EXIF parser, EXIF fuzzing, WAV math, receipt totals)
+Mobile:    0px  ✅    (horizontal overflow, 390×844)
+```
 
 ---
 
@@ -169,26 +228,39 @@ The suite is fully responsive — verified at a 390×844 mobile viewport with **
 
 ```bash
 npm install
-npm run dev          # http://localhost:5177 — the hub with all 10 tools
-npm test             # unit tests (EXIF byte-level parser, WAV encoder math)
+npm run dev          # http://localhost:5177 — the hub with all 11 tools
+npm test             # unit tests incl. EXIF fuzzing
 npm run typecheck    # strict TypeScript
 npm run build        # static build in dist/ — deployable anywhere
+npm run serve:dist   # serve dist/ with correct MIME types
+
+# full gate (needs playwright + fixtures):
+node scripts/make-fixtures.cjs
+node scripts/serve.cjs &      # serves dist/ on :5178
+node scripts/e2e.cjs          # 15 functional checks
+node scripts/security.cjs     # 20 security checks (serves itself on :5199)
+node scripts/mobile-shot.cjs  # mobile overflow check
 ```
 
-The full acceptance suite (`scripts/e2e.cjs`, Playwright) drives every tool in a real browser with real files and validates the downloaded bytes — **14/14 checks green**, and the same suite runs as a **GitHub Actions CI gate on every push** (typecheck → unit tests → build → E2E → mobile overflow check). Test fixtures are generated in-repo by `scripts/make-fixtures.cjs` (no Python, no network): the GPS-tagged JPEG is spliced byte-by-byte and independently confirmed by an external EXIF parser. Screenshots in `docs/shots/` are captured by the same scripts, so the documentation above can be regenerated from the code at any time.
+Test fixtures are generated in-repo by `scripts/make-fixtures.cjs` — the GPS-tagged JPEG is spliced byte-by-byte and independently confirmed by an external EXIF parser; the sample PDF is built with pdf-lib. No Python, no network, no hand-placed files. Screenshots in `docs/shots/` are captured by the same scripts, so this documentation can be regenerated from the code at any time.
 
 ## Stack & structure
 
 - Vite multi-page app — one `dist/` serves the site root, `/tools/`, and GitHub Pages subpaths (relative base)
-- **PWA**: manifest + Workbox precache of every page and asset; all ten tools work offline after first load
+- **PWA**: Workbox precache of every page, asset, and engine — all eleven tools work offline after first load; images can be opened straight from the OS via `file_handlers`
+- Hub rendered from a single `public/tools.json` (one source of truth for names, taglines, categories)
 - Social-ready: per-page Open Graph/Twitter cards, `sitemap.xml`, `robots.txt`
 - Zero UI frameworks; shared CSS design system in `src/styles.css`
-- `src/lib/exif.ts` — byte-level JPEG/TIFF EXIF parser + APP1 stripper (unit-tested against synthetic JPEGs)
-- pdf-lib for every PDF operation · Web Audio API + lamejs for audio · JSZip for archives
-- No PWA/service worker needed — the pages are already static; cache headers do the rest
+- `src/lib/exif.ts` — byte-level JPEG/TIFF EXIF parser + APP1 stripper (fuzz-tested)
+- pdf-lib for every PDF operation · Web Audio API + lamejs for audio · JSZip for archives · self-hosted Tesseract WASM for OCR
+- Strict CSP on every response — `public/_headers` in production, the same policy asserted by the security suite
 
 ## License
 
 MIT. Use it, fork it, self-host it. If it saves you a subscription, tell someone where you got it.
 
 **NavigatorsLab** — local-first, private-by-default software. [PDF Studio](https://github.com/Kayforkind/NavigatorsLab-PDF-Studio) · [navigatorslab.com](https://navigatorslab.com/)
+
+<div align="center">
+<sub>No accounts. No uploads. No telemetry. Just tools that respect you.</sub>
+</div>
