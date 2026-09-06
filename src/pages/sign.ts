@@ -1,6 +1,6 @@
 import { $, pickFiles, onDrop, download, status, toast } from '../lib/dom';
 import { PDFDocument } from 'pdf-lib';
-import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 
 /* ---------- signature pad ---------- */
 const mode = $('#mode') as HTMLSelectElement;
@@ -146,7 +146,8 @@ async function loadPdf(f: File): Promise<void> {
 
 async function renderPages(): Promise<void> {
   if (!pdfBytes) return;
-  const pdfjs = await import('pdfjs-dist');
+  // legacy build: works in more environments (headless CI, older browsers)
+  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
   const task = pdfjs.getDocument({ data: pdfBytes.slice(0) });
   const pdf = await task.promise;
