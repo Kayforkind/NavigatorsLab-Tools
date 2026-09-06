@@ -1,0 +1,16 @@
+// Cloudflare deployment for https://navigatorslab.com/tools/
+// Usage: npm run build, then stage dist/ under deploy/tools/ and copy this
+// file to deploy/wrangler.jsonc (assets.directory is relative to it):
+//   mkdir -p deploy && cp -r dist deploy/tools && cp wrangler.tools.jsonc deploy/wrangler.jsonc
+//   cd deploy && npx wrangler deploy
+{
+  "name": "navigatorslab-tools",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "."
+  },
+  "routes": [
+    { "pattern": "navigatorslab.com/tools", "zone_name": "navigatorslab.com" },
+    { "pattern": "navigatorslab.com/tools/*", "zone_name": "navigatorslab.com" }
+  ]
+}
