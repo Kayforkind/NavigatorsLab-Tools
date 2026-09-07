@@ -9,3 +9,4 @@ lh-*.json
 
 # per-tool funnel repos (generated, pushed to their own repos)
 /funnel/
+vitest-out.json
