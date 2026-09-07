@@ -55,6 +55,7 @@ const DICT: Record<string, Record<Lang, string>> = {
   'cat.media': { en: '🎧 Media', tr: '🎧 Medya', de: '🎧 Medien' },
   'cat.files': { en: '🗂️ Files', tr: '🗂️ Dosyalar', de: '🗂️ Dateien' },
   'card.open': { en: 'Open →', tr: 'Aç →', de: 'Öffnen →' },
+  'card.repo': { en: 'GitHub repo ↗', tr: 'GitHub deposu ↗', de: 'GitHub-Repo ↗' },
   'card.recent': { en: 'recent', tr: 'son', de: 'kürzlich' },
   'verify.title': { en: 'Same files in, same files out — verified', tr: 'Aynı dosya giriş, aynı dosya çıkış — doğrulanmış', de: 'Gleiche Dateien rein, gleiche raus — verifiziert' },
   'verify.sub': {

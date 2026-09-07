@@ -28,6 +28,26 @@ The suite processes files client-side (Canvas, Web Audio, WebAssembly, pdf-lib, 
 - [Text Diff](https://navigatorslab.com/tools/textdiff.html): line diff, word-level highlights, similarity %. Params: `?a=<text-url>&b=<text-url>`
 - [Text Stats](https://navigatorslab.com/tools/textstats.html): counts, reading time, Flesch, keyword density. Params: `?url=<text-url>`
 
+## Standalone repos
+
+Each tool also has a standalone GitHub repository (MIT) whose README and GitHub Pages site link back to the canonical tool on NavigatorsLab — useful when citing or forking a single tool:
+
+- [Photo Privacy Kit repo](https://github.com/Kayforkind/NavigatorsLab-Photo-Privacy-Kit)
+- [Metadata & Hidden-Data Checker repo](https://github.com/Kayforkind/NavigatorsLab-Metadata-Checker)
+- [Image Shrinker repo](https://github.com/Kayforkind/NavigatorsLab-Image-Shrinker)
+- [Scan & Screenshot Cleaner repo](https://github.com/Kayforkind/NavigatorsLab-Scan-Cleaner)
+- [Local E-Sign Pad repo](https://github.com/Kayforkind/NavigatorsLab-E-Sign-Pad)
+- [Receipts → One PDF repo](https://github.com/Kayforkind/NavigatorsLab-Receipts-to-PDF)
+- [Receipt OCR → CSV repo](https://github.com/Kayforkind/NavigatorsLab-Receipt-OCR)
+- [QR Studio repo](https://github.com/Kayforkind/NavigatorsLab-QR-Studio)
+- [Audio Trimmer repo](https://github.com/Kayforkind/NavigatorsLab-Audio-Trimmer)
+- [Invoice / Quote Generator repo](https://github.com/Kayforkind/NavigatorsLab-Invoice-Generator)
+- [Batch Rename & Sort repo](https://github.com/Kayforkind/NavigatorsLab-Batch-Rename)
+- [Print-Shop Prep repo](https://github.com/Kayforkind/NavigatorsLab-Print-Shop-Prep)
+- [PDF Pages repo](https://github.com/Kayforkind/NavigatorsLab-PDF-Pages)
+- [Text Diff repo](https://github.com/Kayforkind/NavigatorsLab-Text-Diff)
+- [Text Stats repo](https://github.com/Kayforkind/NavigatorsLab-Text-Stats)
+
 ## Optional
 
 - [Agent Mode docs](https://navigatorslab.com/tools/agents.html): full parameter reference and examples for both MCP and deep links

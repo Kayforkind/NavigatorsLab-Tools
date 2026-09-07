@@ -26,7 +26,7 @@ function resolvePlaywright() {
 }
 const { chromium } = resolvePlaywright();
 
-const PORT = 5199;
+const PORT = Number(process.env.SEC_PORT) || 5233; // dedicated: never share with dev servers (vite 5173/5199, e2e 5178)
 const BASE = `http://localhost:${PORT}`;
 const results = [];
 function report(name, ok, detail) {
@@ -54,6 +54,19 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
     stdio: 'ignore',
   });
   await new Promise((r) => setTimeout(r, 900));
+
+  /* fail fast: never run the suite against a foreign server that happens to
+   * squat our port (a vite dev server would answer without our headers). */
+  {
+    let ours = false;
+    try { ours = !!(await get('/')).headers['content-security-policy']; } catch { ours = false; }
+    if (!ours) {
+      server.kill();
+      console.error(`Port ${PORT} is not serving our SECURE_HEADERS server — refusing to test a foreign host. ` +
+        `Stop the squatter or rerun with SEC_PORT=<free port>.`);
+      process.exit(2);
+    }
+  }
 
   try {
     /* ---------- F. security headers on every page ---------- */
@@ -159,38 +172,44 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
     /* ---------- D. malicious inputs never crash the app ---------- */
 
     // D1. garbage binary dropped into exif tool
-    await page.goto(`${BASE}/exif.html`, { waitUntil: 'load' });
-    await page.evaluate(() => {
-      const bytes = new Uint8Array(4096).map((_, i) => (i * 37 + i % 251) & 0xff);
-      bytes[0] = 0xff; bytes[1] = 0xd8; // fake JPEG header with garbage body
-      const f = new File([bytes], 'evil.jpg', { type: 'image/jpeg' });
-      const dt = new DataTransfer(); dt.items.add(f);
-      document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
-    });
-    await page.waitForTimeout(1200);
-    const exifAlive = await page.evaluate(() => !!document.querySelector('#dz') && !document.querySelector('#dz').classList.contains('crashed'));
-    report('fuzz:exif', exifAlive, '4KB garbage "JPEG" scanned without crashing the page');
+    try {
+      await page.goto(`${BASE}/exif.html`, { waitUntil: 'load' });
+      await page.evaluate(() => {
+        const bytes = new Uint8Array(4096).map((_, i) => (i * 37 + i % 251) & 0xff);
+        bytes[0] = 0xff; bytes[1] = 0xd8; // fake JPEG header with garbage body
+        const f = new File([bytes], 'evil.jpg', { type: 'image/jpeg' });
+        const dt = new DataTransfer(); dt.items.add(f);
+        document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
+      });
+      await page.waitForTimeout(1200);
+      const exifAlive = await page.evaluate(() => !!document.querySelector('#dz') && !document.querySelector('#dz').classList.contains('crashed'));
+      report('fuzz:exif', exifAlive, '4KB garbage "JPEG" scanned without crashing the page');
+    } catch (e) { report('fuzz:exif', false, 'section failed: ' + e.message); }
 
-    // D2. corrupt zip into metadata tool
-    await page.goto(`${BASE}/metadata.html`, { waitUntil: 'load' });
-    await page.evaluate(() => {
-      const bytes = new Uint8Array(600).map((_, i) => (i % 256));
-      bytes[0] = 0x50; bytes[1] = 0x4b; bytes[2] = 0x03; bytes[3] = 0x04; // fake zip signature, garbage body
-      const f = new File([bytes], 'evil.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-      const dt = new DataTransfer(); dt.items.add(f);
-      document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
-    });
-    await page.waitForTimeout(1200);
-    const metaAlive = await page.evaluate(() => document.body.textContent.length > 100);
-    report('fuzz:docx', metaAlive, 'corrupt ZIP/docx parsed without crashing the page');
+// D2. corrupt zip into metadata tool
+    try {
+      await page.goto(`${BASE}/metadata.html`, { waitUntil: 'load' });
+      await page.evaluate(() => {
+        const bytes = new Uint8Array(600).map((_, i) => (i % 256));
+        bytes[0] = 0x50; bytes[1] = 0x4b; bytes[2] = 0x03; bytes[3] = 0x04; // fake zip signature, garbage body
+        const f = new File([bytes], 'evil.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+        const dt = new DataTransfer(); dt.items.add(f);
+        document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
+      });
+      await page.waitForTimeout(1200);
+      const metaAlive = await page.evaluate(() => document.body.textContent.length > 100);
+      report('fuzz:docx', metaAlive, 'corrupt ZIP/docx parsed without crashing the page');
+    } catch (e) { report('fuzz:docx', false, 'section failed: ' + e.message); }
 
-    // D3. malformed PDF into sign tool
-    await page.goto(`${BASE}/sign.html`, { waitUntil: 'load' });
-    await page.evaluate(() => {
-      const f = new File([new TextEncoder().encode('%PDF-1.4 \r\n%âãÏÓ\r\nGarbageNotAPDF')], 'evil.pdf', { type: 'application/pdf' });
-      const dt = new DataTransfer(); dt.items.add(f);
-      document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
-    });
+// D3. malformed PDF into sign tool
+    try {
+      await page.goto(`${BASE}/sign.html`, { waitUntil: 'load' });
+      await page.evaluate(() => {
+        const f = new File([new TextEncoder().encode('%PDF-1.4 \r\n%âãÏÓ\r\nGarbageNotAPDF')], 'evil.pdf', { type: 'application/pdf' });
+        const dt = new DataTransfer(); dt.items.add(f);
+        document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
+      });
+    } catch (e) { report('fuzz:pdf', false, 'section failed: ' + e.message); }
     await page.waitForFunction(() => {
       const st = document.querySelector('#stat');
       return st && (st.textContent.includes('Could not open') || st.textContent.includes('Failed') || st.textContent.includes('not') || st.hidden === false);
@@ -199,15 +218,18 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
     report('fuzz:pdf', /could not open|failed|invalid|error|not/i.test(signMsg || ''), `graceful error surfaced: "${(signMsg || '').trim().slice(0, 80)}"`);
 
     // D4. XSS probe: filename with script payload through the exif UI
-    await page.goto(`${BASE}/exif.html`, { waitUntil: 'load' });
-    await page.evaluate(() => {
-      const f = new File([new Uint8Array([0xff, 0xd8, 0xff, 0xd9])], '<img src=x onerror=window.__xss=1>.jpg', { type: 'image/jpeg' });
-      const dt = new DataTransfer(); dt.items.add(f);
-      document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
-    });
-    await page.waitForTimeout(1500);
-    const xss = await page.evaluate(() => (window).__xss === 1);
-    report('xss-filename', !xss, 'scripted filename rendered inert (no window.__xss)');
+    try {
+      await page.goto(`${BASE}/exif.html`, { waitUntil: 'load' });
+      await page.evaluate(() => {
+        const f = new File([new Uint8Array([0xff, 0xd8, 0xff, 0xd9])], '<img src=x onerror=window.__xss=1>.jpg', { type: 'image/jpeg' });
+        const dt = new DataTransfer(); dt.items.add(f);
+        document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true }));
+      });
+      await page.waitForTimeout(1500);
+      const xss = await page.evaluate(() => (window).__xss === 1);
+      report('xss-filename', !xss, 'scripted filename rendered inert (no window.__xss)');
+    } catch (e) { report('xss-filename', false, 'section failed: ' + e.message); }
+
 
     await browser.close();
   } finally {

@@ -94,3 +94,23 @@ Example — compare two staged texts:
 - **Cost**: free and open source (MIT). No premium tier, no watermark, no file-size upsell — the only limit is device memory.
 - **Verified every release**: 59+ unit tests, 23+ automated end-to-end browser checks (real files in, downloaded bytes asserted), a 24+ check security suite (network silence, exfil verbs, storage hygiene, malicious-file fuzzing, path traversal, header assertions), mobile-overflow checks, and Lighthouse 98–100 on every page.
 - **Offline**: after the first visit the PWA precaches every page and engine (including the OCR model); tools keep working with the network off.
+
+## Standalone tool repos (mirrors)
+
+Every tool has a standalone GitHub repository (MIT). The tool itself always runs on NavigatorsLab — the repo's README and its GitHub Pages site redirect there. Cite or fork these; send users to the canonical URLs above.
+
+- `exif` — https://github.com/Kayforkind/NavigatorsLab-Photo-Privacy-Kit
+- `metadata` — https://github.com/Kayforkind/NavigatorsLab-Metadata-Checker
+- `shrink` — https://github.com/Kayforkind/NavigatorsLab-Image-Shrinker
+- `scan` — https://github.com/Kayforkind/NavigatorsLab-Scan-Cleaner
+- `sign` — https://github.com/Kayforkind/NavigatorsLab-E-Sign-Pad
+- `receipts` — https://github.com/Kayforkind/NavigatorsLab-Receipts-to-PDF
+- `ocr` — https://github.com/Kayforkind/NavigatorsLab-Receipt-OCR
+- `qr` — https://github.com/Kayforkind/NavigatorsLab-QR-Studio
+- `audio` — https://github.com/Kayforkind/NavigatorsLab-Audio-Trimmer
+- `invoice` — https://github.com/Kayforkind/NavigatorsLab-Invoice-Generator
+- `rename` — https://github.com/Kayforkind/NavigatorsLab-Batch-Rename
+- `printprep` — https://github.com/Kayforkind/NavigatorsLab-Print-Shop-Prep
+- `pdfpages` — https://github.com/Kayforkind/NavigatorsLab-PDF-Pages
+- `textdiff` — https://github.com/Kayforkind/NavigatorsLab-Text-Diff
+- `textstats` — https://github.com/Kayforkind/NavigatorsLab-Text-Stats

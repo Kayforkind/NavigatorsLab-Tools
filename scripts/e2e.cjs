@@ -653,6 +653,10 @@ async function setFiles(page, files) {
     const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
     report('hub', cards === 15, `${cards} tool cards on the redesigned hub (tools.json-driven)`);
+    const repoLinks = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('#grid .cards a.repo')).map((a) => a.href));
+    const allRepos = repoLinks.length === 15 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/NavigatorsLab-'));
+    report('hub-repo-links', allRepos, `${repoLinks.length}/15 cards carry a standalone GitHub repo link (funnel)`);
   });
 
   const failed = results.filter((r) => !r.ok);

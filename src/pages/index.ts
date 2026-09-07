@@ -16,6 +16,8 @@ interface Tool {
   detail: string;
   category: string;
   keywords: string;
+  /** standalone GitHub funnel repo (links back to the hub) */
+  repo?: string;
 }
 
 const CATS: [string, string][] = [
@@ -119,17 +121,30 @@ function render(): void {
     return (used.has(b.id) ? 1 : 0) - (used.has(a.id) ? 1 : 0);
   });
   for (const tool of sorted) {
-    const a = document.createElement('a');
-    a.className = 'cards';
-    a.href = `./${tool.id}.html`;
-    a.addEventListener('click', () => markUsed(tool.id));
-    a.innerHTML = `
+    const card = document.createElement('article');
+    card.className = 'cards';
+    const open = document.createElement('a');
+    open.href = `./${tool.id}.html`;
+    open.addEventListener('click', () => markUsed(tool.id));
+    open.innerHTML = `
       <div class="card-top"><span class="ico">${tool.icon}</span>${used.has(tool.id) ? `<span class="pill">${t('card.recent', lang)}</span>` : ''}</div>
       <h3>${tool.name}</h3>
       <p class="tag">${toolTagline(tool.id, tool.tagline, lang)}</p>
       <p class="detail">${tool.detail}</p>
       <span class="open">${t('card.open', lang)}</span>`;
-    grid.appendChild(a);
+    card.appendChild(open);
+    if (tool.repo) {
+      const repo = document.createElement('a');
+      repo.className = 'repo';
+      repo.href = tool.repo;
+      repo.target = '_blank';
+      repo.rel = 'noopener noreferrer';
+      repo.title = 'Standalone GitHub repository — the tool itself runs on NavigatorsLab';
+      repo.setAttribute('aria-label', `${tool.name} — GitHub repository`);
+      repo.textContent = t('card.repo', lang);
+      card.appendChild(repo);
+    }
+    grid.appendChild(card);
   }
 }
 

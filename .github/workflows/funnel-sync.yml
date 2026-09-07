@@ -1,0 +1,31 @@
+name: Funnel sync (per-tool repos)
+
+on:
+  push:
+    branches: [main]
+    paths: ['public/tools.json', 'scripts/funnel-gen.py', 'scripts/funnel-sync.py']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: funnel-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regenerate funnel content
+        run: python scripts/funnel-gen.py
+      - name: Push changes to the 15 per-tool repos
+        run: python scripts/funnel-sync.py
+        env:
+          # Classic PAT with `repo` scope (or a fine-grained token with
+          # contents:write + administration:write on the NavigatorsLab-* repos).
+          GH_TOKEN: ${{ secrets.FUNNEL_TOKEN }}
