@@ -18,6 +18,8 @@
   },
   "routes": [
     { "pattern": "navigatorslab.com/tools", "zone_name": "navigatorslab.com" },
-    { "pattern": "navigatorslab.com/tools/*", "zone_name": "navigatorslab.com" }
+    { "pattern": "navigatorslab.com/tools/*", "zone_name": "navigatorslab.com" },
+    { "pattern": "navigatorslab.com/llms.txt", "zone_name": "navigatorslab.com" },
+    { "pattern": "navigatorslab.com/llms-full.txt", "zone_name": "navigatorslab.com" }
   ]
 }

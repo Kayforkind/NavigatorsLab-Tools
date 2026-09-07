@@ -62,7 +62,12 @@ export default {
     const url = new URL(request.url);
 
     /* ---- MCP endpoint for AI agents (Model Context Protocol) ---- */
-    if (url.pathname === '/tools/mcp' || url.pathname === '/tools/mcp/') return handleMcp(request);
+    if (url.pathname === '/tools/mcp' || url.pathname === '/tools/mcp/') {
+      const mcpRes = await handleMcp(request);
+      const h = new Headers(mcpRes.headers);
+      for (const [k, v] of Object.entries(HEADERS)) h.set(k, v);
+      return new Response(mcpRes.body, { status: mcpRes.status, statusText: mcpRes.statusText, headers: h });
+    }
 
     // map pretty paths: /tools/<id> -> /tools/<id>.html (and /tools -> /tools/index.html).
     // assets run with html_handling:none, so this worker owns all URL normalization.
