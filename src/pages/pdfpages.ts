@@ -152,18 +152,42 @@ $('#delSel').addEventListener('click', () => {
   status(stat, `${items.length} page${items.length === 1 ? '' : 's'} remaining.`, 'info');
 });
 
-$('#rebuild').addEventListener('click', () => void rebuild());
+$('#rebuild').addEventListener('click', () => void rebuild(false));
+$('#extract').addEventListener('click', () => { if (items.some((i) => i.selected)) void rebuild(true); });
+$('#blank').addEventListener('click', () => {
+  if (!items.length) return;
+  const at = Math.max(0, dragIdx < 0 ? 0 : dragIdx);
+  const ref = items[Math.min(at, items.length - 1)];
+  const swap = ref.rotation % 180 !== 0;
+  const c = document.createElement('canvas');
+  c.width = swap ? ref.canvas.height : ref.canvas.width;
+  c.height = swap ? ref.canvas.width : ref.canvas.height;
+  const cx = c.getContext('2d')!;
+  cx.fillStyle = '#ffffff';
+  cx.fillRect(0, 0, c.width, c.height);
+  items.splice(at + 1, 0, { docIdx: -1, srcIdxInDoc: 0, rotation: 0, canvas: c, selected: true });
+  dragIdx = -1;
+  render();
+  status(stat, 'Blank page inserted — sized to match its neighbor.', 'ok');
+});
 
-async function rebuild(): Promise<void> {
+async function rebuild(extractOnly = false): Promise<void> {
   const files = (items as unknown as { __files?: File[] }).__files || [];
   if (!items.length || !files.length) return;
+  const chosen = extractOnly ? items.filter((i) => i.selected) : items;
+  if (!chosen.length) return;
   status(stat, 'Rebuilding PDF…', 'info');
   try {
     const { PDFDocument, degrees } = await import('pdf-lib');
     const out = await PDFDocument.create();
     const cache = new Map<number, import('pdf-lib').PDFDocument>();
-    for (const it of items) {
+    for (const it of chosen) {
       if (!it.selected) continue;
+      if (it.docIdx === -1) {
+        // synthetic blank page — no source document to copy from
+        out.addPage([595.28, 841.89]); // A4
+        continue;
+      }
       let loaded = cache.get(it.docIdx);
       if (!loaded) {
         loaded = await PDFDocument.load(new Uint8Array(await files[it.docIdx].arrayBuffer()).slice(0), { ignoreEncryption: true });
@@ -174,8 +198,9 @@ async function rebuild(): Promise<void> {
       out.addPage(copied);
     }
     const bytes = await out.save();
-    download(new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' }), 'reorganized.pdf');
-    status(stat, `Rebuilt with ${items.filter((i) => i.selected).length} pages (${fmtBytes(bytes.length)}).`, 'ok');
+    const count = chosen.filter((i) => i.selected).length;
+    download(new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' }), extractOnly ? `extract-${count}p.pdf` : 'reorganized.pdf');
+    status(stat, `${extractOnly ? 'Extracted' : 'Rebuilt with'} ${count} page${count === 1 ? '' : 's'} (${fmtBytes(bytes.length)}).`, 'ok');
     toast('PDF rebuilt 📑');
   } catch (e) {
     status(stat, `Rebuild failed: ${(e as Error).message}`, 'err');

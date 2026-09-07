@@ -48,12 +48,21 @@
       <h2>Extracted expenses <span class="pill" id="rowCount"></span></h2>
       <table class="tbl" id="tbl">
         <thead><tr>
-          <th style="width:44px">✓</th><th>File</th><th>Date</th><th>Merchant (first line)</th><th>Detected total</th><th>Confidence</th>
+          <th style="width:44px">✓</th><th>File</th><th>Date</th><th>Merchant (first line)</th><th>Detected total</th><th>Confidence</th><th>Category</th>
         </tr></thead>
         <tbody></tbody>
       </table>
       <div class="row">
         <span class="grow" style="flex:1"></span>
+        <label>Currency
+          <select id="cur" aria-label="Currency symbol for CSV">
+            <option value="">none</option>
+            <option>$</option>
+            <option>€</option>
+            <option>£</option>
+            <option>₺</option>
+          </select>
+        </label>
         <button class="primary" id="csv">⬇️ Export selected as CSV</button>
       </div>
       <p class="sub" style="font-size:12.5px; margin-bottom:0;">

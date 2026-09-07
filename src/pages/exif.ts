@@ -15,10 +15,10 @@ if ('launchQueue' in window) {
   });
 }
 
-import { $, pickFiles, onDrop, download, status, fmtBytes, toast } from '../lib/dom';
+import { $, pickFiles, onDrop, download, status, fmtBytes, toast, sha256Hex, fileToCanvas } from '../lib/dom';
 import { parseExif, stripExif, exifSummary, type ExifData } from '../lib/exif';
 
-interface Row { file: File; exif: ExifData | null; clean?: Blob; }
+interface Row { file: File; exif: ExifData | null; clean?: Blob; origHash?: string; cleanHash?: string; hashes?: string; }
 
 const rows: Row[] = [];
 const dz = $('#dz');
@@ -31,6 +31,19 @@ const countEl = $('#count');
 dz.addEventListener('click', () => void pickAndScan());
 $('#strip').addEventListener('click', () => { void stripAll(false); });
 $('#rezip').addEventListener('click', () => { void stripAll(true); });
+const btnHash = $('#hashbtn') as HTMLButtonElement;
+btnHash.addEventListener('click', async () => {
+  status(stat, 'Hashing…', 'info');
+  for (const r of rows) {
+    const parts = [`original  SHA-256: ${r.origHash ?? (await sha256Hex(r.file))}`];
+    if (r.clean) parts.push(`cleaned   SHA-256: ${r.cleanHash ?? (await sha256Hex(r.clean))}`);
+    r.origHash = parts[0].split(': ')[1];
+    r.cleanHash = parts[1]?.split(': ')[1];
+    r.hashes = parts.join('\n');
+  }
+  render();
+  status(stat, 'Fingerprints shown — attach these when you send the files so the recipient can verify them.', 'ok');
+});
 
 onDrop(dz, (files) => void scan(files));
 
@@ -51,6 +64,8 @@ async function scan(files: File[]): Promise<void> {
     rows.push(row);
   }
   render();
+  // fingerprints: let the user prove in/out are the same picture, minus metadata
+  for (const r of rows) { try { r.origHash = await sha256Hex(r.file); } catch { /* skip */ } }
   const leaked = rows.filter((r) => r.exif?.gps).length;
   const withMeta = rows.filter((r) => r.exif?.hasExif).length;
   status(
@@ -64,6 +79,7 @@ function render(): void {
   countEl.textContent = `${rows.length} files`;
   btnStrip.disabled = rows.length === 0;
   btnZip.disabled = rows.length === 0;
+  btnHash.disabled = rows.length === 0;
   list.innerHTML = '';
   for (const r of rows) {
     const div = document.createElement('div');
@@ -88,6 +104,13 @@ function render(): void {
       none.textContent = r.file.type === 'image/jpeg' ? 'No EXIF found' : 'No EXIF layer (format carries none or browser strips it)';
       info.appendChild(none);
     }
+    if (r.hashes) {
+      const h = document.createElement('div');
+      h.className = 'mono';
+      h.style.cssText = 'font-size:11px;color:#7ce0ae;word-break:break-all;white-space:pre-wrap;';
+      h.textContent = r.hashes;
+      info.appendChild(h);
+    }
     div.appendChild(info);
     list.appendChild(div);
   }
@@ -106,16 +129,27 @@ async function stripAll(asZip: boolean): Promise<void> {
     r.clean = blob;
   }
   render();
+  // verify pixels: decode both versions and compare every rendered pixel
+  let verified = 0;
+  for (const r of rows) {
+    if (!r.clean) continue;
+    try {
+      const a = await fileToCanvas(r.file), b = await fileToCanvas(r.clean);
+      if (a.width === b.width && a.height === b.height && a.toDataURL() === b.toDataURL()) verified++;
+      r.cleanHash = await sha256Hex(r.clean);
+    } catch { /* skip */ }
+  }
+  const proof = verified === out.length ? ` Pixel data verified identical on ${verified}/${out.length}.` : '';
   if (asZip && out.length > 1) {
     const { default: JSZip } = await import('jszip');
     const zip = new JSZip();
     for (const o of out) zip.file(o.name, o.blob);
     const zblob = await zip.generateAsync({ type: 'blob' });
     download(zblob, 'clean-photos.zip');
-    status(stat, `Done — ${out.length} clean photos zipped (${fmtBytes(zblob.size)}), ${gps} had GPS removed.`, 'ok');
+    status(stat, `Done — ${out.length} clean photos zipped (${fmtBytes(zblob.size)}), ${gps} had GPS removed.${proof}`, 'ok');
   } else {
     for (const o of out) download(o.blob, o.name);
-    status(stat, `Done — ${out.length} clean photo${out.length === 1 ? '' : 's'} downloaded, ${gps} had GPS removed.`, 'ok');
+    status(stat, `Done — ${out.length} clean photo${out.length === 1 ? '' : 's'} downloaded, ${gps} had GPS removed.${proof}`, 'ok');
   }
   toast('Metadata stripped 🔒');
 }

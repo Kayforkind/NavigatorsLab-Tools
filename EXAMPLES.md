@@ -228,3 +228,40 @@ Every tool is responsive, verified at 390×844 with zero horizontal overflow —
 **We keep no attachments and no user information.** There is no server that could receive your files. Open devtools → Network and watch every tool stay silent after load — the CI security gate asserts it on every release.
 
 *[NavigatorsLab](https://navigatorslab.com/) · [PDF Studio](https://github.com/Kayforkind/NavigatorsLab-PDF-Studio) · [Source (MIT)](https://github.com/Kayforkind/NavigatorsLab-Tools)*
+
+---
+
+## New in v1.3 — upgrades across the suite
+
+### Paste anywhere (all tools)
+Ctrl/Cmd+V a screenshot or copied file on any tool page — it lands in the drop zone. Try it: copy a screenshot, open **Photo Privacy Kit**, press Ctrl+V, strip it, download.
+
+### Photo Privacy Kit — SHA-256 fingerprints
+Scan photos → **Strip metadata & download all** → click **🔬 Show SHA-256 fingerprints**. You get the hash of the original and the cleaned copy; decode both images anywhere and compare pixels — the picture is identical, only the metadata is gone.
+
+### Image Shrinker — AVIF + batch zip
+Pick **AVIF (smallest, slow)** for a ~30–50% further reduction over WebP. Multi-image batches now also produce a single `shrunk-images.zip`.
+
+### Scan & Screenshot Cleaner — auto-levels and threshold
+Load a washed-out phone photo → **🌗 Auto-levels** (stretches black/white points; reports them) → **⚫ Threshold** (pure black-on-white photocopy look) → Export PDF. Page images are now embedded at quality 0.92, so 300 DPI text stays crisp.
+
+### Local E-Sign Pad — dated signatures
+Check **stamp date** before flattening: today's date is drawn under the ink (Helvetica 9pt, grey). The E2E gate decodes the signed PDF and asserts the year is present.
+
+### PDF Pages — extract and blank pages
+Deselect pages you don't want → **📤 Extract selected** → `extract-Np.pdf`. **➕ Insert blank** adds a blank page sized like its neighbor (A4 if first) — handy for "this page intentionally left blank" scans.
+
+### Receipt OCR → CSV — categories and currency
+Each row gets a **category** dropdown (food, transport, office, travel, software…). Choose a currency symbol before export; the CSV v2 header is `date,merchant,category,amount,currency,file,ocr_confidence`.
+
+### QR Studio — Wi-Fi & contact presets
+**📶 Wi-Fi** opens SSID/password/security fields; special characters are escaped per the `WIFI:` spec (`;`, `,`, `:`, `\`) — the E2E round-trips a password containing `;` and `\` through the decoder. Error-correction level is selectable (L/M/Q/H).
+
+### Audio Trimmer — normalize
+Check **normalize to −0.1 dB** to scale the selection's peak to full scale — quiet voice memos become uniformly loud. Gain is computed locally and applied before WAV/MP3 export.
+
+### Text Diff — similarity score
+After Compare, the summary shows **N% similar** (2·LCS/total lines). **⇄ Swap** exchanges the two panes.
+
+### Text Stats — sentence rhythm
+A live histogram of sentence lengths (1–5, 6–10, … words) with the average — spot monotone long-sentence paragraphs at a glance.

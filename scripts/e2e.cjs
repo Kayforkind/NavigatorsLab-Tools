@@ -231,6 +231,7 @@ async function setFiles(page, files) {
       return;
     }
     // click the middle of the preview canvas (dispatched at the element so scroll state is irrelevant)
+    await page.check('#addDate'); // v1.3: stamp today's date under the ink
     await page.evaluate(() => {
       const cv = document.getElementById('cv');
       const r = cv.getBoundingClientRect();
@@ -238,7 +239,28 @@ async function setFiles(page, files) {
     });
     const dl = await grabDownload(page, () => page.click('#stamp'));
     const s = dl.bytes.toString('latin1');
-    report('esign', s.startsWith('%PDF-') && s.includes('/Image'), `signed.pdf, ${Math.round(dl.bytes.length / 1024)}KB, flattened signature image embedded`);
+    // Parse with pdf-lib (real object model): walk each page's Contents array,
+    // decode the streams, hex-decode Tj strings, and assert the stamped year.
+    const { PDFDocument: PLD, PDFName, decodePDFRawStream, PDFArray } = require(path.join(__dirname, '..', 'node_modules', 'pdf-lib'));
+    const signed = await PLD.load(dl.bytes, { ignoreEncryption: true });
+    const yr = String(new Date().getFullYear());
+    let yearFound = false;
+    for (let pi = 0; pi < signed.getPageCount(); pi++) {
+      const contents = signed.getPage(pi).node.get(PDFName.of('Contents'));
+      const arr = contents instanceof PDFArray ? contents.asArray() : [contents];
+      for (const ref of arr) {
+        const st = signed.context.lookup(ref);
+        if (!st) continue;
+        try {
+          const t = Buffer.from(decodePDFRawStream(st).decode()).toString('latin1');
+          if (!t.includes('Tj')) continue;
+          for (const hx of t.match(/<[0-9A-Fa-f]+>/g) || []) {
+            if (Buffer.from(hx.slice(1, -1), 'hex').toString('latin1').includes(yr)) yearFound = true;
+          }
+        } catch { /* non-inflatable stream */ }
+      }
+    }
+    report('esign', s.startsWith('%PDF-') && s.includes('/Image') && yearFound, `signed.pdf, ${Math.round(dl.bytes.length / 1024)}KB, signature embedded + date stamp decoded (${yr})`);
     await page.screenshot({ path: path.join(SHOTS, '04-esign.png') });
   });
 
@@ -412,8 +434,8 @@ async function setFiles(page, files) {
     const rowCount = await page.locator('#tbl tbody tr').count();
     const dl = await grabDownload(page, () => page.click('#csv'));
     const csv = dl.bytes.toString('utf8');
-    const headerOk = csv.startsWith('date,merchant,amount,file,ocr_confidence');
-    report('ocr', headerOk && rowCount === 1, `expenses.csv (${dl.bytes.length}B, header=${headerOk}), ${rowCount} receipt row, engine loaded from same origin`);
+    const headerOk = csv.startsWith('date,merchant,category,amount,currency,file,ocr_confidence');
+    report('ocr', headerOk && rowCount === 1, `expenses.csv (${dl.bytes.length}B, v2 header=${headerOk}), ${rowCount} receipt row, engine loaded from same origin`);
     await page.screenshot({ path: path.join(SHOTS, '13-ocr.png') });
   });
 
@@ -505,6 +527,77 @@ async function setFiles(page, files) {
     report('textstats', words === 62 && kw.includes('tools') && flesch > 0 && flesch <= 100,
       `words=${words} (expected 62), top keyword contains "tools", reading ease ${flesch}/100`);
     await page.screenshot({ path: path.join(SHOTS, '17-textstats.png') });
+  });
+
+  /* ---------- 18. QR Wi-Fi preset: payload + round-trip through the decoder ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/qr.html`);
+    await page.click('#preWifi');
+    await page.fill('#wifiS', 'NavLab-Guest');
+    await page.fill('#wifiP', 'pass;word\\1'); // adversarial: ; and \\ must be escaped
+    await page.click('#wifiMake');
+    await page.waitForFunction(() => !document.getElementById('qrOut').hidden, { timeout: 10000 });
+    const payload = await page.inputValue('#qrText');
+    const expected = 'WIFI:T:WPA;S:NavLab-Guest;P:pass\\;word\\\\1;;';
+    const dl = await grabDownload(page, () => page.click('#qrPng'));
+    await page.evaluate(async (bytesB64) => {
+      const bin = atob(bytesB64);
+      const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      const file = new File([u8], 'wifi.png', { type: 'image/png' });
+      const dt = new DataTransfer(); dt.items.add(file);
+      document.getElementById('tabRead').click();
+      document.getElementById('qrDz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
+    }, dl.bytes.toString('base64'));
+    await page.waitForFunction(() => !document.getElementById('qrResult').hidden, { timeout: 15000 });
+    const decoded = await page.inputValue('#qrData');
+    report('qr-wifi', payload === expected && decoded === payload,
+      `Wi-Fi payload escaped correctly (${payload.length} chars) and decodes back identically`);
+  });
+
+  /* ---------- 19. PDF Pages: extract-selected + insert blank ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/pdfpages.html`);
+    await page.evaluate(async (name) => {
+      const res = await fetch(`/fx/${name}`);
+      const dt = new DataTransfer(); dt.items.add(new File([await res.blob()], name, { type: 'application/pdf' }));
+      document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
+    }, 'sample.pdf');
+    await page.waitForFunction(() => !document.getElementById('panel').hidden, { timeout: 30000 });
+    const { PDFDocument: PL5 } = require(path.join(__dirname, '..', 'node_modules', 'pdf-lib'));
+    const srcDoc = await PL5.load(fs.readFileSync(FX('sample.pdf')));
+    const orig = srcDoc.getPageCount();
+    await page.click('#pages .pp-cell:first-child input[type=checkbox]'); // deselect page 1
+    await page.click('#blank'); // insert blank after the drag target (defaults to index 0 area)
+    const afterBlank = await page.locator('#pages .pp-cell').count();
+    const dl = await grabDownload(page, () => page.click('#extract'));
+    const out = await PL5.load(dl.bytes);
+    // extract = only selected (orig-1 pages) + the inserted blank = orig pages total
+    report('pdfpages-x', afterBlank === orig + 1 && out.getPageCount() === orig,
+      `insert blank → ${afterBlank} cells; extract → ${out.getPageCount()}p PDF (selected ${orig - 1} + 1 blank)`);
+  });
+
+  /* ---------- 20. Clipboard paste lands in the drop zone ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/exif.html`);
+    const pngB64 = await page.evaluate(() => {
+      const c = document.createElement('canvas');
+      c.width = 90; c.height = 60;
+      c.getContext('2d').fillStyle = '#4f8cff';
+      c.getContext('2d').fillRect(0, 0, 90, 60);
+      return c.toDataURL('image/png').split(',')[1];
+    });
+    await page.evaluate((b64) => {
+      const bin = atob(b64);
+      const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      const dt = new DataTransfer();
+      dt.items.add(new File([u8], 'pasted.png', { type: 'image/png' }));
+      document.dispatchEvent(new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true }));
+    }, pngB64);
+    await page.waitForFunction(() => document.querySelectorAll('#list .frow').length === 1, { timeout: 10000 });
+    const name = await page.textContent('#list .frow .nm');
+    report('paste', /pasted\.png/.test(name || ''), `Ctrl+V image landed in Photo Privacy Kit (row: ${name?.trim().slice(0, 30)}…)`);
   });
 
   /* ---------- hub ---------- */

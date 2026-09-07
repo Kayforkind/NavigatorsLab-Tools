@@ -1,5 +1,6 @@
 import { $, pickFiles, onDrop, download, status, fmtBytes, fileToImage, canvasBlob, toast } from '../lib/dom';
 import { enhance, autoStraighten, canvasJpeg } from '../lib/canvasp';
+import { thresholdData, autoLevelsData } from '../lib/enhance';
 
 const pages: HTMLCanvasElement[] = [];
 let idx = 0;
@@ -45,6 +46,25 @@ $('#applyEnh').addEventListener('click', () => {
   });
   show();
   status(editStat, 'Enhancement applied (destructive, per page).', 'ok');
+});
+$('#autoLev').addEventListener('click', () => {
+  if (!pages.length) return;
+  const ctx = pages[idx].getContext('2d')!;
+  const img = ctx.getImageData(0, 0, pages[idx].width, pages[idx].height);
+  const r = autoLevelsData(img);
+  if (!r) { status(editStat, 'Image is too flat for levels stretching.', 'warn'); return; }
+  ctx.putImageData(img, 0, 0);
+  show();
+  status(editStat, `Auto-levels applied — black point ${r.black}, white point ${r.white}.`, 'ok');
+});
+$('#thresh').addEventListener('click', () => {
+  if (!pages.length) return;
+  const ctx = pages[idx].getContext('2d')!;
+  const img = ctx.getImageData(0, 0, pages[idx].width, pages[idx].height);
+  thresholdData(img, 160);
+  ctx.putImageData(img, 0, 0);
+  show();
+  status(editStat, 'Threshold applied — pure black-on-white photocopy look.', 'ok');
 });
 $('#cropMode').addEventListener('click', () => {
   cropMode = !cropMode;
@@ -225,7 +245,7 @@ async function exportPdf(): Promise<void> {
   const { PDFDocument } = await import('pdf-lib'); // lazy
   const doc = await PDFDocument.create();
   for (let i = 0; i < pages.length; i++) {
-    const jpg = await canvasJpeg(pages[i], 0.85);
+    const jpg = await canvasJpeg(pages[i], 0.92); // keep text crisp at 300 DPI
     const emb = await doc.embedJpg(new Uint8Array(await jpg.arrayBuffer()));
     // page size follows the image at ~150 dpi (A4-ish for typical phone scans)
     const wpt = (emb.width * 72) / 150;
@@ -235,6 +255,6 @@ async function exportPdf(): Promise<void> {
   }
   const bytes = await doc.save();
   download(new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' }), `scanned-${pages.length}p.pdf`);
-  status(stat, `PDF with ${pages.length} page${pages.length === 1 ? '' : 's'} exported (${fmtBytes(bytes.length)}).`, 'ok');
+  status(stat, `PDF with ${pages.length} page${pages.length === 1 ? '' : 's'} exported at print resolution (${fmtBytes(bytes.length)}).`, 'ok');
   toast('PDF exported 📄');
 }

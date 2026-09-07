@@ -10,7 +10,10 @@ interface Row {
   confidence: number;
   lines: string[];
   include: boolean;
+  category: string;
 }
+
+const CATEGORIES = ['uncategorized', 'food', 'transport', 'office', 'travel', 'software', 'other'];
 
 const rows: Row[] = [];
 const dz = $('#dz');
@@ -89,6 +92,7 @@ async function run(files: File[]): Promise<void> {
       confidence: Math.round(data.confidence ?? 0),
       lines,
       include: true,
+      category: 'uncategorized',
     });
     status(stat, `${rows.length}/${files.length} read (${f.name})`, 'info');
   }
@@ -134,7 +138,18 @@ function render(): void {
     const tdConf = document.createElement('td');
     const conf = r.confidence;
     tdConf.innerHTML = `<span class="pill ${conf >= 80 ? 'ok' : conf >= 55 ? 'warn' : 'err'}">${conf}%</span>`;
-    tr.append(td0, tdFile, tdDate, tdMer, tdTotal, tdConf);
+    const tdCat = document.createElement('td');
+    const cat = document.createElement('select');
+    cat.setAttribute('aria-label', `Category for ${r.file.name}`);
+    for (const c of CATEGORIES) {
+      const o = document.createElement('option');
+      o.value = c; o.textContent = c;
+      if (c === r.category) o.selected = true;
+      cat.appendChild(o);
+    }
+    cat.addEventListener('change', () => { r.category = cat.value; });
+    tdCat.appendChild(cat);
+    tr.append(td0, tdFile, tdDate, tdMer, tdTotal, tdConf, tdCat);
     tbody.appendChild(tr);
   });
 }
@@ -143,10 +158,11 @@ function exportCsv(): void {
   const sel = rows.filter((r) => r.include);
   if (!sel.length) return;
   const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
-  const lines = ['date,merchant,amount,file,ocr_confidence'];
+  const cur = ($('#cur') as HTMLSelectElement).value;
+  const lines = ['date,merchant,category,amount,currency,file,ocr_confidence'];
   for (const r of sel) {
     const d = r.date ? r.date.toISOString().slice(0, 10) : '';
-    lines.push([d, esc(r.merchant), r.total != null ? r.total.toFixed(2) : '', esc(r.file.name), String(r.confidence)].join(','));
+    lines.push([d, esc(r.merchant), esc(r.category), r.total != null ? cur + r.total.toFixed(2) : '', cur, esc(r.file.name), String(r.confidence)].join(','));
   }
   download(new Blob([lines.join('\n')], { type: 'text/csv' }), 'expenses.csv');
   status(stat, `Exported ${sel.length} expense${sel.length === 1 ? '' : 's'} to expenses.csv.`, 'ok');

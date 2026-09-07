@@ -41,12 +41,31 @@
     <section id="makePanel">
       <div class="panel">
         <label for="qrText">Text or URL to encode</label>
-        <textarea id="qrText" rows="3" placeholder="https://example.com — or Wi-Fi: WIFI:T:WPA;S:MyNet;P:pass;;"></textarea>
+        <textarea id="qrText" rows="3" placeholder="https://example.com — or use a preset below"></textarea>
+        <div class="row" style="margin-top:8px">
+          <label>Presets</label>
+          <button class="btn" id="preWifi" type="button">📶 Wi-Fi</button>
+          <button class="btn" id="preUrl" type="button">🔗 URL</button>
+          <button class="btn" id="preMail" type="button">✉️ Email</button>
+          <button class="btn" id="prePhone" type="button">📞 Phone</button>
+          <button class="btn" id="preVcard" type="button">👤 Contact card</button>
+        </div>
+        <div class="row" id="wifiFields" hidden style="margin-top:8px">
+          <input type="text" id="wifiS" placeholder="Network name (SSID)" aria-label="Wi-Fi network name" style="width:170px" />
+          <input type="password" id="wifiP" placeholder="Password" aria-label="Wi-Fi password" style="width:150px" />
+          <select id="wifiT" aria-label="Wi-Fi security">
+            <option value="WPA">WPA/WPA2/WPA3</option>
+            <option value="WEP">WEP</option>
+            <option value="nopass">Open</option>
+          </select>
+          <label><input type="checkbox" id="wifiH" /> hidden</label>
+          <button class="btn" id="wifiMake" type="button">Make Wi-Fi QR</button>
+        </div>
 
         <div class="row3">
           <div>
             <label for="qrSize">Size (px)</label>
-            <select id="qrSize">
+            <select id="qrSize" aria-label="Output pixel size">
               <option value="256">256</option>
               <option value="384" selected>384</option>
               <option value="512">512</option>
@@ -63,6 +82,14 @@
           </div>
         </div>
         <label class="check"><input type="checkbox" id="qrQuiet" checked /> white quiet zone (recommended for scanners)</label>
+        <label>Error correction
+          <select id="qrEc" aria-label="Error correction level">
+            <option value="L">L — smallest</option>
+            <option value="M" selected>M — standard</option>
+            <option value="Q">Q — robust</option>
+            <option value="H">H — most robust</option>
+          </select>
+        </label>
 
         <div class="actions">
           <button id="qrMake" class="btn primary">Generate QR</button>

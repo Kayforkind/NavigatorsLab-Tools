@@ -22,6 +22,29 @@ function showTab(which: 'make' | 'read'): void {
 tabMake.addEventListener('click', () => showTab('make'));
 tabRead.addEventListener('click', () => showTab('read'));
 
+/* ================= payload presets ================= */
+const qesc = (s: string): string => s.replace(/([\\;,:"'])/g, '\\$1');
+
+function wifiFields(show: boolean): void { ($('#wifiFields') as HTMLElement).hidden = !show; }
+$('#preWifi').addEventListener('click', () => { wifiFields(true); ($('#wifiS') as HTMLInputElement).focus(); });
+$('#preUrl').addEventListener('click', () => { wifiFields(false); qrText.value = 'https://'; qrText.focus(); });
+$('#preMail').addEventListener('click', () => { wifiFields(false); qrText.value = 'mailto:'; qrText.focus(); });
+$('#prePhone').addEventListener('click', () => { wifiFields(false); qrText.value = 'tel:'; qrText.focus(); });
+$('#preVcard').addEventListener('click', () => {
+  wifiFields(false);
+  qrText.value = 'BEGIN:VCARD\nVERSION:3.0\nFN:Your Name\nORG:Company\nTEL:+90…\nEMAIL:you@example.com\nEND:VCARD';
+  qrText.focus();
+});
+$('#wifiMake').addEventListener('click', () => {
+  const s = ($('#wifiS') as HTMLInputElement).value.trim();
+  if (!s) return status(qrStat, 'Network name (SSID) is required.', 'warn');
+  const t = ($('#wifiT') as HTMLSelectElement).value;
+  const p = t === 'nopass' ? '' : ($('#wifiP') as HTMLInputElement).value;
+  const h = ($('#wifiH') as HTMLInputElement).checked ? 'H:true;' : '';
+  qrText.value = `WIFI:T:${t};S:${qesc(s)};${p ? `P:${qesc(p)};` : ''}${h};`;
+  btnMake.click();
+});
+
 /* ================= generate ================= */
 const qrText = $('#qrText') as HTMLTextAreaElement;
 const qrSize = $('#qrSize') as HTMLSelectElement;
@@ -43,8 +66,9 @@ btnMake.addEventListener('click', () => {
   const text = qrText.value.trim();
   if (!text) return status(qrStat, 'Type some text or a URL first.', 'warn');
   try {
-    // typeNumber 0 = auto; 'M' is the standard error-correction level
-    const qr = qrcode(0, 'M');
+    // typeNumber 0 = auto; EC level chosen by the user (M is the standard)
+    const ec = ($('#qrEc') as HTMLSelectElement).value as 'L' | 'M' | 'Q' | 'H';
+    const qr = qrcode(0, ec);
     qr.addData(text);
     qr.make();
     const count = qr.getModuleCount();
@@ -90,7 +114,7 @@ btnMake.addEventListener('click', () => {
     qrOut.hidden = false;
     btnPng.disabled = false;
     btnSvgDl.disabled = false;
-    qrMeta.textContent = `${count}×${count} modules · error correction M · ${size}px`;
+    qrMeta.textContent = `${count}×${count} modules · error correction ${ec} · ${size}px`;
     status(qrStat, `QR generated locally — ${text.length} characters encoded.`, 'ok');
   } catch (e) {
     status(qrStat, `Could not encode that content: ${(e as Error).message}`, 'err');

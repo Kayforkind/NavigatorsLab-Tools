@@ -44,6 +44,21 @@ Companion project: **[PDF Studio](https://github.com/Kayforkind/NavigatorsLab-PD
 
 ---
 
+## What the tools can do — v1.3 highlights
+
+Every claim below is exercised by the automated gate (23 E2E checks, 59 unit tests). Not marketing — test results.
+
+- **Everything accepts paste.** Ctrl/Cmd+V a screenshot or copied file on any tool page and it lands in the drop zone. Snip → paste → done.
+- **Photo Privacy Kit** strips GPS/camera/timestamps and now shows **SHA-256 fingerprints** of original vs. cleaned files — cryptographic proof that "same picture, minus the metadata" (the E2E suite verifies pixel-identical output). Paste support means screenshots get scrubbed in two keystrokes.
+- **Image Shrinker** targets an exact byte size via binary-searched quality in **JPG, WebP or AVIF**, streams per-file progress, survives unreadable images, and zips multi-file batches.
+- **Scan & Screenshot Cleaner** gained **auto-levels** (content-aware black/white point stretch) and **threshold** (pure photocopy black-on-white), alongside auto-straighten, fit-to-view crop, and 300 DPI PDF export.
+- **Local E-Sign Pad** can stamp **today's date under the signature** — the gate parses the signed PDF and asserts the year is embedded next to the flattened ink.
+- **PDF Pages** now has **extract-selected** and **insert blank page** (sized to its neighbor) on top of reorder/rotate/delete/merge.
+- **Receipt OCR → CSV** adds per-row **expense categories** and a **currency** for the CSV, on top of on-device totals and confidence flags.
+- **QR Studio** speaks the **Wi-Fi payload format** (with spec-correct escaping of `;` , `:` `,` and `\` in SSIDs/passwords — round-tripped through the decoder in CI), plus URL/mail/phone/vCard presets and selectable error correction.
+- **Audio Trimmer** can **peak-normalize** the selection (quiet voice memos → uniform loudness) before WAV/MP3 export.
+- **Text Diff** shows a **similarity percentage** and has a swap button; **Text Stats** draws a live **sentence-rhythm histogram**.
+
 ## Privacy is the architecture, not a promise
 
 These are static pages. There is **no server that could receive your files** — no upload endpoint, no queue, no storage bucket, no analytics, no cookies, no accounts. We keep **no attachments and no user information**, ever. What you drop in is processed by your own device and forgotten when you close the tab.

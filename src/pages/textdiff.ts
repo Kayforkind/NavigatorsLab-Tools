@@ -3,6 +3,7 @@
  * unified diff can be copied or downloaded. All local. */
 import { $, download, status, onDrop } from '../lib/dom';
 import { diffLines, summarize, unifiedDiff, type DiffLine } from '../lib/diff';
+import { similarityPercent } from '../lib/enhance';
 
 const ta = $('#textA') as HTMLTextAreaElement;
 const tb = $('#textB') as HTMLTextAreaElement;
@@ -26,12 +27,14 @@ for (const [el, ta2] of [[ta, ta], [tb, tb]] as const) {
 btnDiff.addEventListener('click', () => {
   if (!ta.value && !tb.value) return status(stat, 'Paste or drop two texts first.', 'warn');
   const lines = diffLines(ta.value, tb.value, { ignoreWs: ignoreWs.checked, caseSensitive: caseSense.checked });
-  render(lines);
+  const sim = similarityPercent(ta.value, tb.value);
+  diffSummary.textContent = `${summarize(lines)} · ${sim}% similar`;
+  render(lines, true);
 });
 
-function render(lines: DiffLine[]): void {
+function render(lines: DiffLine[], keepSummary = false): void {
   outPanel.hidden = false;
-  diffSummary.textContent = summarize(lines);
+  if (!keepSummary) diffSummary.textContent = summarize(lines);
   diffOut.innerHTML = '';
   const fragment = document.createDocumentFragment();
   for (const l of lines) {
@@ -77,6 +80,8 @@ $('#btnCopy').addEventListener('click', async () => {
   $('#btnCopy').textContent = 'Copied ✓';
   setTimeout(() => { ($('#btnCopy') as HTMLButtonElement).textContent = 'Copy unified diff'; }, 1500);
 });
+
+$('#btnSwap').addEventListener('click', () => { const tmp = ta.value; ta.value = tb.value; tb.value = tmp; });
 
 $('#btnDl').addEventListener('click', () => {
   const text = unifiedDiff(diffLines(ta.value, tb.value, { ignoreWs: ignoreWs.checked, caseSensitive: caseSense.checked }));

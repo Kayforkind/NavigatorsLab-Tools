@@ -180,6 +180,14 @@ async function exportSel(): Promise<void> {
     }
     chans.push(out);
   }
+  if (($('#norm') as HTMLInputElement).checked) {
+    const { normalizeGain } = await import('../lib/enhance');
+    const gain = normalizeGain(chans);
+    if (gain !== 1) {
+      for (const ch of chans) for (let i = 0; i < ch.length; i++) ch[i] = Math.min(0.9988, ch[i] * gain);
+    }
+    status(stat, `Normalize gain applied: ×${gain.toFixed(2)}.`, 'info');
+  }
   if (fmt.value === 'wav') {
     const blob = encodeWav(chans, sr);
     download(blob, `${fileName}-trim.wav`);

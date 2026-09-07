@@ -46,7 +46,10 @@
           <option value="{date}-{n}">date-number</option>
           <option value="{date} {slug}">date + original name</option>
           <option value="{n}-{slug}">number-slug</option>
+          <option value="{prefix}{date}-{slug}{suffix}">prefix + date-slug + suffix</option>
         </select>
+        <input type="text" id="preTxt" placeholder="prefix-" aria-label="Filename prefix" style="width:90px" />
+        <input type="text" id="sufTxt" placeholder="-suffix" aria-label="Filename suffix" style="width:90px" />
         <label>Slug from</label>
         <select id="slugSrc" aria-label="Slug source">
           <option value="orig">original name (cleaned)</option>
@@ -59,6 +62,8 @@
           <option value="compact">20260905</option>
           <option value="month">2026-09</option>
         </select>
+        <label>Start №</label>
+        <input type="number" id="startN" value="1" min="0" style="width:70px" aria-label="First sequence number" />
         <label><input type="checkbox" id="lower" checked /> lowercase</label>
       </div>
       <div class="row">

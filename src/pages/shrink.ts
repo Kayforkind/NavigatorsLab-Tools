@@ -1,6 +1,7 @@
 import { $, pickFiles, onDrop, download, status, fmtBytes, fileToCanvas, canvasBlob, toast } from '../lib/dom';
 
 interface Row { file: File; out?: Blob; w?: number; h?: number; }
+let batch = 0; // increments per run — lets a stale loop abort
 
 const rows: Row[] = [];
 const dz = $('#dz');
@@ -70,28 +71,45 @@ function render(): void {
 
 function outName(r: Row): string {
   const base = r.file.name.replace(/\.[^.]+$/, '');
-  const ext = fmt.value === 'image/jpeg' ? 'jpg' : fmt.value === 'image/webp' ? 'webp' : 'png';
+  const ext = fmt.value === 'image/jpeg' ? 'jpg' : fmt.value === 'image/webp' ? 'webp' : fmt.value === 'image/avif' ? 'avif' : 'png';
   return `${base}-shrunk.${ext}`;
 }
 
 async function run(): Promise<void> {
+  const run = ++batch;
+  btnGo.disabled = true;
   status(stat, 'Processing…', 'info');
-  let totalIn = 0, totalOut = 0;
+  let totalIn = 0, totalOut = 0, done = 0, failed = 0;
   for (const r of rows) {
+    if (run !== batch) { btnGo.disabled = false; return; } // a newer run replaced this one
     try {
       const canvas = await fileToCanvas(r.file, 8000, 8000);
       const out = await encode(canvas);
       r.out = out;
       r.w = canvas.width; r.h = canvas.height;
       totalIn += r.file.size; totalOut += out.size;
-    } catch (e) {
-      status(stat, `Failed on ${r.file.name}: ${(e as Error).message}`, 'err');
-      return;
+      done++;
+      status(stat, `Processing ${done}/${rows.length} — ${r.file.name}`, 'info');
+    } catch {
+      failed++; // keep going — one broken image must not kill the batch
     }
   }
+  btnGo.disabled = rows.length === 0;
+  if (run !== batch) return;
+  if (!done) { status(stat, 'Could not read any of those images.', 'err'); return; }
   render();
   const saved = Math.round((1 - totalOut / totalIn) * 100);
-  status(stat, `Done — ${fmtBytes(totalIn)} → ${fmtBytes(totalOut)} (${saved}% smaller). Downloading…`, 'ok');
+  const failNote = failed ? ` (${failed} unreadable skipped)` : '';
+  status(stat, `Done — ${fmtBytes(totalIn)} → ${fmtBytes(totalOut)} (${saved}% smaller). Downloading…${failNote}`, 'ok');
+  if (rows.length > 1 && !failed) {
+    const { default: JSZip } = await import('jszip');
+    const zip = new JSZip();
+    for (const r of rows) if (r.out) zip.file(outName(r), r.out);
+    const zb = await zip.generateAsync({ type: 'blob' });
+    download(zb, 'shrunk-images.zip');
+    toast('Shrunk 🗜️');
+    return;
+  }
   for (const r of rows) if (r.out) download(r.out, outName(r));
   toast('Shrunk 🗜️');
 }

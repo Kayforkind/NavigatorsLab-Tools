@@ -222,7 +222,7 @@ async function doStamp(): Promise<void> {
     return;
   }
   try {
-    const { PDFDocument } = await import('pdf-lib'); // lazy
+    const { PDFDocument, StandardFonts, rgb } = await import('pdf-lib'); // lazy
     const fresh = await PDFDocument.load(pdfBytes.slice(0), { ignoreEncryption: true });
     const png = await fresh.embedPng(new Uint8Array(await sigPng.arrayBuffer()));
     const pageIdx = parseInt(pageSel.value || '0', 10);
@@ -235,9 +235,18 @@ async function doStamp(): Promise<void> {
     const xPt = placeAt.x / pxPerPt - wPt / 2;
     const yPt = ptH - placeAt.y / pxPerPt - hPt / 2;
     page.drawImage(png, { x: xPt, y: yPt, width: wPt, height: hPt });
+    let dateStamped = false;
+    if (($('#addDate') as HTMLInputElement).checked) {
+      try {
+        const helv = await fresh.embedFont(StandardFonts.Helvetica);
+        const txt = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        page.drawText(txt, { x: xPt, y: Math.max(4, yPt - 13), size: 9, font: helv, color: rgb(0.25, 0.28, 0.35) });
+        dateStamped = true;
+      } catch { /* date is optional — the ink is the important part */ }
+    }
     const bytes = await fresh.save();
     download(new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' }), 'signed.pdf');
-    status(stat, 'Signed & flattened — downloading signed.pdf.', 'ok');
+    status(stat, `Signed & flattened — downloading signed.pdf.${dateStamped ? ' Date stamped.' : ''}`, 'ok');
     toast('Signed ✍️');
   } catch (e) {
     status(stat, `Flatten failed: ${(e as Error).message}`, 'err');

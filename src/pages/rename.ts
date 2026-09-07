@@ -71,10 +71,15 @@ function nameFor(r: Row, i: number): string {
     const orig = slugify(r.file.name);
     slug = orig || 'file';
   }
+  const pre = ($('#preTxt') as HTMLInputElement).value;
+  const suf = ($('#sufTxt') as HTMLInputElement).value;
+  const start = parseInt(($('#startN') as HTMLInputElement).value, 10);
   let n = pat
+    .replace('{prefix}', pre)
+    .replace('{suffix}', suf)
     .replace('{date}', dateStr(r.date))
     .replace('{slug}', slug)
-    .replace('{n}', String(i + 1).padStart(2, '0'));
+    .replace('{n}', String(i + (Number.isFinite(start) ? start : 1)).padStart(2, '0'));
   if (($('#lower') as HTMLInputElement).checked) n = n.toLowerCase();
   return n + ext;
 }

@@ -25,11 +25,29 @@ export function onDrop(el: HTMLElement, cb: (files: File[]) => void): () => void
   el.addEventListener('dragover', over);
   el.addEventListener('dragleave', leave);
   el.addEventListener('drop', drop);
+  // Paste support: Ctrl/Cmd+V an image (screenshot!) or copied files anywhere
+  // on the page — goes to the page's drop zone. Snipping tool → share in 2s.
+  const paste = (e: ClipboardEvent) => {
+    const items = e.clipboardData?.files;
+    if (!items?.length) return;
+    const files = Array.from(items);
+    e.preventDefault();
+    cb(files);
+    el.classList.remove('dz-over');
+  };
+  document.addEventListener('paste', paste);
   return () => {
     el.removeEventListener('dragover', over);
     el.removeEventListener('dragleave', leave);
     el.removeEventListener('drop', drop);
+    document.removeEventListener('paste', paste);
   };
+}
+
+/** SHA-256 of a blob, hex-encoded — lets tools prove "same bytes, minus the metadata". */
+export async function sha256Hex(blob: Blob): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', await blob.arrayBuffer());
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 /** Trigger a browser download of a blob. */
