@@ -353,6 +353,8 @@ const TOOL_ALIASES: Record<string, string> = {
 export function resolveToolAlias(raw: string): string | null {
   const key = decodeURIComponent(raw).trim().toLowerCase().replace(/-/g, ' ').replace(/\s+/g, ' ');
   if (TOOL_ALIASES[key]) return TOOL_ALIASES[key];
+  // a bare tool id (/qr, /exif, /ocr…) is its own pretty URL
+  if (CATALOG.some((t) => t.id === key)) return key;
   return null;
 }
 

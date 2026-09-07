@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-07T07:45:44.650756+00:00",
-  "allGood": false,
+  "generatedAt": "2026-09-07T09:26:47.833044+00:00",
+  "allGood": true,
   "tools": [
     {
       "id": "exif",
@@ -9,8 +9,8 @@
       "href": "./exif.html",
       "prettyUrl": "https://navigatorslab.com/Photo-Privacy-Kit",
       "method": "strip E2E (browser)",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "metadata",
@@ -19,8 +19,8 @@
       "href": "./metadata.html",
       "prettyUrl": "https://navigatorslab.com/Metadata-Checker",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "shrink",
@@ -29,8 +29,8 @@
       "href": "./shrink.html",
       "prettyUrl": "https://navigatorslab.com/Image-Shrinker",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "scan",
@@ -39,8 +39,8 @@
       "href": "./scan.html",
       "prettyUrl": "https://navigatorslab.com/Scan-Cleaner",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "sign",
@@ -49,8 +49,8 @@
       "href": "./sign.html",
       "prettyUrl": "https://navigatorslab.com/E-Sign-Pad",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "receipts",
@@ -59,8 +59,8 @@
       "href": "./receipts.html",
       "prettyUrl": "https://navigatorslab.com/Receipts-to-PDF",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "ocr",
@@ -69,8 +69,8 @@
       "href": "./ocr.html",
       "prettyUrl": "https://navigatorslab.com/Receipt-OCR",
       "method": "engine E2E (browser)",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "qr",
@@ -79,8 +79,8 @@
       "href": "./qr.html",
       "prettyUrl": "https://navigatorslab.com/QR-Studio",
       "method": "engine E2E (browser)",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "audio",
@@ -89,8 +89,8 @@
       "href": "./audio.html",
       "prettyUrl": "https://navigatorslab.com/Audio-Trimmer",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "invoice",
@@ -99,8 +99,8 @@
       "href": "./invoice.html",
       "prettyUrl": "https://navigatorslab.com/Invoice-Generator",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "rename",
@@ -109,8 +109,8 @@
       "href": "./rename.html",
       "prettyUrl": "https://navigatorslab.com/Batch-Rename",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "printprep",
@@ -119,8 +119,8 @@
       "href": "./printprep.html",
       "prettyUrl": "https://navigatorslab.com/Print-Shop-Prep",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "pdfpages",
@@ -129,8 +129,8 @@
       "href": "./pdfpages.html",
       "prettyUrl": "https://navigatorslab.com/PDF-Pages",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "textdiff",
@@ -139,8 +139,8 @@
       "href": "./textdiff.html",
       "prettyUrl": "https://navigatorslab.com/Text-Diff",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     },
     {
       "id": "textstats",
@@ -149,20 +149,20 @@
       "href": "./textstats.html",
       "prettyUrl": "https://navigatorslab.com/Text-Stats",
       "method": "route + headers",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
-      "ok": false
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00",
+      "ok": true
     }
   ],
   "probes": [
     {
       "name": "Receipt OCR — engine end-to-end",
-      "result": "PASS: PROD OCR E2E: PASS â€” real engine ran on navigatorslab.com",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00"
+      "result": "PASS: PROD OCR E2E: PASS — real engine ran on navigatorslab.com",
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00"
     },
     {
       "name": "Photo Privacy Kit — strip end-to-end",
       "result": "PASS: bytes: clean file 20B, SOI=true, leftover metadata segments: NONE",
-      "verifiedAt": "2026-09-07T07:45:44.650756+00:00"
+      "verifiedAt": "2026-09-07T09:26:47.833044+00:00"
     }
   ]
 }
