@@ -1,6 +1,7 @@
 /* Edge worker for navigatorslab.com/tools — serves the static suite from the
  * ASSETS binding and stamps the security policy onto EVERY response, so the
  * headers we assert in scripts/security.cjs are exactly what production sends. */
+import { resolveToolAlias } from './mcp.ts';
 const CSP =
   "default-src 'none'; script-src 'self' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; " +
   "img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' blob: data:; " +
@@ -99,7 +100,19 @@ export default {
     if (assetPath === '/tools' || assetPath === '') assetPath = '/tools/index.html';
     else if (assetPath === '/llms.txt') assetPath = '/tools/llms.txt'; // site-root alias for agents
     else if (assetPath === '/llms-full.txt') assetPath = '/tools/llms-full.txt';
-    else if (!assetPath.startsWith('/tools/')) assetPath = '/tools/' + assetPath.replace(/^\//, '');
+    else if (assetPath === '/status' || assetPath === '/status.html') assetPath = '/tools/status.html';
+    else if (!assetPath.startsWith('/tools/')) {
+      // Pretty tool URLs at the site root: /QR-Studio, /qr, /Photo-Privacy-Kit…
+      // 301 to the canonical /tools/<id>.html (which is what the funnel repos
+      // and search results should index).
+      const pretty = assetPath.replace(/^\//, '');
+      const toolId = resolveToolAlias(pretty);
+      if (toolId) {
+        const target = `https://navigatorslab.com/tools/${toolId}.html`;
+        return new Response(null, { status: 301, headers: { location: target, 'cache-control': 'public, max-age=86400' } });
+      }
+      assetPath = '/tools/' + pretty;
+    }
     else {
       const tail = assetPath.slice('/tools/'.length);
       if (tail && !tail.includes('.')) assetPath = `/tools/${tail}.html`;

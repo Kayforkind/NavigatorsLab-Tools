@@ -35,6 +35,7 @@ function report(name, ok, detail) {
 }
 
 function get(pathname) {
+  /* pathname is BASE-relative (e.g. '/exif.html'); callers must not double-prefix */
   return new Promise((resolve, reject) => {
     http.get(`${BASE}${pathname}`, (res) => {
       const chunks = [];
@@ -60,6 +61,7 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
    * squat our port (a vite dev server would answer without our headers). */
   {
     let ours = false;
+    const guardPath = new URL(BASE).pathname.replace(/\/+$/, '');
     try { ours = !!(await get('/')).headers['content-security-policy']; } catch { ours = false; }
     if (!ours) {
       if (server) server.kill();
@@ -136,9 +138,10 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
     /* capture ALL requests the page makes (incl. beacons via CDP-level events) */
     let foreignRequests = [];
     let postTargets = [];
+    const SELF_HOST = new URL(BASE).host; // derived from SEC_BASE — subpath/origin agnostic
     page.on('request', (req) => {
       const u = new URL(req.url());
-      if (u.protocol.startsWith('http') && u.host !== `localhost:${PORT}`) {
+      if (u.protocol.startsWith('http') && u.host !== SELF_HOST) {
         foreignRequests.push(`${req.method()} ${u.host}${u.pathname.slice(0, 60)}`);
       }
       if (req.method() !== 'GET') postTargets.push(`${req.method()} ${u.host}${u.pathname.slice(0, 60)}`);

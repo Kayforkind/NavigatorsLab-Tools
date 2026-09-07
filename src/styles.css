@@ -508,3 +508,25 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .mirrors-line { margin-top: 14px; font-size: 13.5px; color: var(--mut); }
 .mirrors-line a { color: var(--acc); text-decoration: none; }
 .mirrors-line a:hover { text-decoration: underline; }
+
+/* ---------- status page ---------- */
+.status-rows { display: flex; flex-direction: column; gap: 8px; margin: 18px 0; }
+.status-row {
+  display: grid; grid-template-columns: 2rem 1fr 1.2fr auto auto; gap: 10px;
+  align-items: center; padding: 10px 14px; border-radius: 10px;
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+  font-size: .92rem;
+}
+.status-row .sr-name { font-weight: 600; color: var(--fg, #e8ecf4); text-decoration: none; }
+.status-row .sr-name:hover { text-decoration: underline; }
+.status-row .sr-pretty { color: #7aa2ff; text-decoration: none; font-family: ui-monospace, monospace; font-size: .85rem; }
+.status-row .sr-pretty:hover { text-decoration: underline; }
+.status-row .sr-method { color: #9aa4b8; font-size: .8rem; }
+.status-row .sr-when { color: #6b7488; font-size: .78rem; white-space: nowrap; }
+.status-row.probe { border-style: dashed; }
+.foot-note { color: #9aa4b8; font-size: .85rem; margin-top: 14px; }
+.foot-note code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 4px; }
+@media (max-width: 640px) {
+  .status-row { grid-template-columns: 1.6rem 1fr; grid-auto-rows: auto; }
+  .status-row .sr-pretty, .status-row .sr-method, .status-row .sr-when { grid-column: 2; }
+}

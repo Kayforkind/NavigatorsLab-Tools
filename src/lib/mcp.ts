@@ -321,3 +321,30 @@ const CATALOG = [
   { id: 'textdiff', name: 'Text Diff', url: 'https://navigatorslab.com/tools/textdiff.html', agent_params: '?a=<text-url>&b=<text-url>', files: 'any text', what: 'line diff, word-level highlights, similarity %, unified diff', repo: 'https://github.com/Kayforkind/NavigatorsLab-Text-Diff' },
   { id: 'textstats', name: 'Text Stats', url: 'https://navigatorslab.com/tools/textstats.html', agent_params: '?url=<text-url>', files: 'any text', what: 'counts, reading time, Flesch, keyword density, rhythm', repo: 'https://github.com/Kayforkind/NavigatorsLab-Text-Stats' },
 ];
+
+/* Pretty URL aliases for the site root: /QR-Studio, /qr, /Photo-Privacy-Kit…
+ * The edge worker 301s these to the canonical /tools/<id>.html. Accepts the
+ * tool id, the tool name, and the funnel-repo suffix. */
+const TOOL_ALIASES: Record<string, string> = {
+  'photo-privacy-kit': 'exif', 'photo privacy kit': 'exif',
+  'metadata hidden data checker': 'metadata', 'metadata checker': 'metadata',
+  'image-shrinker': 'shrink', 'image shrinker': 'shrink',
+  'scan-screenshot-cleaner': 'scan', 'scan cleaner': 'scan', 'scan screenshot cleaner': 'scan',
+  'local-e-sign-pad': 'sign', 'e-sign-pad': 'sign', 'e sign pad': 'sign', 'esign': 'sign',
+  'receipts-to-pdf': 'receipts', 'receipts to pdf': 'receipts',
+  'receipt-ocr-to-csv': 'ocr', 'receipt-ocr': 'ocr', 'receipt ocr': 'ocr',
+  'qr-studio': 'qr', 'qr studio': 'qr',
+  'audio-trimmer': 'audio', 'audio trimmer': 'audio',
+  'invoice-quote-generator': 'invoice', 'invoice generator': 'invoice', 'invoice quote generator': 'invoice',
+  'batch-rename-and-sort': 'rename', 'batch-rename': 'rename', 'batch rename': 'rename',
+  'print-shop-prep': 'printprep', 'print shop prep': 'printprep',
+  'pdf-pages': 'pdfpages', 'pdf pages': 'pdfpages',
+  'text-diff': 'textdiff', 'text diff': 'textdiff',
+  'text-stats': 'textstats', 'text stats': 'textstats',
+};
+
+export function resolveToolAlias(raw: string): string | null {
+  const key = decodeURIComponent(raw).trim().toLowerCase().replace(/-/g, ' ').replace(/\s+/g, ' ');
+  if (TOOL_ALIASES[key]) return TOOL_ALIASES[key];
+  return null;
+}

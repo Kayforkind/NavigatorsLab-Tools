@@ -127,3 +127,21 @@ describe('text_diff DoS guard', () => {
     expect(parsed.removed).toBe(1);
   });
 });
+
+describe('resolveToolAlias (pretty URLs)', () => {
+  it('maps repo-style names, display names and ids to tool ids', async () => {
+    const { resolveToolAlias } = await import('./mcp');
+    expect(resolveToolAlias('QR-Studio')).toBe('qr');
+    expect(resolveToolAlias('photo-privacy-kit')).toBe('exif');
+    expect(resolveToolAlias('Photo%20Privacy%20Kit')).toBe('exif');
+    expect(resolveToolAlias('PDF-Pages')).toBe('pdfpages');
+    expect(resolveToolAlias('e-sign-pad')).toBe('sign');
+    expect(resolveToolAlias('receipt-ocr')).toBe('ocr');
+  });
+  it('rejects unknown paths so real files still resolve', async () => {
+    const { resolveToolAlias } = await import('./mcp');
+    expect(resolveToolAlias('favicon.svg')).toBe(null);
+    expect(resolveToolAlias('llms.txt')).toBe(null);
+    expect(resolveToolAlias('totally-unknown-page')).toBe(null);
+  });
+});

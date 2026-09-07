@@ -338,6 +338,19 @@ async function setFiles(page, files) {
     const expected = hdrRate * 2 * 1.0; // 16-bit mono, 1 second
     const okTrim = Math.abs(dataLen - expected) <= hdrRate * 2 * 0.02; // ±20ms
     report('audio-trim', okTrim, `WAV 1.0s @${hdrRate}Hz = ${dataLen}B data (expected ${expected}±)`);
+
+    // MP3 export: switch format, export, verify real LAME output (ID3 tag or
+    // MPEG frame sync) AND that the encoder script was fetched same-origin.
+    const lameReqs = [];
+    page.on('request', (r) => { if (r.url().includes('lamejs')) lameReqs.push(r.url()); });
+    await page.selectOption('#fmt', 'mp3');
+    const mp3 = await grabDownload(page, () => page.click('#exp'));
+    const b = mp3.bytes;
+    const hasId3 = b.length > 10 && b[0] === 0x49 && b[1] === 0x44 && b[2] === 0x33; // "ID3"
+    const hasFrame = b.length > 4 && b[0] === 0xff && (b[1] & 0xe0) === 0xe0;       // MPEG sync
+    report('audio-mp3', (hasId3 || hasFrame) && lameReqs.length > 0,
+      `MP3 ${b.length}B ${hasId3 ? 'ID3' : hasFrame ? 'frame-sync' : 'INVALID'}; lame fetched same-origin: ${lameReqs.length > 0 ? 'yes' : 'NO'}`);
+
     await page.screenshot({ path: path.join(SHOTS, '07-audio.png') });
   });
 

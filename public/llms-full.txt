@@ -114,3 +114,25 @@ Every tool has a standalone GitHub repository (MIT). The tool itself always runs
 - `pdfpages` — https://github.com/Kayforkind/NavigatorsLab-PDF-Pages
 - `textdiff` — https://github.com/Kayforkind/NavigatorsLab-Text-Diff
 - `textstats` — https://github.com/Kayforkind/NavigatorsLab-Text-Stats
+
+## Pretty URLs
+
+Every tool also answers at a root-level short URL (the edge worker 301s it to the tool page):
+
+- https://navigatorslab.com/Photo-Privacy-Kit
+- https://navigatorslab.com/Metadata-Checker
+- https://navigatorslab.com/Image-Shrinker
+- https://navigatorslab.com/Scan-Cleaner
+- https://navigatorslab.com/E-Sign-Pad
+- https://navigatorslab.com/Receipts-to-PDF
+- https://navigatorslab.com/Receipt-OCR
+- https://navigatorslab.com/QR-Studio
+- https://navigatorslab.com/Audio-Trimmer
+- https://navigatorslab.com/Invoice-Generator
+- https://navigatorslab.com/Batch-Rename
+- https://navigatorslab.com/Print-Shop-Prep
+- https://navigatorslab.com/PDF-Pages
+- https://navigatorslab.com/Text-Diff
+- https://navigatorslab.com/Text-Stats
+
+These mirror each tool's standalone repo name — one name, three surfaces (repo, mirror site, live tool).

@@ -10,6 +10,14 @@ import io, json, os, shutil
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'funnel')
 HUB = 'https://navigatorslab.com/tools'
+# root-level pretty URLs on the hub (edge worker 301s these to the tool page)
+PRETTY = {
+    'exif': 'Photo-Privacy-Kit', 'metadata': 'Metadata-Checker', 'shrink': 'Image-Shrinker',
+    'scan': 'Scan-Cleaner', 'sign': 'E-Sign-Pad', 'receipts': 'Receipts-to-PDF',
+    'ocr': 'Receipt-OCR', 'qr': 'QR-Studio', 'audio': 'Audio-Trimmer',
+    'invoice': 'Invoice-Generator', 'rename': 'Batch-Rename', 'printprep': 'Print-Shop-Prep',
+    'pdfpages': 'PDF-Pages', 'textdiff': 'Text-Diff', 'textstats': 'Text-Stats',
+}
 MAIN_REPO = 'https://github.com/Kayforkind/NavigatorsLab-Tools'
 
 SLUGS = {
@@ -175,12 +183,14 @@ REDIRECT_CSS = '''
     @keyframes s { to { transform: rotate(360deg); } }
     small { color: #64748b; display: block; margin-top: 26px; }
     small a { color: #94a3b8; }
+    .pretty { font-family: ui-monospace, monospace; color: #67e8f9; font-size: 14px; margin: 4px 0 0; }
 '''
 
 
 def redirector(t):
     icon = t['icon'].replace('\ufe0f', '')
     url = f"{HUB}/{t['id']}.html"
+    pretty = f"https://navigatorslab.com/{PRETTY[t['id']]}"
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -198,6 +208,7 @@ def redirector(t):
     <h1>{t['name']}</h1>
     <p>{t['tagline']}</p>
     <p><span class="spin" aria-hidden="true"></span>Opening on <strong>navigatorslab.com</strong>&hellip;</p>
+    <p class="pretty">{pretty}</p>
     <a class="btn" href="{url}">Open {t['name']} now &rarr;</a>
     <small>Part of the free, open-source <a href="{HUB}/">NavigatorsLab Tools</a> suite &mdash; 15 tools, zero uploads.</small>
   </main>
@@ -210,6 +221,7 @@ def redirector(t):
 def readme(t, all_tools):
     icon = t['icon'].replace('\ufe0f', '')
     tool_url = f"{HUB}/{t['id']}.html"
+    pretty = f"https://navigatorslab.com/{PRETTY[t['id']]}"
     feats = '\n'.join(f'- {f}' for f in FEATURES[t['id']])
     rows = []
     for x in all_tools:
@@ -223,6 +235,7 @@ def readme(t, all_tools):
 
 <h4 align="center">
   &#9654; <a href="{tool_url}">Open {t['name']} &mdash; free, no sign-up, nothing uploaded</a><br>
+  pretty link: **{pretty}** &rarr; same tool, shorter URL<br>
   <a href="{HUB}/">Browse all 15 NavigatorsLab Tools</a>
 </h4>
 

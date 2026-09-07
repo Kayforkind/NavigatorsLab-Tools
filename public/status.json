@@ -1,0 +1,168 @@
+{
+  "generatedAt": "2026-09-07T07:45:44.650756+00:00",
+  "allGood": false,
+  "tools": [
+    {
+      "id": "exif",
+      "icon": "🛡️",
+      "name": "Photo Privacy Kit",
+      "href": "./exif.html",
+      "prettyUrl": "https://navigatorslab.com/Photo-Privacy-Kit",
+      "method": "strip E2E (browser)",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "metadata",
+      "icon": "🔍",
+      "name": "Metadata & Hidden-Data Checker",
+      "href": "./metadata.html",
+      "prettyUrl": "https://navigatorslab.com/Metadata-Checker",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "shrink",
+      "icon": "🗜️",
+      "name": "Image Shrinker",
+      "href": "./shrink.html",
+      "prettyUrl": "https://navigatorslab.com/Image-Shrinker",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "scan",
+      "icon": "📄",
+      "name": "Scan & Screenshot Cleaner",
+      "href": "./scan.html",
+      "prettyUrl": "https://navigatorslab.com/Scan-Cleaner",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "sign",
+      "icon": "✍️",
+      "name": "Local E-Sign Pad",
+      "href": "./sign.html",
+      "prettyUrl": "https://navigatorslab.com/E-Sign-Pad",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "receipts",
+      "icon": "🧾",
+      "name": "Receipts → One PDF",
+      "href": "./receipts.html",
+      "prettyUrl": "https://navigatorslab.com/Receipts-to-PDF",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "ocr",
+      "icon": "🔢",
+      "name": "Receipt OCR → CSV",
+      "href": "./ocr.html",
+      "prettyUrl": "https://navigatorslab.com/Receipt-OCR",
+      "method": "engine E2E (browser)",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "qr",
+      "icon": "🔳",
+      "name": "QR Studio",
+      "href": "./qr.html",
+      "prettyUrl": "https://navigatorslab.com/QR-Studio",
+      "method": "engine E2E (browser)",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "audio",
+      "icon": "🎧",
+      "name": "Audio Trimmer",
+      "href": "./audio.html",
+      "prettyUrl": "https://navigatorslab.com/Audio-Trimmer",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "invoice",
+      "icon": "🧮",
+      "name": "Invoice / Quote Generator",
+      "href": "./invoice.html",
+      "prettyUrl": "https://navigatorslab.com/Invoice-Generator",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "rename",
+      "icon": "🗂️",
+      "name": "Batch Rename & Sort",
+      "href": "./rename.html",
+      "prettyUrl": "https://navigatorslab.com/Batch-Rename",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "printprep",
+      "icon": "🖨️",
+      "name": "Print-Shop Prep",
+      "href": "./printprep.html",
+      "prettyUrl": "https://navigatorslab.com/Print-Shop-Prep",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "pdfpages",
+      "icon": "📑",
+      "name": "PDF Pages",
+      "href": "./pdfpages.html",
+      "prettyUrl": "https://navigatorslab.com/PDF-Pages",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "textdiff",
+      "icon": "🔬",
+      "name": "Text Diff",
+      "href": "./textdiff.html",
+      "prettyUrl": "https://navigatorslab.com/Text-Diff",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    },
+    {
+      "id": "textstats",
+      "icon": "📊",
+      "name": "Text Stats",
+      "href": "./textstats.html",
+      "prettyUrl": "https://navigatorslab.com/Text-Stats",
+      "method": "route + headers",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00",
+      "ok": false
+    }
+  ],
+  "probes": [
+    {
+      "name": "Receipt OCR — engine end-to-end",
+      "result": "PASS: PROD OCR E2E: PASS â€” real engine ran on navigatorslab.com",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00"
+    },
+    {
+      "name": "Photo Privacy Kit — strip end-to-end",
+      "result": "PASS: bytes: clean file 20B, SOI=true, leftover metadata segments: NONE",
+      "verifiedAt": "2026-09-07T07:45:44.650756+00:00"
+    }
+  ]
+}

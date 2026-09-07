@@ -34,7 +34,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.svg', 'icon.svg', 'og-image.png', 'robots.txt', 'sitemap.xml',
-        'tools.json', 'llms.txt', 'llms-full.txt', 'lamejs/lame.min.js', 'tess/worker.min.js',
+        'tools.json', 'status.json', 'llms.txt', 'llms-full.txt', 'lamejs/lame.min.js', 'tess/worker.min.js',
         'tess/tesseract-core-lstm.wasm.js', 'tess/tesseract-core-lstm.wasm',
         'tess/tesseract-core-simd-lstm.wasm.js', 'tess/tesseract-core-simd-lstm.wasm',
         'tessdata/eng.traineddata.gz',
@@ -103,6 +103,7 @@ export default defineConfig({
         textdiff: resolve(__dirname, 'textdiff.html'),
         textstats: resolve(__dirname, 'textstats.html'),
         agents: resolve(__dirname, 'agents.html'),
+        status: resolve(__dirname, 'status.html'),
       },
     },
   },
