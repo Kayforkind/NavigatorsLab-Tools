@@ -1,7 +1,7 @@
 /* Edge worker for navigatorslab.com/tools — serves the static suite from the
  * ASSETS binding and stamps the security policy onto EVERY response, so the
  * headers we assert in scripts/security.cjs are exactly what production sends. */
-import { resolveToolAlias } from './mcp.ts';
+import { resolvePrettyTarget } from './mcp.ts';
 const CSP =
   "default-src 'none'; script-src 'self' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; " +
   "img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' blob: data:; " +
@@ -104,11 +104,11 @@ export default {
     else if (!assetPath.startsWith('/tools/')) {
       // Pretty tool URLs at the site root: /QR-Studio, /qr, /Photo-Privacy-Kit…
       // 301 to the canonical /tools/<id>.html (which is what the funnel repos
-      // and search results should index).
+      // and search results should index). External tools (Reimagine, at
+      // /reimagine/) 301 to their own path.
       const pretty = assetPath.replace(/^\//, '');
-      const toolId = resolveToolAlias(pretty);
-      if (toolId) {
-        const target = `https://navigatorslab.com/tools/${toolId}.html`;
+      const target = resolvePrettyTarget(pretty);
+      if (target) {
         return new Response(null, { status: 301, headers: { location: target, 'cache-control': 'public, max-age=86400' } });
       }
       assetPath = '/tools/' + pretty;

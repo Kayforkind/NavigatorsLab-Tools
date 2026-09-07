@@ -20,7 +20,7 @@ const DICT: Record<string, Record<Lang, string>> = {
     tr: '🔒 Yükleme yok · Hesap yok · Hiçbir şey saklanmaz',
     de: '🔒 Keine Uploads · Keine Konten · Nichts wird gespeichert',
   },
-  'hero.title1': { en: 'Fifteen tools that', tr: 'On beş araç —', de: 'Fünfzehn Tools, die' },
+  'hero.title1': { en: 'Sixteen tools that', tr: 'On altı araç —', de: 'Sechzehn Tools, die' },
   'hero.title2': { en: 'never phone home.', tr: 'nach Hause telefonieren nie.', de: 'niemals nach Hause telefonieren.' },
   'hero.cta.browse': { en: 'Browse the tools ↓', tr: 'Araçlara göz at ↓', de: 'Tools ansehen ↓' },
   'hero.cta.github': { en: '★ Source on GitHub', tr: '★ Kaynak: GitHub', de: '★ Quelle auf GitHub' },
@@ -47,13 +47,14 @@ const DICT: Record<string, Record<Lang, string>> = {
   'tools.head': { en: 'The toolbox', tr: 'Araç kutusu', de: 'Die Werkzeugkiste' },
   'tools.search': { en: 'Search — try “gps”, “2 mb”, “invoice”…', tr: 'Ara — “gps”, “2 mb”, “fatura” deneyin…', de: 'Suchen — „gps“, „2 mb“, „rechnung“…' },
   'search.none': { en: 'Nothing matches — try a different word.', tr: 'Sonuç yok — başka bir kelime deneyin.', de: 'Keine Treffer — anderes Wort versuchen.' },
-  'cat.all': { en: 'All 15', tr: 'Hepsi 15', de: 'Alle 15' },
+  'cat.all': { en: 'All 16', tr: 'Hepsi 16', de: 'Alle 16' },
   'cat.privacy': { en: '🛡️ Privacy', tr: '🛡️ Gizlilik', de: '🛡️ Datenschutz' },
   'cat.documents': { en: '📄 Documents', tr: '📄 Belgeler', de: '📄 Dokumente' },
   'cat.money': { en: '🧾 Money', tr: '🧾 Para', de: '🧾 Geld' },
   'cat.images': { en: '🖼️ Images', tr: '🖼️ Görseller', de: '🖼️ Bilder' },
   'cat.media': { en: '🎧 Media', tr: '🎧 Medya', de: '🎧 Medien' },
   'cat.files': { en: '🗂️ Files', tr: '🗂️ Dosyalar', de: '🗂️ Dateien' },
+  'cat.design': { en: '🎨 Design', tr: '🎨 Tasarım', de: '🎨 Design' },
   'card.open': { en: 'Open →', tr: 'Aç →', de: 'Öffnen →' },
   'card.repo': { en: 'GitHub repo ↗', tr: 'GitHub deposu ↗', de: 'GitHub-Repo ↗' },
   'mirrors.line': {
@@ -122,6 +123,7 @@ export function t(key: string, lang: Lang = getLang()): string {
 
 /** localized tool tagline: keyed by tool id, EN fallback is tools.json content */
 const TAGLINES: Record<string, Partial<Record<Lang, string>>> = {
+  reimagine: { tr: 'HTML sayfalarını kendi içeriğinden yeniden tasarla', de: 'HTML-Seiten aus ihrem eigenen Inhalt neu gestalten' },
   exif: { tr: 'Paylaşmadan önce GPS, kamera modeli ve zaman damgalarını silin', de: 'GPS, Kameramodell und Zeitstempel vor dem Posten entfernen' },
   metadata: { tr: 'Bir dosyanın içindeki her şeyi görün — sonra silin', de: 'Sehen Sie, was wirklich in einer Datei steckt — dann entfernen Sie es' },
   shrink: { tr: '“En fazla 2 MB” portal limitlerini TinyPNG olmadan karşılayın', de: '„max. 2 MB“-Portal-Limits ohne TinyPNG treffen' },

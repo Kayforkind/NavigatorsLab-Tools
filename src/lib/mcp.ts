@@ -14,9 +14,9 @@ export const AGENT_INFO = {
   name: 'navigatorslab-tools',
   version: '1.4.0',
   title: 'NavigatorsLab Tools',
-  description: 'Fifteen private, in-browser file tools. Zero uploads, zero accounts.',
+  description: 'Sixteen private, in-browser tools — fifteen file utilities plus Reimagine, the HTML redesign engine. Zero uploads, zero accounts.',
   instructions:
-    'Tools run in two modes. (1) compute: this MCP server computes QR payloads, text diffs and text stats locally at the edge — nothing is stored. (2) drive: for file processing (EXIF strip, image shrink, PDF sign/pages, OCR…), open the tool URL with ?url=<same-origin file URL> plus its agent parameters; the page loads the file and applies the parameters automatically. All tool URLs are on this same origin. The suite never uploads, retains, or logs any file.',
+    'Tools run in two modes. (1) compute: this MCP server computes QR payloads, text diffs and text stats locally at the edge — nothing is stored. (2) drive: for file processing (EXIF strip, image shrink, PDF sign/pages, OCR…), open the tool URL with ?url=<same-origin file URL> plus its agent parameters; the page loads the file and applies the parameters automatically. Reimagine redesigns an HTML page from its own content at /reimagine/ — paste HTML in the browser, or run its CLI locally (npx reimagine-it). All tool URLs are on this same origin. The suite never uploads, retains, or logs any file.',
 };
 
 const MAX_TEXT = 400_000; // per-text cap for compute tools
@@ -319,12 +319,19 @@ const CATALOG = [
   { id: 'printprep', name: 'Print-Shop Prep', url: 'https://navigatorslab.com/tools/printprep.html', agent_params: '?url=<image-url>&size=4x6', files: 'jpg, png', what: 'exact print sizes, bleed, 300 DPI checks, PDF out', repo: 'https://github.com/Kayforkind/NavigatorsLab-Print-Shop-Prep' },
   { id: 'pdfpages', name: 'PDF Pages', url: 'https://navigatorslab.com/tools/pdfpages.html', agent_params: '?url=<pdf-url>', files: 'pdf', what: 'reorder/rotate/delete/extract/blank/merge pages', repo: 'https://github.com/Kayforkind/NavigatorsLab-PDF-Pages' },
   { id: 'textdiff', name: 'Text Diff', url: 'https://navigatorslab.com/tools/textdiff.html', agent_params: '?a=<text-url>&b=<text-url>', files: 'any text', what: 'line diff, word-level highlights, similarity %, unified diff', repo: 'https://github.com/Kayforkind/NavigatorsLab-Text-Diff' },
+  { id: 'reimagine', name: 'Reimagine', url: 'https://navigatorslab.com/reimagine/', agent_params: '— (paste HTML in the page; CLI: npx reimagine-it)', files: 'html', what: 'redesign an HTML page in 17 directions from its own content — palette, motif, motion derived from the source; nothing invented', repo: 'https://github.com/Kayforkind/reimagine-it' },
   { id: 'textstats', name: 'Text Stats', url: 'https://navigatorslab.com/tools/textstats.html', agent_params: '?url=<text-url>', files: 'any text', what: 'counts, reading time, Flesch, keyword density, rhythm', repo: 'https://github.com/Kayforkind/NavigatorsLab-Text-Stats' },
 ];
 
 /* Pretty URL aliases for the site root: /QR-Studio, /qr, /Photo-Privacy-Kit…
  * The edge worker 301s these to the canonical /tools/<id>.html. Accepts the
- * tool id, the tool name, and the funnel-repo suffix. */
+ * tool id, the tool name, and the funnel-repo suffix.
+ * EXTERNAL_ALIASES are tools that live outside /tools/ — their pretty URL
+ * 301s to the tool's own origin path instead. */
+const EXTERNAL_ALIASES: Record<string, string> = {
+  'reimagine': 'https://navigatorslab.com/reimagine/',
+};
+
 const TOOL_ALIASES: Record<string, string> = {
   'photo-privacy-kit': 'exif', 'photo privacy kit': 'exif',
   'metadata hidden data checker': 'metadata', 'metadata checker': 'metadata',
@@ -347,4 +354,12 @@ export function resolveToolAlias(raw: string): string | null {
   const key = decodeURIComponent(raw).trim().toLowerCase().replace(/-/g, ' ').replace(/\s+/g, ' ');
   if (TOOL_ALIASES[key]) return TOOL_ALIASES[key];
   return null;
+}
+
+/** pretty URL → full redirect target; external tools map to their own URL */
+export function resolvePrettyTarget(raw: string): string | null {
+  const key = decodeURIComponent(raw).trim().toLowerCase().replace(/-/g, ' ').replace(/\s+/g, ' ');
+  if (EXTERNAL_ALIASES[key]) return EXTERNAL_ALIASES[key];
+  const toolId = resolveToolAlias(key);
+  return toolId ? `https://navigatorslab.com/tools/${toolId}.html` : null;
 }

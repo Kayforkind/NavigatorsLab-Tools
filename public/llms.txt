@@ -1,6 +1,6 @@
 # NavigatorsLab Tools
 
-> Fifteen free, open-source (MIT) utilities that run entirely in the user's browser: photo privacy (EXIF strip), metadata inspection, image compression, scan cleanup, PDF signing and page organizing, receipt OCR, QR generation/decoding, audio trimming, invoicing, batch renaming, print prep, text diff and text stats. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. An MCP (Model Context Protocol) server endpoint is available for AI agents.
+> Sixteen free, open-source (MIT) utilities that run entirely in the user's browser: photo privacy (EXIF strip), metadata inspection, image compression, scan cleanup, PDF signing and page organizing, receipt OCR, QR generation/decoding, audio trimming, invoicing, batch renaming, print prep, text diff, text stats — plus Reimagine, which redesigns an HTML page in 17 directions from the content already in it. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. An MCP (Model Context Protocol) server endpoint is available for AI agents.
 
 The suite processes files client-side (Canvas, Web Audio, WebAssembly, pdf-lib, Tesseract). Nothing is uploaded, stored, or logged. Every release passes an automated verification gate (unit + end-to-end browser tests + a security suite that proves zero non-self network calls on every page).
 
@@ -27,6 +27,7 @@ The suite processes files client-side (Canvas, Web Audio, WebAssembly, pdf-lib, 
 - [PDF Pages](https://navigatorslab.com/tools/pdfpages.html): reorder/rotate/delete/extract/blank/merge pages. Params: `?url=<pdf>`
 - [Text Diff](https://navigatorslab.com/tools/textdiff.html): line diff, word-level highlights, similarity %. Params: `?a=<text-url>&b=<text-url>`
 - [Text Stats](https://navigatorslab.com/tools/textstats.html): counts, reading time, Flesch, keyword density. Params: `?url=<text-url>`
+- [Reimagine](https://navigatorslab.com/reimagine/): redesigns an HTML page in 17 directions (infographic, 3D, cinematic, dashboard…) from its own nouns, dates, numbers and colors — nothing invented. Paste HTML in the page, or run the CLI: `npx reimagine-it --auto -i page.html -o out.html`
 
 ## Standalone repos
 

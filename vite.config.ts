@@ -43,7 +43,7 @@ export default defineConfig({
         name: 'NavigatorsLab Tools — private, in-browser utilities',
         short_name: 'NL Tools',
         description:
-          'Fifteen free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, organize PDF pages, merge receipts, OCR expenses, make & decode QR codes, diff texts, count words, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads.',
+          'Sixteen free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, organize PDF pages, merge receipts, OCR expenses, make & decode QR codes, diff texts, count words, inspect metadata, trim audio, make invoices, batch rename, prep files for print — and reimagine, which redesigns any HTML page from its own content. No uploads.',
         theme_color: '#0b0f17',
         background_color: '#0b0f17',
         display: 'standalone',

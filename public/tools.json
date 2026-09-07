@@ -140,6 +140,17 @@
     "repo": "https://github.com/Kayforkind/NavigatorsLab-Text-Diff"
   },
   {
+    "id": "reimagine",
+    "icon": "🎨",
+    "name": "Reimagine",
+    "tagline": "Redesign any HTML page from its own content",
+    "detail": "Paste a page and the engine rebuilds it in 17 directions — infographic, 3D, cinematic, dashboard and more — from the nouns, dates, numbers and colors already in your HTML. Nothing invented, nothing uploaded: runs entirely in your browser tab.",
+    "category": "design",
+    "keywords": "reimagine redesign html infographic 3d threejs cinematic dashboard photography landing page generator content-derived design ai agent palette",
+    "url": "https://navigatorslab.com/reimagine/",
+    "repo": "https://github.com/Kayforkind/reimagine-it"
+  },
+  {
     "id": "textstats",
     "icon": "📊",
     "name": "Text Stats",

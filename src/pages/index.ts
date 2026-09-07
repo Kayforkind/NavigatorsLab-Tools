@@ -18,6 +18,9 @@ interface Tool {
   keywords: string;
   /** standalone GitHub funnel repo (links back to the hub) */
   repo?: string;
+  /** external URL for tools served outside the hub (e.g. /reimagine/)
+   * — when set, the card opens this instead of ./<id>.html */
+  url?: string;
 }
 
 const CATS: [string, string][] = [
@@ -28,6 +31,7 @@ const CATS: [string, string][] = [
   ['images', 'cat.images'],
   ['media', 'cat.media'],
   ['files', 'cat.files'],
+  ['design', 'cat.design'],
 ];
 
 const grid = document.getElementById('grid')!;
@@ -129,7 +133,7 @@ function render(): void {
     const card = document.createElement('article');
     card.className = 'cards';
     const open = document.createElement('a');
-    open.href = `./${tool.id}.html`;
+    open.href = tool.url ?? `./${tool.id}.html`;
     open.addEventListener('click', () => markUsed(tool.id));
     open.innerHTML = `
       <div class="card-top"><span class="ico">${tool.icon}</span>${used.has(tool.id) ? `<span class="pill">${t('card.recent', lang)}</span>` : ''}</div>

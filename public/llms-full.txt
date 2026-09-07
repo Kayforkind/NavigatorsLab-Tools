@@ -1,6 +1,6 @@
 # NavigatorsLab Tools — full agent documentation
 
-> Fifteen free, open-source (MIT) utilities that run entirely in the user's browser. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. This page is the complete guide for AI agents and automation.
+> Sixteen free, open-source (MIT) utilities that run entirely in the user's browser — fifteen file utilities plus Reimagine, the HTML redesign engine. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. This page is the complete guide for AI agents and automation.
 
 ## Architecture (what an agent must know)
 
@@ -136,3 +136,4 @@ Every tool also answers at a root-level short URL (the edge worker 301s it to th
 - https://navigatorslab.com/Text-Stats
 
 These mirror each tool's standalone repo name — one name, three surfaces (repo, mirror site, live tool).
+- `reimagine` — https://github.com/Kayforkind/reimagine-it (served at https://navigatorslab.com/reimagine/ — same-origin, no uploads)

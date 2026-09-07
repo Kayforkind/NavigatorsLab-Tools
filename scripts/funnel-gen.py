@@ -38,6 +38,11 @@ SLUGS = {
     'textstats': 'text-stats',
 }
 
+# Tools listed in tools.json but WITHOUT a funnel landing repo: they live
+# outside the hub (their card opens their own URL) and already have a
+# full-scale repo of their own.
+EXTERNAL = {'reimagine'}
+
 FEATURES = {
     'exif': [
         'See exactly what leaks — GPS coordinates, camera & lens, timestamps, embedded thumbnails — before you post',
@@ -210,12 +215,17 @@ def redirector(t):
     <p><span class="spin" aria-hidden="true"></span>Opening on <strong>navigatorslab.com</strong>&hellip;</p>
     <p class="pretty">{pretty}</p>
     <a class="btn" href="{url}">Open {t['name']} now &rarr;</a>
-    <small>Part of the free, open-source <a href="{HUB}/">NavigatorsLab Tools</a> suite &mdash; 15 tools, zero uploads.</small>
+    <small>Part of the free, open-source <a href="{HUB}/">NavigatorsLab Tools</a> suite &mdash; 16 tools, zero uploads.</small>
   </main>
   <script>location.replace('{url}');</script>
 </body>
 </html>
 '''
+
+
+def tool_link(x):
+    # external tools get their real URL; hub tools get ./<id>.html
+    return x.get('url') or f"{HUB}/{x['id']}.html"
 
 
 def readme(t, all_tools):
@@ -227,7 +237,7 @@ def readme(t, all_tools):
     for x in all_tools:
         xi = x['icon'].replace('\ufe0f', '')
         name = f"**{xi} {x['name']}**" if x['id'] == t['id'] else f"{xi} {x['name']}"
-        rows.append(f"| {name} | {x['tagline']} | [Open]({HUB}/{x['id']}.html) |")
+        rows.append(f"| {name} | {x['tagline']} | [Open]({tool_link(x)}) |")
     suite = '\n'.join(rows)
     return f'''# {icon} {t['name']}
 
@@ -236,7 +246,7 @@ def readme(t, all_tools):
 <h4 align="center">
   &#9654; <a href="{tool_url}">Open {t['name']} &mdash; free, no sign-up, nothing uploaded</a><br>
   pretty link: **{pretty}** &rarr; same tool, shorter URL<br>
-  <a href="{HUB}/">Browse all 15 NavigatorsLab Tools</a>
+  <a href="{HUB}/">Browse all 16 NavigatorsLab Tools</a>
 </h4>
 
 ![{t['name']}](og.png)
@@ -262,7 +272,7 @@ def readme(t, all_tools):
 
 ## \U0001f5c2 The NavigatorsLab Tools suite
 
-Fifteen free tools, one hub \u2014 all with the same zero-upload promise:
+Fifteen free tools, one hub \u2014 all with the same zero-upload promise \u2014 plus Reimagine, the design engine at /reimagine/:
 
 | Tool | What it does | |
 |---|---|---|
@@ -279,8 +289,11 @@ Fifteen free tools, one hub \u2014 all with the same zero-upload promise:
 
 def main():
     tools = json.load(io.open(os.path.join(ROOT, 'public', 'tools.json'), encoding='utf-8'))
-    assert len(tools) == 15, f'expected 15 tools, got {len(tools)}'
+    assert len(tools) == 16, f'expected 16 tools, got {len(tools)}'
     for t in tools:
+        if t['id'] in EXTERNAL:
+            print(f'skip {t["id"]:32s} (external — no funnel repo)')
+            continue
         slug = SLUGS[t['id']]
         d = os.path.join(OUT, slug)
         os.makedirs(d, exist_ok=True)

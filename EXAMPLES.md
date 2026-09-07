@@ -1,6 +1,6 @@
 # NavigatorsLab Tools — Hands-On Examples
 
-Step-by-step walkthroughs for all **fifteen** tools, with the exact clicks and the verified result of each.
+Step-by-step walkthroughs for the fifteen file tools, with the exact clicks and the verified result of each. (Reimagine — the sixteenth — has its own walkthroughs in the [reimagine-it repo](https://github.com/Kayforkind/reimagine-it#readme).)
 Everything below works at **https://navigatorslab.com/tools/** (or `npm run dev` locally) — every step happens **inside your browser**: no uploads, no accounts, nothing retained. Free and open source (MIT).
 
 > Every example ends with a **Verified** line — the same flow is asserted automatically by the CI gate (20 E2E + 24 security checks) on every push.

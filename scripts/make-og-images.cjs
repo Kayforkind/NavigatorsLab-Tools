@@ -67,9 +67,9 @@ const tools = JSON.parse(fs.readFileSync(path.join(ROOT, 'public', 'tools.json')
   </style></head><body>
     <div class="brand">🧭 NavigatorsLab <b>Tools</b> · free · open source</div>
     <div>
-      <h1>Fifteen tools that<br /><span>never phone home.</span></h1>
-      <p class="sub">Strip GPS · shrink images · clean scans · sign PDFs · organize PDF pages · OCR receipts · QR codes · diff texts · text stats · trim audio · invoices · rename · print prep — all inside your browser tab, plus an MCP endpoint for AI agents.</p>
-      <div class="icons">🛡️🔍🗜️📄✍️🧾🔢🔳📑🔬📊🎧🧮🗂️🖨️🤖</div>
+      <h1>Sixteen tools that<br /><span>never phone home.</span></h1>
+      <p class="sub">Strip GPS · shrink images · clean scans · sign PDFs · organize PDF pages · OCR receipts · QR codes · diff texts · text stats · trim audio · invoices · rename · print prep · reimagine any page — all inside your browser tab, plus an MCP endpoint for AI agents.</p>
+      <div class="icons">🛡️🔍🗜️📄✍️🧾🔢🔳📑🔬📊🎧🧮🗂️🖨️🎨🤖</div>
     </div>
     <div class="foot"><span>navigatorslab.com/tools</span><span class="pill">✓ no uploads · no accounts · nothing retained</span></div>
   </body></html>`;

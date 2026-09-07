@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="docs/banner.png" alt="NavigatorsLab Tools — fifteen private, in-browser utilities" width="800" />
+<img src="docs/banner.png" alt="NavigatorsLab Tools — sixteen private, in-browser utilities" width="800" />
 
 **By NavigatorsLab** · free & open source · nothing you drop in ever leaves your device
 
@@ -12,7 +12,7 @@
 ![No uploads](https://img.shields.io/badge/uploads-none-red.svg)
 ![Offline ready](https://img.shields.io/badge/offline-ready-8a6fd1.svg)
 
-**Fifteen tools. Zero uploads. Zero accounts. Zero telemetry.**
+**Sixteen tools. Zero uploads. Zero accounts. Zero telemetry.**
 
 </div>
 
@@ -44,7 +44,7 @@ Companion project: **[PDF Studio](https://github.com/Kayforkind/NavigatorsLab-PD
 
 ### One repo per tool
 
-Prefer a standalone repo? Each tool has its own home — every one links straight back to the hub, where all 15 live together:
+Prefer a standalone repo? Each tool has its own home — every one links straight back to the hub, where all 16 live together:
 
 | | Tool | Standalone repo |
 |---|------|-----------------|
@@ -328,7 +328,7 @@ Lighthouse: 98–100 ✅ (perf / a11y / best-practices / SEO, all 13 pages)
 
 ```bash
 npm install
-npm run dev          # http://localhost:5177 — the hub with all 15 tools
+npm run dev          # http://localhost:5177 — the hub with all 16 tools
 npm test             # unit tests incl. EXIF fuzzing
 npm run typecheck    # strict TypeScript
 npm run build        # static build in dist/ — deployable anywhere
