@@ -130,7 +130,7 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
 
     /* ---------- A/B/C/D. browser-level checks on every page ---------- */
     const browser = await chromium.launch();
-    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, bypassCSP: true });
     const page = await ctx.newPage();
 
     /* capture ALL requests the page makes (incl. beacons via CDP-level events) */

@@ -44,7 +44,7 @@ function report(tool, ok, detail) {
 
 async function withPage(fn) {
   const browser = await chromium.launch();
-  const ctx = await browser.newContext({ acceptDownloads: true, viewport: { width: 1280, height: 900 } });
+  const ctx = await browser.newContext({ acceptDownloads: true, viewport: { width: 1280, height: 900 }, bypassCSP: true });
   const page = await ctx.newPage();
   const errors = [];
   const consoleMsgs = [];
@@ -83,7 +83,7 @@ async function setFiles(page, files) {
   /* ---------- 0. PWA: service worker registers and works offline ---------- */
   {
     const browser = await chromium.launch();
-    const ctx = await browser.newContext();
+    const ctx = await browser.newContext({ bypassCSP: true });
     const page = await ctx.newPage();
     await page.goto(`${BASE}/index.html`);
     let swReady = true;
