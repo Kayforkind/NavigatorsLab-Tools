@@ -384,3 +384,4 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   .stats-band { grid-template-columns: repeat(3, 1fr); }
   .ex-grid { grid-template-columns: 1fr; }
 }
+
