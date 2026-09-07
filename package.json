@@ -10,7 +10,10 @@
     "preview": "vite preview --port 5177 --strictPort",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json --pretty false",
-    "serve:dist": "node scripts/serve.cjs"
+    "serve:dist": "node scripts/serve.cjs",
+    "funnel:gen": "python scripts/funnel-gen.py",
+    "funnel:verify": "node scripts/funnel-verify.cjs",
+    "funnel:sync": "python scripts/funnel-sync.py"
   },
   "dependencies": {
     "jsqr": "^1.4.0",
