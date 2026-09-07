@@ -39,6 +39,8 @@ def main():
               'to enable CI sync, or run locally with GH_TOKEN=$(gh auth token).')
         return
     failures = []
+    pushed, uptodate = [], []
+    summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
     for slug, name in REPO.items():
         d = os.path.join(FUNNEL, slug)
         if not os.path.isdir(os.path.join(d, '.git')):
@@ -49,6 +51,7 @@ def main():
             dirty = run(['git', 'status', '--porcelain'], cwd=d)
             if not dirty:
                 print(f'up-to-date: {name}')
+                uptodate.append(name)
                 continue
             run(['git', '-c', 'user.name=NavigatorsLab Funnel Sync',
                  '-c', 'user.email=kazim.r.merchant@users.noreply.github.com',
@@ -62,11 +65,20 @@ def main():
                      f'https://x-access-token:{token}@github.com/{OWNER}/{name}.git'], cwd=d)
             run(['git', 'push', 'origin', 'main'], cwd=d)
             print(f'pushed: {name}')
+            pushed.append(name)
         except Exception as e:  # noqa: BLE001 — one bad repo must not stop the rest
             failures.append(name)
             print(f'FAIL: {name}: {e}')
     if failures:
         print('FAILED repos:', ', '.join(failures))
+    if summary_path:
+        with io.open(summary_path, 'a', encoding='utf-8') as s:
+            s.write('## Funnel sync result\n\n')
+            s.write(f'- **Pushed ({len(pushed)}):** ' + (', '.join(pushed) or '—') + '\n')
+            s.write(f'- **Up-to-date ({len(uptodate)}):** ' + (', '.join(uptodate) or '—') + '\n')
+            if failures:
+                s.write(f'- **FAILED ({len(failures)}):** ' + ', '.join(failures) + '\n')
+    if failures:
         sys.exit(1)
     print('FUNNEL SYNC DONE')
 

@@ -14,6 +14,9 @@ export const CHANGELOG: Entry[] = [
     version: '1.5.0',
     date: 'September 2026',
     items: [
+      '🧰 New: every tool has its own full product repo — the real tool runs free on each repo\'s GitHub Pages (demo.html), with in-depth READMEs and in-task screenshots',
+      '🩺 New: live Pages-deployment + "live check" badges on every per-tool repo README, refreshed by the weekly production watch',
+      '🤖 Automation: per-tool repos regenerate and push from CI on every catalog change, with a job summary',
       '🎨 New: Reimagine — redesign any HTML page in 17 directions from its own content (lives at /reimagine/)',
       '🎨 New: Design category chip on the hub',
     ],

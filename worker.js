@@ -122,6 +122,8 @@ export default {
     const res = new Response(asset.body, asset);
     const headers = new Headers(res.headers);
     for (const [k, v] of Object.entries(HEADERS)) headers.set(k, v);
+    // shields.io endpoint badges must flip colors fast after a prod-watch run
+    if (url.pathname.startsWith('/tools/badge-')) headers.set('cache-control', 'public, max-age=300');
     // text docs (llms.txt, robots, etc.) must declare UTF-8 so agents parse them right
     const ct = headers.get('content-type');
     if (ct && ct.startsWith('text/') && !ct.includes('charset')) headers.set('content-type', ct + '; charset=utf-8');

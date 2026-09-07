@@ -42,6 +42,13 @@ function report(tool, ok, detail) {
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${tool} — ${detail}`);
 }
 
+/* Best-effort in-task screenshot: called at each tool's most interesting
+ * state (results on screen, export ready). Written to docs/shots/in-<id>.png
+ * for the per-tool repo READMEs/landings; silently skipped on failure. */
+async function snap(page, id) {
+  try { await page.screenshot({ path: path.join(SHOTS, `in-${id}.png`), fullPage: true }); } catch { /* best effort */ }
+}
+
 async function withPage(fn) {
   const browser = await chromium.launch();
   const ctx = await browser.newContext({ acceptDownloads: true, viewport: { width: 1280, height: 900 }, bypassCSP: true });
@@ -129,6 +136,7 @@ async function setFiles(page, files) {
     const u8 = dl.bytes;
     let hasExif = false;
     for (let i = 0; i < u8.length - 1; i++) if (u8[i] === 0xff && u8[i + 1] === 0xe1) { hasExif = true; break; }
+    await snap(page, 'exif');
     report('exif-strip', !hasExif && u8[0] === 0xff && u8[1] === 0xd8, `${dl.name}, ${u8.length}B, APP1 removed=${!hasExif}`);
     await page.screenshot({ path: path.join(SHOTS, '01-privacy-kit.png') });
   });
@@ -149,6 +157,7 @@ async function setFiles(page, files) {
     await page.fill('#targetKB', '300');
     const dl = await grabDownload(page, () => page.click('#go'));
     const under = dl.bytes.length <= 300 * 1024 * 1.05;
+    await snap(page, 'shrink');
     report('shrink', under && dl.name.endsWith('.jpg'), `${dl.name}, ${Math.round(dl.bytes.length / 1024)}KB (target ≤300KB, ~16MB source)`);
     await page.screenshot({ path: path.join(SHOTS, '02-shrinker.png') });
   });
@@ -190,6 +199,7 @@ async function setFiles(page, files) {
     const { PDFDocument: PL } = require(path.join(__dirname, '..', 'node_modules', 'pdf-lib'));
     const pdfDoc = await PL.load(dl.bytes);
     const pages = pdfDoc.getPageCount();
+    await snap(page, 'scan');
     report('scan-cleaner', dl.bytes.subarray(0, 5).toString() === '%PDF-' && pages === 2, `PDF ${pages} pages, ${Math.round(dl.bytes.length / 1024)}KB, grayscale+contrast applied`);
     await page.screenshot({ path: path.join(SHOTS, '03-scan-cleaner.png') });
   });
@@ -260,6 +270,7 @@ async function setFiles(page, files) {
         } catch { /* non-inflatable stream */ }
       }
     }
+    await snap(page, 'sign');
     report('esign', s.startsWith('%PDF-') && s.includes('/Image') && yearFound, `signed.pdf, ${Math.round(dl.bytes.length / 1024)}KB, signature embedded + date stamp decoded (${yr})`);
     await page.screenshot({ path: path.join(SHOTS, '04-esign.png') });
   });
@@ -283,6 +294,7 @@ async function setFiles(page, files) {
     const { PDFDocument: PL2 } = require(path.join(__dirname, '..', 'node_modules', 'pdf-lib'));
     const pdfDoc2 = await PL2.load(dl.bytes);
     const pages2 = pdfDoc2.getPageCount();
+    await snap(page, 'receipts');
     report('receipts', pages2 === 3, `one PDF, ${pages2} pages, ${Math.round(dl.bytes.length / 1024)}KB, stamped`);
     await page.screenshot({ path: path.join(SHOTS, '05-receipts.png') });
   });
@@ -302,6 +314,7 @@ async function setFiles(page, files) {
     const text = await page.textContent('#list');
     const foundDocx = text.includes('J. Hidden') && text.includes('Stealth Co');
     const foundGps = /GPS\s+41[.,]/.test(text) || /41\.0+/.test(text);
+    await snap(page, 'metadata');
     report('metadata-scan', foundDocx && foundGps, `docx author+company shown; photo GPS latitude 41.0 shown`);
     const dl = await grabDownload(page, () => page.click('#stripAll'));
     // the last download may be either file; verify zip route instead:
@@ -348,6 +361,7 @@ async function setFiles(page, files) {
     const b = mp3.bytes;
     const hasId3 = b.length > 10 && b[0] === 0x49 && b[1] === 0x44 && b[2] === 0x33; // "ID3"
     const hasFrame = b.length > 4 && b[0] === 0xff && (b[1] & 0xe0) === 0xe0;       // MPEG sync
+    await snap(page, 'audio');
     report('audio-mp3', (hasId3 || hasFrame) && lameReqs.length > 0,
       `MP3 ${b.length}B ${hasId3 ? 'ID3' : hasFrame ? 'frame-sync' : 'INVALID'}; lame fetched same-origin: ${lameReqs.length > 0 ? 'yes' : 'NO'}`);
 
@@ -368,6 +382,7 @@ async function setFiles(page, files) {
     const total = await page.textContent('#total');
     const dl = await grabDownload(page, () => page.click('#pdf'));
     const s = dl.bytes.toString('latin1');
+    await snap(page, 'invoice');
     report('invoice', s.startsWith('%PDF-') && total.includes('408.00'), `${dl.name}; total $408.00 (4×85 + 20% tax) = ${total.trim()}`);
     await page.screenshot({ path: path.join(SHOTS, '08-invoice.png') });
   });
@@ -389,6 +404,7 @@ async function setFiles(page, files) {
     await page.click('#apply');
     const names = await page.evaluate(() => Array.from(document.querySelectorAll('#list .mono')).map((e) => e.textContent.trim()));
     const good = names.some((n) => /\d{4}-\d{2}-\d{2}-home-depot\.jpg/.test(n));
+    await snap(page, 'rename');
     report('rename', good, `generated: ${names.join(' | ')}`);
     await page.screenshot({ path: path.join(SHOTS, '09-rename.png') });
   });
@@ -416,6 +432,7 @@ async function setFiles(page, files) {
     const { PDFDocument: PL3 } = require(path.join(__dirname, '..', 'node_modules', 'pdf-lib'));
     const pdfDoc3 = await PL3.load(dl.bytes);
     const { width: mbW } = pdfDoc3.getPage(0).getSize();
+    await snap(page, 'printprep');
     report('printprep', dl.bytes.subarray(0, 5).toString() === '%PDF-' && px && Math.round(mbW) === 306, `4×6in +0.125in bleed → page ${mbW.toFixed(1)}×?pt (4.25in=306pt), 1275×1875px @300dpi${info.includes('DPI effective') ? ', DPI shown' : ''}`);
     await page.screenshot({ path: path.join(SHOTS, '10-printprep.png') });
   });
@@ -448,6 +465,7 @@ async function setFiles(page, files) {
     const dl = await grabDownload(page, () => page.click('#csv'));
     const csv = dl.bytes.toString('utf8');
     const headerOk = csv.startsWith('date,merchant,category,amount,currency,file,ocr_confidence');
+    await snap(page, 'ocr');
     report('ocr', headerOk && rowCount === 1, `expenses.csv (${dl.bytes.length}B, v2 header=${headerOk}), ${rowCount} receipt row, engine loaded from same origin`);
     await page.screenshot({ path: path.join(SHOTS, '13-ocr.png') });
   });
@@ -474,6 +492,7 @@ async function setFiles(page, files) {
     }, dl.bytes.toString('base64'));
     await page.waitForFunction(() => !document.getElementById('qrResult').hidden, { timeout: 15000 });
     const decoded = await page.inputValue('#qrData');
+    await snap(page, 'qr');
     report('qr', isPng && decoded === secret, `round-trip: ${secret.slice(0, 24)}… encoded (${meta.trim()}), PNG exported ${dl.bytes.length}B, decoded payload matches`);
     await page.screenshot({ path: path.join(SHOTS, '14-qr.png') });
   });
@@ -495,6 +514,7 @@ async function setFiles(page, files) {
     await page.click('#pages .pp-cell:first-child .pp-x');
     const dl = await grabDownload(page, () => page.click('#rebuild'));
     const outDoc = await PL4.load(dl.bytes);
+    await snap(page, 'pdfpages');
     report('pdfpages', original === expectOrig && outDoc.getPageCount() === expectOrig - 1,
       `${original} thumbnails = source ${expectOrig} pages; deleted 1 → rebuilt PDF has ${outDoc.getPageCount()} pages`);
     await page.screenshot({ path: path.join(SHOTS, '15-pdfpages.png') });
@@ -514,6 +534,7 @@ async function setFiles(page, files) {
     }));
     const dl = await grabDownload(page, () => page.click('#btnDl'));
     const diffText = dl.bytes.toString('utf8');
+    await snap(page, 'textdiff');
     report('textdiff', summary.includes('2 added') && summary.includes('2 removed') && wordHi.add > 0 && diffText.includes('- ') && diffText.includes('+ '),
       `${summary.trim()}; ${wordHi.add} word-add / ${wordHi.del} word-del highlights; .diff exported`);
     await page.screenshot({ path: path.join(SHOTS, '16-textdiff.png') });
@@ -537,6 +558,7 @@ async function setFiles(page, files) {
     const words = parseInt(cards['Words'], 10);
     const kw = await page.textContent('#keywords');
     const flesch = parseFloat(cards['Reading ease']);
+    await snap(page, 'textstats');
     report('textstats', words === 62 && kw.includes('tools') && flesch > 0 && flesch <= 100,
       `words=${words} (expected 62), top keyword contains "tools", reading ease ${flesch}/100`);
     await page.screenshot({ path: path.join(SHOTS, '17-textstats.png') });

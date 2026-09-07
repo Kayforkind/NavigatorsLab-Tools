@@ -3,7 +3,14 @@ name: Funnel sync (per-tool repos)
 on:
   push:
     branches: [main]
-    paths: ['public/tools.json', 'scripts/funnel-gen.py', 'scripts/funnel-sync.py']
+    paths:
+      - 'public/tools.json'
+      - 'public/og-*.png'
+      - 'docs/shots/**'
+      - 'LICENSE'
+      - 'NOTICE'
+      - 'scripts/funnel-gen.py'
+      - 'scripts/funnel-sync.py'
   workflow_dispatch:
 
 permissions:
