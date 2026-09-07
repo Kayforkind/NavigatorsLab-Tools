@@ -6,3 +6,6 @@ node_modules/
 deploy/
 .profile-tmp/
 lh-*.json
+
+# per-tool funnel repos (generated, pushed to their own repos)
+/funnel/
