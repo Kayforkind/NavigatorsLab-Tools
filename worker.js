@@ -32,6 +32,13 @@ const MCP_ALLOWED_ORIGINS = new Set([
   'https://www.navigatorslab.com',
 ]);
 
+/** Best-effort per-IP rate limit for the free public MCP endpoint.
+ * Lives in isolate memory (resets on eviction, per-colo) — not a hard
+ * guarantee, but it makes naive floods of the compute tools expensive. */
+const RATE = new Map();
+const RATE_LIMIT = 30;            // requests…
+const RATE_WINDOW_MS = 60_000;    // …per minute per IP
+
 /** Handle one MCP JSON-RPC POST (stateless; GET/SSE unsupported by design). */
 async function handleMcp(request) {
   if (request.method === 'GET') {
@@ -44,8 +51,25 @@ async function handleMcp(request) {
     return json({ jsonrpc: '2.0', id: null, error: { code: -32600, message: 'Invalid Request: use POST' } }, 405);
   }
   const origin = request.headers.get('origin');
+  // Origin policy: browsers always send Origin (must be allow-listed); absent
+  // Origin = a non-browser agent (curl, MCP client) — allowed, but subject to
+  // the same body cap + rate limit below. Nothing here is stateful or authed
+  // because everything is stateless local compute over caller-supplied text.
   if (origin && !MCP_ALLOWED_ORIGINS.has(origin)) {
     return json({ jsonrpc: '2.0', id: null, error: { code: -32001, message: 'Origin not allowed' } }, 403);
+  }
+  /* ---- abuse guards: this is a free public endpoint ---- */
+  const len = Number(request.headers.get('content-length') || 0);
+  if (len > 1_000_000) {
+    return json({ jsonrpc: '2.0', id: null, error: { code: -32000, message: 'Request body too large (1 MB cap)' } }, 413);
+  }
+  const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+  const now = Date.now();
+  const win = RATE.get(ip);
+  if (!win || now > win.reset) {
+    RATE.set(ip, { count: 1, reset: now + RATE_WINDOW_MS });
+  } else if (++win.count > RATE_LIMIT) {
+    return json({ jsonrpc: '2.0', id: null, error: { code: -32002, message: `Rate limit exceeded (${RATE_LIMIT} requests per minute)` } }, 429);
   }
   let body;
   try {

@@ -1,5 +1,8 @@
-/* Minimal EXIF parser (JPEG APP1). Extracts GPS + dates + camera + orientation
- * and the raw APP1 segment so images can be rewritten *without* it.
+/* Privacy strip engine for photos. Parses JPEG APP1 EXIF (GPS, dates, camera,
+ * orientation) AND detects the other channels that carry the same kind of data:
+ * XMP (APP1), IPTC (APP13), JPEG comments, PNG tEXt/iTXt/zTXt/eXIf chunks, and
+ * WebP EXIF/XMP chunks. stripExif() removes all of them and re-encodes
+ * PNG/WebP through a canvas when their metadata cannot be safely spliced out.
  * Everything is synchronous over an ArrayBuffer; small enough to inline. */
 
 export interface ExifData {
@@ -11,6 +14,14 @@ export interface ExifData {
   dateTime?: Date | null;
   camera?: string;
   orientation?: number;
+  /** metadata channels found beyond the Exif APP1 (XMP/IPTC/COM/PNG/WebP chunks) */
+  extra?: ExtraChannel[];
+}
+
+export interface ExtraChannel {
+  kind: 'xmp' | 'iptc' | 'comment' | 'png-text' | 'png-exif' | 'webp-exif' | 'webp-xmp';
+  bytes: number;
+  preview?: string;
 }
 
 const TAGS: Record<number, string> = {
@@ -37,11 +48,73 @@ export function parseExif(buf: ArrayBuffer): ExifData | null {
     if (isExif) {
       // segment data starts AFTER the 2-byte length field
       const app1 = u8.slice(off + 4, off + 2 + len);
-      return decodeApp1(app1);
+      const exif = decodeApp1(app1);
+      exif.extra = extraChannels(u8);
+      return exif;
     }
     off += 2 + len;
   }
   return null;
+}
+
+const ASCII = (b: number) => b >= 0x20 && b <= 0x7e;
+function asciiAt(u8: Uint8Array, off: number, max = 48): string {
+  let s = '';
+  for (let i = off; i < Math.min(off + max, u8.length); i++) {
+    if (!ASCII(u8[i])) break;
+    s += String.fromCharCode(u8[i]);
+  }
+  return s;
+}
+
+/** Detect XMP / IPTC / COM (JPEG), PNG text/eXIf chunks, WebP EXIF/XMP chunks. */
+export function extraChannels(u8: Uint8Array): ExtraChannel[] {
+  const out: ExtraChannel[] = [];
+  if (u8.length > 8 && u8[0] === 0xff && u8[1] === 0xd8) {
+    let off = 2;
+    while (off + 4 <= u8.length) {
+      if (u8[off] !== 0xff) break;
+      const marker = u8[off + 1];
+      if (marker === 0xda || marker === 0xd9) break;
+      const len = (u8[off + 2] << 8) | u8[off + 3];
+      const body = off + 4;
+      if (marker === 0xe1 && asciiAt(u8, body, 29) === 'http://ns.adobe.com/xap/1.0/') {
+        out.push({ kind: 'xmp', bytes: len, preview: asciiAt(u8, body + 29) });
+      } else if (marker === 0xed) {
+        out.push({ kind: 'iptc', bytes: len, preview: asciiAt(u8, body) });
+      } else if (marker === 0xfe) {
+        out.push({ kind: 'comment', bytes: len, preview: asciiAt(u8, body) });
+      }
+      off += 2 + len;
+    }
+    return out;
+  }
+  if (u8.length > 8 && u8[0] === 0x89 && u8[1] === 0x50 && u8[2] === 0x4e && u8[3] === 0x47) {
+    // PNG: chunks after the 8-byte signature: len(4) type(4) data crc(4)
+    let off = 8;
+    while (off + 8 <= u8.length) {
+      const dlen = (u8[off] << 24) | (u8[off + 1] << 16) | (u8[off + 2] << 8) | u8[off + 3];
+      const type = String.fromCharCode(u8[off + 4], u8[off + 5], u8[off + 6], u8[off + 7]);
+      if (type === 'tEXt' || type === 'iTXt' || type === 'zTXt') {
+        out.push({ kind: 'png-text', bytes: dlen, preview: asciiAt(u8, off + 8) });
+      } else if (type === 'eXIf') {
+        out.push({ kind: 'png-exif', bytes: dlen });
+      }
+      off += 12 + dlen;
+    }
+    return out;
+  }
+  if (u8.length > 12 && asciiAt(u8, 0, 4) === 'RIFF' && asciiAt(u8, 8, 4) === 'WEBP') {
+    let off = 12;
+    while (off + 8 <= u8.length) {
+      const fourcc = asciiAt(u8, off, 4);
+      const dlen = u8[off + 4] | (u8[off + 5] << 8) | (u8[off + 6] << 16) | (u8[off + 7] << 24);
+      if (fourcc === 'EXIF') out.push({ kind: 'webp-exif', bytes: dlen });
+      else if (fourcc === 'XMP ') out.push({ kind: 'webp-xmp', bytes: dlen });
+      off += 8 + dlen + (dlen & 1); // chunks are word-aligned
+    }
+  }
+  return out;
 }
 
 function decodeApp1(app1: Uint8Array): ExifData {
@@ -174,10 +247,46 @@ function dmsToDeg(v: unknown, ref: string): number | null {
   return sign * n;
 }
 
-/** Remove EXIF (all APP1 Exif segments) from a JPEG buffer → new Blob. Non-JPEG passes through unchanged. */
+/** Privacy strip: JPEG loses Exif APP1 + XMP APP1 + IPTC APP13 + COM segments;
+ *  PNG loses tEXt/iTXt/zTXt/eXIf chunks (canvas re-encode when splicing is unsafe);
+ *  WebP loses EXIF/XMP chunks (canvas re-encode). Everything else passes through. */
 export async function stripExif(file: File | Blob): Promise<Blob> {
   const buf = await file.arrayBuffer();
   const u8 = new Uint8Array(buf);
+
+  /* ---------- PNG ---------- */
+  if (u8.length > 8 && u8[0] === 0x89 && u8[1] === 0x50 && u8[2] === 0x4e && u8[3] === 0x47) {
+    const dirty = extraChannels(u8).length > 0;
+    if (!dirty) return file;
+    try {
+      // re-encode via canvas: drops every ancillary chunk, keeps pixels
+      const bmp = await createImageBitmap(new Blob([buf], { type: 'image/png' }));
+      const c = document.createElement('canvas');
+      c.width = bmp.width; c.height = bmp.height;
+      c.getContext('2d')!.drawImage(bmp, 0, 0);
+      const blob = await new Promise<Blob | null>((r) => c.toBlob(r, 'image/png'));
+      return blob && blob.size < u8.length * 1.2 ? blob : file;
+    } catch {
+      return file; // never destroy a file we cannot process
+    }
+  }
+
+  /* ---------- WebP ---------- */
+  if (u8.length > 12 && asciiAt(u8, 0, 4) === 'RIFF' && asciiAt(u8, 8, 4) === 'WEBP') {
+    if (extraChannels(u8).length === 0) return file;
+    try {
+      const bmp = await createImageBitmap(new Blob([buf], { type: 'image/webp' }));
+      const c = document.createElement('canvas');
+      c.width = bmp.width; c.height = bmp.height;
+      c.getContext('2d')!.drawImage(bmp, 0, 0);
+      const blob = await new Promise<Blob | null>((r) => c.toBlob(r, 'image/webp', 0.92));
+      return blob ?? file;
+    } catch {
+      return file;
+    }
+  }
+
+  /* ---------- JPEG (segment splice, lossless) ---------- */
   if (u8.length < 4 || u8[0] !== 0xff || u8[1] !== 0xd8) return file; // not jpeg → untouched
   const parts: BlobPart[] = [];
   const push = (a: Uint8Array, b: number, e: number) => parts.push(a.slice(b, e));
@@ -196,9 +305,19 @@ export async function stripExif(file: File | Blob): Promise<Blob> {
     }
     if (marker === 0xd9) { push(u8, off, u8.length); off = u8.length; break; }
     const len = (u8[off + 2] << 8) | u8[off + 3];
+    if (off + 2 + len > u8.length) {
+      // malformed tail: keep the remainder verbatim (never truncate user data)
+      push(u8, off, u8.length);
+      off = u8.length;
+      break;
+    }
+    const body = off + 4;
     const isExif = marker === 0xe1 && off + 10 <= u8.length &&
       u8[off + 4] === 0x45 && u8[off + 5] === 0x78 && u8[off + 6] === 0x69 && u8[off + 7] === 0x66;
-    if (isExif) { stripped = true; off += 2 + len; continue; }
+    const isXmp = marker === 0xe1 && asciiAt(u8, body, 29) === 'http://ns.adobe.com/xap/1.0/';
+    const isIptc = marker === 0xed;
+    const isCom = marker === 0xfe;
+    if (isExif || isXmp || isIptc || isCom) { stripped = true; off += 2 + len; continue; }
     push(u8, off, off + 2 + len);
     off += 2 + len;
   }
@@ -210,6 +329,7 @@ export async function stripExif(file: File | Blob): Promise<Blob> {
 export function exifSummary(e: ExifData): string[] {
   const lines: string[] = [];
   if (e.gps) lines.push(`GPS ${e.gps.lat.toFixed(6)}, ${e.gps.lon.toFixed(6)}`);
+  for (const x of e.extra ?? []) lines.push(`${x.kind.toUpperCase()} metadata (${x.bytes}B)`);
   if (e.camera) lines.push(`Camera: ${e.camera}`);
   if (e.dateTime) lines.push(`Taken: ${e.dateTime.toLocaleString()}`);
   for (const [k, v] of Object.entries(e.tags)) {

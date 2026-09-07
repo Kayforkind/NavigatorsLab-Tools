@@ -26,7 +26,7 @@
 | 🔍 | [**Metadata Checker**](#-metadata--hidden-data-checker) | Word/PDF files that remember every author | `docx` author shown, then stripped |
 | 🗜️ | [**Image Shrinker**](#️-image-shrinker) | "This portal only accepts 2 MB" | 16 MB → 294 KB under a 300 KB target |
 | 📄 | [**Scan & Screenshot Cleaner**](#-scan--screenshot-cleaner) | Crooked phone photos of documents | 2-page straight PDF out |
-| ✍️ | [**Local E-Sign Pad**](#️-local-e-sign-pad) | "Just sign and send it back" at 11pm | Flattened signature inside the PDF |
+| ✍️ | [**Local E-Sign Pad**](#️-local-e-sign-pad) | "Just sign and send it back" at 11pm | Flattened (visual) signature inside the PDF |
 | 🧾 | [**Receipts → One PDF**](#-receipts--one-pdf) | A shoebox of receipts at tax time | 3 pages, EXIF date order |
 | 🔢 | [**Receipt OCR → CSV**](#-receipt-ocr--csv) | Expense-tracking data entry | Same-origin engine, CSV out |
 | 🔳 | [**QR Studio**](#-qr-studio) | Sketchy generator sites and upload-to-decode scanners | Generate → decode round-trip matches |
@@ -102,7 +102,7 @@ These are static pages. There is **no server that could receive your files** —
 - ❌ **No attachments kept** — files never leave your machine; nothing is transmitted, retained, or backed up
 - ❌ **No user information kept** — no accounts, no emails, no tracking cookies, no analytics, no fingerprinting
 - ✅ **Free to use, open source (MIT)** — no premium tier, no watermarks, no file-size limits
-- ✅ **Works fully offline** — PWA precaches every page and engine (including the 24 MB OCR model); verified by a test that disables the network and runs a tool
+- ✅ **Works fully offline** — PWA precaches every page and engine (including the 11 MB compressed OCR model); verified by a test that disables the network and runs a tool
 
 Open devtools → Network while using any tool and watch it stay silent after load. Or don't take our word for it — the test suite asserts it on every release.
 
@@ -165,7 +165,7 @@ Open devtools → Network while using any tool and watch it stay silent after lo
 
 **The problem:** "just sign this and send it back" — at 11pm, with no printer and no DocuSign account.
 
-**How it works:** draw on the pressure-friendly pointer-capture pad (or type your name in a handwriting font). The signature is trimmed to its ink bounding box, embedded as a transparent PNG, and you click exactly where it lands on any PDF page. pdf-lib burns it into the page content stream — flattened, so no editable signature field remains, it's just ink on the document.
+**How it works:** draw on the pressure-friendly pointer-capture pad (or type your name in a handwriting font). The signature is trimmed to its ink bounding box, embedded as a transparent PNG, and you click exactly where it lands on any PDF page. pdf-lib burns it into the page content stream — flattened, so no editable signature field remains, it's just ink on the document - a **visual** signature, not a cryptographic/PKCS one.
 
 **Verified example:** a drawn squiggle was placed mid-page on a fixture PDF and exported as `signed.pdf` — 6 KB, signature image confirmed inside the page resources.
 

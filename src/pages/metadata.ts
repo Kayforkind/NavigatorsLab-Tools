@@ -43,7 +43,7 @@ async function scan(files: File[]): Promise<void> {
           } else row.lines = ['No EXIF segment found — already clean.'];
         } catch { row.lines = ['Could not parse EXIF.']; }
       } else {
-        row.lines = ['This format has no EXIF layer (metadata lives elsewhere or not at all).'];
+        row.lines = ['The browser decodes pixels only — raw metadata for this format is not displayed here.'];
       }
     } else if (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)) {
       row.kind = 'pdf';
@@ -63,6 +63,28 @@ async function scan(files: File[]): Promise<void> {
         if (pr) lines.push(`Producer: ${pr}`);
         if (cd) lines.push(`Created: ${fmtDate(cd)}`);
         if (md) lines.push(`Modified: ${fmtDate(md)}`);
+        // XMP metadata packet (docProps for PDFs — pdf-lib's Info API does not touch it)
+        try {
+          const raw = await f.arrayBuffer();
+          const u8 = new Uint8Array(raw);
+          const text = new TextDecoder('latin1').decode(u8);
+          const xmpStart = text.indexOf('<x:xmpmeta');
+          if (xmpStart !== -1) {
+            const xmpEnd = text.indexOf('</x:xmpmeta>', xmpStart);
+            if (xmpEnd !== -1) {
+              const xmp = text.slice(xmpStart, xmpEnd + 12);
+              const dcCreator = /<dc:creator>[\s\S]*?<rdf:li[^>]*>([^<]+)<\/rdf:li>/.exec(xmp);
+              const dcTitle = /<dc:title>[\s\S]*?<rdf:li[^>]*>([^<]+)<\/rdf:li>/.exec(xmp);
+              const xmpDate = /<xmp:CreateDate>([^<]+)<\/xmp:CreateDate>/.exec(xmp);
+              const tool = /<xmp:CreatorTool>([^<]+)<\/xmp:CreatorTool>/.exec(xmp);
+              if (dcCreator?.[1]) lines.push(`XMP Author: ${dcCreator[1].trim()}`);
+              if (dcTitle?.[1]) lines.push(`XMP Title: ${dcTitle[1].trim()}`);
+              if (tool?.[1]) lines.push(`XMP Creator tool: ${tool[1].trim()}`);
+              if (xmpDate?.[1]) lines.push(`XMP Created: ${xmpDate[1].trim()}`);
+            }
+          }
+        } catch { /* XMP probe is best-effort */ }
+        if (doc.isEncrypted) lines.push('⚠ Encrypted PDF — opening ignores passwords; stripping will REMOVE the password protection.');
         row.lines = lines.length ? lines : ['No metadata fields set.'];
       } catch (e) {
         row.lines = [`Could not parse: ${(e as Error).message}`];
@@ -114,9 +136,32 @@ async function clean(r: Findings): Promise<Blob> {
   if (r.kind === 'image-exif') return stripExif(r.file);
   if (r.kind === 'pdf') {
     const { PDFDocument } = await import('pdf-lib'); // lazy
-    const doc = await PDFDocument.load(await r.file.arrayBuffer(), { ignoreEncryption: true });
+    const raw = await r.file.arrayBuffer();
+    const doc = await PDFDocument.load(raw.slice(0), { ignoreEncryption: true });
     doc.setTitle(''); doc.setAuthor(''); doc.setSubject(''); doc.setKeywords([]);
     doc.setProducer(''); doc.setCreator('');
+    // also blank the XMP metadata stream when one is present
+    try {
+      const text = new TextDecoder('latin1').decode(new Uint8Array(raw));
+      const start = text.indexOf('<x:xmpmeta');
+      if (start !== -1) {
+        const end = text.indexOf('</x:xmpmeta>', start);
+        if (end !== -1) {
+          const blank = '<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about=""/></rdf:RDF></x:xmpmeta>';
+          const u8 = new Uint8Array(raw);
+          const head = u8.slice(0, start);
+          const tail = u8.slice(end + 12);
+          const enc = new TextEncoder().encode(blank);
+          const merged = new Uint8Array(head.length + enc.length + tail.length);
+          merged.set(head, 0); merged.set(enc, head.length); merged.set(tail, head.length + enc.length);
+          const doc2 = await PDFDocument.load(merged.buffer, { ignoreEncryption: true });
+          doc2.setTitle(''); doc2.setAuthor(''); doc2.setSubject(''); doc2.setKeywords([]);
+          doc2.setProducer(''); doc2.setCreator('');
+          const bytes = await doc2.save();
+          return new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' });
+        }
+      }
+    } catch { /* fall through to Info-only strip */ }
     const bytes = await doc.save();
     return new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' });
   }

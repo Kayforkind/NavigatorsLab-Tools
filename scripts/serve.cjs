@@ -7,6 +7,11 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..', 'dist');
 const port = Number(process.env.TOOLS_PORT) || 5178;
 const secure = !!process.env.SECURE_HEADERS;
+// BASE_PREFIX=/tools mirrors the production subpath mount so CI runs at the
+// same URL shape (and catches engine/base-URL bugs localhost-at-root hides).
+// accept '/tools' or 'tools' (Git Bash may hand the env value as a path)
+const PREFIX = '/' + (process.env.BASE_PREFIX || '').replace(/\/+$/, '').replace(/^\/+/, '');
+const HAS_PREFIX = PREFIX !== '/';
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -51,9 +56,14 @@ const SECURE = {
 http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
   let p = decodeURIComponent(url.pathname);
+  if (HAS_PREFIX) {
+    if (p === PREFIX || p === PREFIX + '/') p = '/';
+    else if (p.startsWith(PREFIX + '/')) p = p.slice(PREFIX.length);
+    else { res.writeHead(404); return res.end('not found (mounted under ' + PREFIX + ')'); }
+  }
   if (p.endsWith('/')) p += 'index.html';
-  const file = path.join(root, p);
-  if (!file.startsWith(root)) { res.writeHead(403); return res.end(); }
+  const file = path.normalize(path.join(root, p));
+  if (!file.startsWith(root + path.sep) && file !== root) { res.writeHead(403); return res.end(); }
   fs.readFile(file, (err, data) => {
     if (err) {
       // try directory index

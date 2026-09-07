@@ -19,9 +19,12 @@ function totals() {
   const sub = items().reduce((s, it) => s + it.qty * it.rate, 0);
   const taxPct = Math.min(100, Math.max(0, parseFloat(($('#tax') as HTMLInputElement).value) || 0));
   const discPct = Math.min(100, Math.max(0, parseFloat(($('#disc') as HTMLInputElement).value) || 0));
-  const tax = sub * (taxPct / 100);
+  // discount first, then tax on the discounted amount — the common convention
+  // (tax on what was actually charged). Label in the PDF states the order.
   const disc = sub * (discPct / 100);
-  return { sub, tax, disc, total: sub + tax - disc };
+  const net = sub - disc;
+  const tax = net * (taxPct / 100);
+  return { sub, tax, disc, net, total: net + tax };
 }
 
 function money(v: number): string {
@@ -145,7 +148,7 @@ function drawPreview(m: ReturnType<typeof model>): void {
   y += 10;
   const rows: [string, string][] = [['Subtotal', money(m.sub)]];
   if (m.discPct) rows.push([`Discount (${m.discPct}%)`, '-' + money(m.disc)]);
-  if (m.taxPct) rows.push([`Tax (${m.taxPct}%)`, money(m.tax)]);
+  if (m.taxPct) rows.push([`Tax (${m.taxPct}%${m.discPct ? ' after discount' : ''})`, money(m.tax)]);
   ctx.textAlign = 'right';
   for (const [k, v] of rows) {
     ctx.fillStyle = mut; ctx.font = '11px Arial';
@@ -230,7 +233,7 @@ async function exportPdf(): Promise<void> {
     y -= 6;
     const rowsP: [string, string][] = [['Subtotal', money(m.sub)]];
     if (m.discPct) rowsP.push([`Discount (${m.discPct}%)`, '-' + money(m.disc)]);
-    if (m.taxPct) rowsP.push([`Tax (${m.taxPct}%)`, money(m.tax)]);
+    if (m.taxPct) rowsP.push([`Tax (${m.taxPct}%${m.discPct ? ' after discount' : ''})`, money(m.tax)]);
     for (const [k, v] of rowsP) {
       rtext(k, 415, y, 10, font, mut);
       rtext(v, W - 48, y, 10, font, dark);

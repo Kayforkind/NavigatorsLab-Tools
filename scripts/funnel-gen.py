@@ -1,4 +1,4 @@
-# Generates one standalone funnel repo per tool under funnel/<slug>/:
+# Generates one standalone discovery/landing repo per tool (all file processing stays on the hub) under funnel/<slug>/:
 #   index.html  — branded redirector to the tool on navigatorslab.com
 #   README.md   — detailed, suite-cross-linked landing for humans + agents
 #   LICENSE     — MIT

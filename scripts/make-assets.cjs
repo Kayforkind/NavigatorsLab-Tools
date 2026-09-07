@@ -1,7 +1,7 @@
 /* OG social image 1200x630 + PWA icons 192/512, rendered to match the suite's look. */
 const path = require('node:path');
 const fs = require('node:fs');
-const NODE_PATH = 'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules';
+const NODE_PATH = (process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : '');
 const { chromium } = require(path.join(NODE_PATH, 'playwright'));
 
 const OUT = path.resolve(__dirname, '..', 'public');

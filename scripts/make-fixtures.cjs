@@ -7,7 +7,7 @@ const JSZip = require(path.join(__dirname, '..', 'node_modules', 'jszip'));
 function resolvePlaywright() {
   const candidates = [
     process.env.PW_MODULES,
-    'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules',
+    (process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : ''),
     path.resolve(__dirname, '..', 'node_modules'),
   ].filter(Boolean);
   for (const c of candidates) {

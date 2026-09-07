@@ -1,0 +1,23 @@
+# NOTICE — third-party components
+
+NavigatorsLab Tools is MIT-licensed (see LICENSE). The following third-party
+components are used under their own licenses:
+
+| Component | Where | License | Source |
+|---|---|---|---|
+| `lamejs` 1.2.1 (vendored as `lamejs/lame.min.js`) | Audio Trimmer MP3 export | **LGPL-3.0** (LAME encoding engine) | https://github.com/zhuker/lamejs |
+| `tesseract.js` + WASM core + `eng.traineddata.gz` | Receipt OCR | Apache-2.0 (engine) / Tesseract data per its terms | https://github.com/naptha/tesseract.js |
+| `pdf-lib` | PDF building blocks | MIT | https://github.com/Hopding/pdf-lib |
+| `jszip` | batch ZIP downloads | MIT | https://github.com/Stuk/jszip |
+| `jsqr` | QR decode | Apache-2.0 | https://github.com/cozmo/jsQR |
+| `qrcode-generator` | QR encode | MIT | https://github.com/kazuhikoarase/qrcode-generator |
+
+Notes
+
+- The vendored `lame.min.js` is a compiled build of the LAME MP3 encoder
+  (lamejs). LAME is distributed under the LGPL-3.0; this suite links it for
+  MP3 export and remains separable from it. If you redistribute this project,
+  keep this notice and the LGPL terms for that component.
+- The OCR model `eng.traineddata.gz` is a compressed copy of Tesseract's
+  English language data, served same-origin so it can be precached for
+  offline use.

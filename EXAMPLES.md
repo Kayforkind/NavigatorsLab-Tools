@@ -227,7 +227,7 @@ Everything below works at **https://navigatorslab.com/tools/** (or `npm run dev`
 
 ## Everything works offline after the first visit
 
-The suite is a PWA: every page, script, engine (including the 24 MB OCR model) is precached. Turn off Wi-Fi and keep working — verified by a CI test that disables the network and runs a tool.
+The suite is a PWA: every page, script, engine (including the 11 MB compressed OCR model) is precached. Turn off Wi-Fi and keep working — verified by a CI test that disables the network and runs a tool.
 
 ## Works on your phone
 

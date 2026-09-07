@@ -108,3 +108,22 @@ describe('JSON-RPC dispatch', () => {
     expect(text).toContain('"removed": 1');
   });
 });
+
+describe('text_diff DoS guard', () => {
+  it('truncates giant inputs instead of allocating a huge LCS table', () => {
+    // 3000 x 3000 lines = 9M cells > 4M cap -> truncation path, no OOM
+    const a = Array.from({ length: 3000 }, (_, i) => `alpha line ${i}`).join('\n');
+    const b = Array.from({ length: 3000 }, (_, i) => `beta line ${i}`).join('\n');
+    const res = callTool('text_diff', { text_a: a, text_b: b });
+    const parsed = JSON.parse(res.content[0].text) as { truncated: boolean; note?: string };
+    expect(parsed.truncated).toBe(true);
+    expect(parsed.note).toContain('truncated');
+  });
+  it('still diffs normal documents without truncation', () => {
+    const res = callTool('text_diff', { text_a: 'one\ntwo', text_b: 'one\nthree' });
+    const parsed = JSON.parse(res.content[0].text) as { truncated: boolean; added: number; removed: number };
+    expect(parsed.truncated).toBe(false);
+    expect(parsed.added).toBe(1);
+    expect(parsed.removed).toBe(1);
+  });
+});

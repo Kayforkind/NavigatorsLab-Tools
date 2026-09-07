@@ -11,6 +11,25 @@ const base = process.env.VITE_BASE ?? './';
 export default defineConfig({
   base,
   plugins: [
+    /* Meta CSP in every page: GitHub Pages (the mirror host) cannot send HTTP
+     * headers, so the policy ships inside the HTML. On navigatorslab.com the
+     * worker's header CSP also applies — identical policy, so no change. */
+    {
+      name: 'meta-csp',
+      transformIndexHtml() {
+        const csp =
+          "default-src 'none'; script-src 'self' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; " +
+          "img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' blob: data:; " +
+          "worker-src 'self' blob:; child-src 'self' blob:; form-action 'none'; base-uri 'none'";
+        return [
+          {
+            tag: 'meta',
+            attrs: { 'http-equiv': 'Content-Security-Policy', content: csp },
+            injectTo: 'head-prepend' as const,
+          },
+        ];
+      },
+    },
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [

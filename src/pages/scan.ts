@@ -247,9 +247,10 @@ async function exportPdf(): Promise<void> {
   for (let i = 0; i < pages.length; i++) {
     const jpg = await canvasJpeg(pages[i], 0.92); // keep text crisp at 300 DPI
     const emb = await doc.embedJpg(new Uint8Array(await jpg.arrayBuffer()));
-    // page size follows the image at ~150 dpi (A4-ish for typical phone scans)
-    const wpt = (emb.width * 72) / 150;
-    const hpt = (emb.height * 72) / 150;
+    // page size follows the image at 300 DPI (matches the README/EXAMPLES claim
+    // and the crispness the export quality is tuned for)
+    const wpt = (emb.width * 72) / 300;
+    const hpt = (emb.height * 72) / 300;
     const page = doc.addPage([wpt, hpt]);
     page.drawImage(emb, { x: 0, y: 0, width: wpt, height: hpt });
   }

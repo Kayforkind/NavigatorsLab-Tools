@@ -6,6 +6,7 @@
 // security headers onto each response, serves the MCP endpoint at /tools/mcp
 // (bundling mcp.ts), and maps /llms.txt to the suite's agent docs.
 {
+  // account_id is public routing info (not a credential) - pinned so scoped deploy tokens skip the account-list API
   "account_id": "56faf9a57ad29af2d943fdedfb5ecda9",
   "name": "navigatorslab-tools",
   "main": "worker.js",

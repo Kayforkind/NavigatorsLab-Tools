@@ -7,7 +7,7 @@ const fs = require('node:fs');
 function resolvePlaywright() {
   const candidates = [
     process.env.PW_MODULES,
-    'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules',
+    (process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : ''),
     path.resolve(__dirname, '..', 'node_modules'),
   ].filter(Boolean);
   for (const c of candidates) {
@@ -17,7 +17,7 @@ function resolvePlaywright() {
 }
 const { chromium } = resolvePlaywright();
 
-const BASE = 'http://localhost:5178';
+const BASE = (process.env.E2E_BASE || 'http://localhost:5178').replace(/\/+$/, '');
 const ROOT = path.resolve(__dirname, '..');
 const FX = (f) => path.join(ROOT, 'dev-assets', f);
 const SHOTS = path.join(ROOT, 'docs', 'shots');
@@ -113,7 +113,7 @@ async function setFiles(page, files) {
     }).catch(() => {});
     // Use the drop zone API directly:
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const blob = await res.blob();
       const file = new File([blob], name, { type: blob.type });
       const dt = new DataTransfer();
@@ -137,7 +137,7 @@ async function setFiles(page, files) {
   await withPage(async (page) => {
     await page.goto(`${BASE}/shrink.html`);
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const blob = await res.blob();
       const file = new File([blob], name, { type: blob.type });
       const dt = new DataTransfer();
@@ -158,7 +158,7 @@ async function setFiles(page, files) {
     await page.goto(`${BASE}/scan.html`);
     await page.evaluate(async () => {
       for (const name of ['receipt-1.jpg', 'receipt-2.jpg']) {
-        const res = await fetch(`/fx/${name}`);
+        const res = await fetch(`fx/${name}`);
         const blob = await res.blob();
         const file = new File([blob], name, { type: blob.type });
         const dt = new DataTransfer();
@@ -211,7 +211,7 @@ async function setFiles(page, files) {
     await page.click('#useSig');
     await page.waitForFunction(() => document.querySelector('#stat')?.textContent?.includes('Signature ready'), { timeout: 10000 });
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const blob = await res.blob();
       const file = new File([blob], name, { type: blob.type });
       const dt = new DataTransfer();
@@ -269,7 +269,7 @@ async function setFiles(page, files) {
     await page.goto(`${BASE}/receipts.html`);
     await page.evaluate(async () => {
       for (const name of ['receipt-3.jpg', 'receipt-1.jpg', 'receipt-2.jpg']) {
-        const res = await fetch(`/fx/${name}`);
+        const res = await fetch(`fx/${name}`);
         const blob = await res.blob();
         const file = new File([blob], name, { type: blob.type });
         const dt = new DataTransfer();
@@ -293,7 +293,7 @@ async function setFiles(page, files) {
     await page.evaluate(async () => {
       const dt = new DataTransfer();
       for (const name of ['secret.docx', 'gps-photo.jpg']) {
-        const res = await fetch(`/fx/${name}`);
+        const res = await fetch(`fx/${name}`);
         dt.items.add(new File([await res.blob()], name, { type: name.endsWith('.docx') ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : 'image/jpeg' }));
       }
       document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
@@ -313,7 +313,7 @@ async function setFiles(page, files) {
   await withPage(async (page) => {
     await page.goto(`${BASE}/audio.html`);
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const blob = await res.blob();
       const file = new File([blob], name, { type: blob.type });
       const dt = new DataTransfer();
@@ -365,7 +365,7 @@ async function setFiles(page, files) {
     await page.evaluate(async () => {
       const dt = new DataTransfer();
       for (const name of ['receipt-1.jpg', 'gps-photo.jpg']) {
-        const res = await fetch(`/fx/${name}`);
+        const res = await fetch(`fx/${name}`);
         dt.items.add(new File([await res.blob()], name, { type: 'image/jpeg' }));
       }
       document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
@@ -384,7 +384,7 @@ async function setFiles(page, files) {
   await withPage(async (page) => {
     await page.goto(`${BASE}/printprep.html`);
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const blob = await res.blob();
       const file = new File([blob], name, { type: blob.type });
       const dt = new DataTransfer();
@@ -412,7 +412,7 @@ async function setFiles(page, files) {
     await page.goto(`${BASE}/ocr.html`);
     // feed a receipt fixture directly through the drop zone (OCR engine loads from same origin)
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const blob = await res.blob();
       const file = new File([blob], name, { type: 'image/jpeg' });
       const dt = new DataTransfer(); dt.items.add(file);
@@ -469,7 +469,7 @@ async function setFiles(page, files) {
   await withPage(async (page) => {
     await page.goto(`${BASE}/pdfpages.html`);
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const dt = new DataTransfer(); dt.items.add(new File([await res.blob()], name, { type: 'application/pdf' }));
       document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
     }, 'sample.pdf');
@@ -559,7 +559,7 @@ async function setFiles(page, files) {
   await withPage(async (page) => {
     await page.goto(`${BASE}/pdfpages.html`);
     await page.evaluate(async (name) => {
-      const res = await fetch(`/fx/${name}`);
+      const res = await fetch(`fx/${name}`);
       const dt = new DataTransfer(); dt.items.add(new File([await res.blob()], name, { type: 'application/pdf' }));
       document.getElementById('dz').dispatchEvent(new DragEvent('drop', { dataTransfer: dt, bubbles: true, cancelable: true }));
     }, 'sample.pdf');

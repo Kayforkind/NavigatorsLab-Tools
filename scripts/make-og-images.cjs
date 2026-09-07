@@ -5,7 +5,7 @@ const fs = require('node:fs');
 function resolvePlaywright() {
   const candidates = [
     process.env.PW_MODULES,
-    'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules',
+    (process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : ''),
     path.resolve(__dirname, '..', 'node_modules'),
   ].filter(Boolean);
   for (const c of candidates) { try { return require(path.join(c, 'playwright')); } catch { /* next */ } }

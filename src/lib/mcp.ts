@@ -228,14 +228,24 @@ export function callTool(name: string, args: Record<string, unknown>): { content
         break;
       }
       case 'text_diff': {
-        const ta = String(args.text_a ?? '');
-        const tb = String(args.text_b ?? '');
+        let ta = String(args.text_a ?? '');
+        let tb = String(args.text_b ?? '');
         if (ta.length > MAX_TEXT || tb.length > MAX_TEXT) throw new Error('text_a/text_b exceed the 400k character cap');
+        // Bound the DP table: diffLinesPure allocates (n+1)*(m+1) Uint32 cells.
+        // A 400k×400k input would OOM the isolate — cap the matrix and say so.
+        const linesA = ta.split('\n').length;
+        const linesB = tb.split('\n').length;
+        let inputTruncated = false;
+        if (linesA * linesB > 4_000_000) {
+          ta = ta.split('\n').slice(0, 2000).join('\n');
+          tb = tb.split('\n').slice(0, 2000).join('\n');
+          inputTruncated = true;
+        }
         const r = diffLinesPure(ta, tb, {
           ignoreWhitespace: args.ignoreWhitespace !== false,
           caseSensitive: args.caseSensitive !== false,
         });
-        out = { added: r.added, removed: r.removed, unchanged: r.unchanged, lines: r.lines.slice(0, 2000), truncated: r.lines.length > 2000 };
+        out = { added: r.added, removed: r.removed, unchanged: r.unchanged, lines: r.lines.slice(0, 2000), truncated: r.lines.length > 2000 || inputTruncated, ...(inputTruncated ? { note: 'inputs truncated to the first 2000 lines each to bound memory' } : {}) };
         break;
       }
       case 'text_stats': {

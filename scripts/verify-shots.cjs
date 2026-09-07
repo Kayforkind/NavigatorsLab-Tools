@@ -1,7 +1,7 @@
 /* Verify screenshots are non-blank by decoding PNGs and measuring variance. */
 const path = require('node:path');
 const fs = require('node:fs');
-const { chromium } = require(path.join('C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules', 'playwright'));
+const { chromium } = require(path.join((process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : ''), 'playwright'));
 
 const SHOTS = path.resolve(__dirname, '..', 'docs', 'shots');
 

@@ -29,15 +29,22 @@ jobs:
           npx playwright install chromium --with-deps
       - name: Generate test fixtures
         run: node scripts/make-fixtures.cjs
-      - name: E2E (all 11 tools, byte-validated)
+      # Serve at the PRODUCTION URL SHAPE (/tools/ subpath, secure headers on)
+      # so base-URL bugs (e.g. engine scripts at /tess/ instead of /tools/tess/)
+      # can never pass CI and still 404 on the live site.
+      - name: E2E + security at production URL shape (subpath /tools/, hardened server)
         run: |
-          node scripts/serve.cjs &
+          BASE_PREFIX=tools SECURE_HEADERS=1 node scripts/serve.cjs &
           sleep 2
           node scripts/e2e.cjs
-      - name: Security suite (network silence, exfil, storage, fuzz, headers, secrets)
-        run: node scripts/security.cjs
+          node scripts/security.cjs
+        env:
+          E2E_BASE: http://localhost:5178/tools/
+          SEC_BASE: http://localhost:5178/tools
       - name: Mobile overflow check
         run: node scripts/mobile-shot.cjs
+        env:
+          E2E_BASE: http://localhost:5178/tools/
       - uses: actions/upload-artifact@v4
         if: always()
         with:

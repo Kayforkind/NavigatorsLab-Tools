@@ -135,7 +135,8 @@ async function loadPdf(f: File): Promise<void> {
     doc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
     pageCanvases = [];
     pageSel.innerHTML = '';
-    status(stat, `Loaded ${f.name} — ${doc.getPageCount()} page(s). Rendering preview…`, 'info');
+    status(stat, `Loaded ${f.name} — ${doc.getPageCount()} page(s). Rendering preview…` +
+      (doc.isEncrypted ? ' ⚠ encrypted PDF: the stamped copy is decrypted (password removed).' : ''), 'info');
     await renderPages();
     pagesRow.hidden = false;
     stampBtn.disabled = !sigPng;

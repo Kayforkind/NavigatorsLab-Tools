@@ -237,7 +237,8 @@ let lameMod: unknown = null;
 async function encodeMp3(chans: Float32Array[], sampleRate: number, kbps: number): Promise<Blob> {
   if (!lameMod) {
     // lamejs 1.2.1 ships as a classic script; copied to /lamejs/ at build time
-    const url = new URL('/lamejs/lame.min.js', import.meta.url).toString();
+    // resolve against the PAGE — the suite is served from /tools/ in production
+    const url = new URL('lamejs/lame.min.js', document.baseURI).toString();
     await new Promise<void>((resolve, reject) => {
       const s = document.createElement('script');
       s.src = url; s.onload = () => resolve(); s.onerror = () => reject(new Error('lamejs load failed'));

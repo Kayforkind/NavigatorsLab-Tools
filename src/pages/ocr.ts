@@ -34,9 +34,11 @@ async function getWorker(): Promise<import('tesseract.js').Worker> {
     enginePanel.hidden = false;
     const Tesseract = await import('tesseract.js');
     workerPromise = Tesseract.createWorker('eng', 1, {
-      workerPath: new URL('/tess/worker.min.js', import.meta.url).toString(),
-      corePath: new URL('/tess/', import.meta.url).toString(),
-      langPath: new URL('/tessdata/', import.meta.url).toString(),
+      // resolve against the PAGE (document.baseURI), not the module — the suite is
+      // served from a subpath (/tools/) in production; origin-root URLs 404 there.
+      workerPath: new URL('tess/worker.min.js', document.baseURI).toString(),
+      corePath: new URL('tess/', document.baseURI).toString(),
+      langPath: new URL('tessdata/', document.baseURI).toString(),
       logger: (m: { status: string; progress: number }) => {
         if (m.status === 'loading tesseract core') engineStat.textContent = 'Loading OCR engine…';
         else if (m.status === 'initializing tesseract') engineStat.textContent = 'Initializing…';

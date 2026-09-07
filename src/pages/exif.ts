@@ -101,7 +101,11 @@ function render(): void {
     } else {
       const none = document.createElement('div');
       none.className = 'meta';
-      none.textContent = r.file.type === 'image/jpeg' ? 'No EXIF found' : 'No EXIF layer (format carries none or browser strips it)';
+      // honest copy: the browser DOES strip some formats' metadata on decode —
+      // but this file's own bytes may still carry XMP/IPTC/PNG chunks.
+      none.textContent = r.file.type === 'image/jpeg'
+        ? 'No EXIF found'
+        : 'No EXIF layer — the browser decodes pixels only; raw metadata is not displayed for this format';
       info.appendChild(none);
     }
     if (r.hashes) {
@@ -120,11 +124,16 @@ async function stripAll(asZip: boolean): Promise<void> {
   status(stat, 'Stripping…', 'info');
   const out: { name: string; blob: Blob }[] = [];
   let gps = 0;
+  let extras = 0;
   for (const r of rows) {
     const blob = await stripExif(r.file);
     if (r.exif?.gps) gps++;
+    if (r.exif?.extra?.length) extras += r.exif.extra.length;
     const base = r.file.name.replace(/\.[^.]+$/, '');
-    const ext = (blob === r.file ? r.file.name.split('.').pop() : 'jpg') || 'jpg';
+    // stripExif may re-encode PNG→PNG or WebP→WebP — keep the real type
+    const ext = blob === r.file
+      ? (r.file.name.split('.').pop() || 'jpg')
+      : (blob.type.split('/')[1] || 'jpg').replace('jpeg', 'jpg');
     out.push({ name: `clean-${base}.${ext}`, blob });
     r.clean = blob;
   }
@@ -140,16 +149,17 @@ async function stripAll(asZip: boolean): Promise<void> {
     } catch { /* skip */ }
   }
   const proof = verified === out.length ? ` Pixel data verified identical on ${verified}/${out.length}.` : '';
+  const extraNote = extras ? ` ${extras} extra metadata channel${extras === 1 ? '' : 's'} (XMP/IPTC/comments) removed.` : '';
   if (asZip && out.length > 1) {
     const { default: JSZip } = await import('jszip');
     const zip = new JSZip();
     for (const o of out) zip.file(o.name, o.blob);
     const zblob = await zip.generateAsync({ type: 'blob' });
     download(zblob, 'clean-photos.zip');
-    status(stat, `Done — ${out.length} clean photos zipped (${fmtBytes(zblob.size)}), ${gps} had GPS removed.${proof}`, 'ok');
+    status(stat, `Done — ${out.length} clean photos zipped (${fmtBytes(zblob.size)}), ${gps} had GPS removed.${extraNote}${proof}`, 'ok');
   } else {
     for (const o of out) download(o.blob, o.name);
-    status(stat, `Done — ${out.length} clean photo${out.length === 1 ? '' : 's'} downloaded, ${gps} had GPS removed.${proof}`, 'ok');
+    status(stat, `Done — ${out.length} clean photo${out.length === 1 ? '' : 's'} downloaded, ${gps} had GPS removed.${extraNote}${proof}`, 'ok');
   }
   toast('Metadata stripped 🔒');
 }

@@ -18,7 +18,7 @@ const http = require('node:http');
 function resolvePlaywright() {
   const candidates = [
     process.env.PW_MODULES,
-    'C:/Users/kazim/AppData/Roaming/npm/node_modules/@playwright/test/node_modules',
+    (process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : ''),
     path.resolve(__dirname, '..', 'node_modules'),
   ].filter(Boolean);
   for (const c of candidates) { try { return require(path.join(c, 'playwright')); } catch { /* next */ } }
@@ -27,7 +27,7 @@ function resolvePlaywright() {
 const { chromium } = resolvePlaywright();
 
 const PORT = Number(process.env.SEC_PORT) || 5233; // dedicated: never share with dev servers (vite 5173/5199, e2e 5178)
-const BASE = `http://localhost:${PORT}`;
+const BASE = process.env.SEC_BASE || `http://localhost:${PORT}`;
 const results = [];
 function report(name, ok, detail) {
   results.push({ name, ok, detail });
@@ -48,9 +48,10 @@ function get(pathname) {
 const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) => f.endsWith('.html'));
 
 (async () => {
-  /* serve dist with secure headers on */
-  const server = spawn(process.execPath, [path.resolve(__dirname, 'serve.cjs')], {
-    env: { ...process.env, TOOLS_PORT: String(PORT), SECURE_HEADERS: '1' },
+  /* serve dist with secure headers on (or attach to an externally started one) */
+  const external = !!process.env.SEC_BASE;
+  const server = external ? null : spawn(process.execPath, [path.resolve(__dirname, 'serve.cjs')], {
+    env: { ...process.env, TOOLS_PORT: String(PORT), SECURE_HEADERS: '1', BASE_PREFIX: process.env.SEC_PREFIX || '' },
     stdio: 'ignore',
   });
   await new Promise((r) => setTimeout(r, 900));
@@ -61,7 +62,7 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
     let ours = false;
     try { ours = !!(await get('/')).headers['content-security-policy']; } catch { ours = false; }
     if (!ours) {
-      server.kill();
+      if (server) server.kill();
       console.error(`Port ${PORT} is not serving our SECURE_HEADERS server — refusing to test a foreign host. ` +
         `Stop the squatter or rerun with SEC_PORT=<free port>.`);
       process.exit(2);
@@ -233,7 +234,7 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
 
     await browser.close();
   } finally {
-    server.kill();
+    if (server) server.kill();
   }
 
   const failed = results.filter((r) => !r.ok);

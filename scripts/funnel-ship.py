@@ -61,7 +61,7 @@ for slug, name in REPO.items():
     run(['git', 'add', '-A'], cwd=d)
     run(['git', '-c', 'user.name=Kazim', '-c', 'user.email=kazim.r.merchant@gmail.com',
          'commit', '-m',
-         'NavigatorsLab - ' + t['name'] + ': funnel repo — tool lives on navigatorslab.com\n'
+         'NavigatorsLab - ' + t['name'] + ': discovery + landing repo — the tool itself runs on navigatorslab.com\n'
          '\nFree, open-source (MIT). The tool itself runs at ' + home +
          ' alongside the other 14 suite tools. Nothing here processes files: the hub does, entirely on-device.\n'
          '\n\U0001F916 Generated with Codebuff'
