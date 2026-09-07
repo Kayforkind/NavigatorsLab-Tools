@@ -503,3 +503,8 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 
 /* links inside data tables need >=4.5:1 on the dark background */
 .ttable td a { color: #9cc3ff; }
+
+/* one-repo-per-tool mirror line under the grid */
+.mirrors-line { margin-top: 14px; font-size: 13.5px; color: var(--mut); }
+.mirrors-line a { color: var(--acc); text-decoration: none; }
+.mirrors-line a:hover { text-decoration: underline; }

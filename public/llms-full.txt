@@ -92,7 +92,7 @@ Example — compare two staged texts:
 
 - **Privacy**: no uploads, no accounts, no cookies, no analytics, nothing retained. Files stay in the tab's memory; closing the tab discards them.
 - **Cost**: free and open source (MIT). No premium tier, no watermark, no file-size upsell — the only limit is device memory.
-- **Verified every release**: 59+ unit tests, 23+ automated end-to-end browser checks (real files in, downloaded bytes asserted), a 24+ check security suite (network silence, exfil verbs, storage hygiene, malicious-file fuzzing, path traversal, header assertions), mobile-overflow checks, and Lighthouse 98–100 on every page.
+- **Verified every release**: 82 unit tests, 28 automated end-to-end browser checks (real files in, downloaded bytes asserted), a 25-check security suite — all run at the production URL shape (network silence, exfil verbs, storage hygiene, malicious-file fuzzing, path traversal, header assertions), mobile-overflow checks, and Lighthouse 98–100 on every page.
 - **Offline**: after the first visit the PWA precaches every page and engine (including the OCR model); tools keep working with the network off.
 
 ## Standalone tool repos (mirrors)

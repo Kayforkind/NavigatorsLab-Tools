@@ -68,7 +68,7 @@ Prefer a standalone repo? Each tool has its own home — every one links straigh
 
 ## What the tools can do — v1.3 highlights
 
-Every claim below is exercised by the automated gate (23 E2E checks, 59 unit tests). Not marketing — test results.
+Every claim below is exercised by the automated gate (28 E2E checks, 82 unit tests, 25 security checks — all at the production URL shape). Not marketing — test results.
 
 - **Everything accepts paste.** Ctrl/Cmd+V a screenshot or copied file on any tool page and it lands in the drop zone. Snip → paste → done.
 - **Photo Privacy Kit** strips GPS/camera/timestamps and now shows **SHA-256 fingerprints** of original vs. cleaned files — cryptographic proof that "same picture, minus the metadata" (the E2E suite verifies pixel-identical output). Paste support means screenshots get scrubbed in two keystrokes.

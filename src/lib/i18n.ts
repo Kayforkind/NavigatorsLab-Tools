@@ -56,6 +56,11 @@ const DICT: Record<string, Record<Lang, string>> = {
   'cat.files': { en: '🗂️ Files', tr: '🗂️ Dosyalar', de: '🗂️ Dateien' },
   'card.open': { en: 'Open →', tr: 'Aç →', de: 'Öffnen →' },
   'card.repo': { en: 'GitHub repo ↗', tr: 'GitHub deposu ↗', de: 'GitHub-Repo ↗' },
+  'mirrors.line': {
+    en: "Prefer a standalone repo? Every tool also has its own GitHub home — one repo per tool, each linking back here.",
+    tr: "Ayrı bir depo mı tercih edersiniz? Her aracın kendi GitHub deposu da var — araç başına bir depo, tümü buraya bağlanır.",
+    de: "Lieber ein eigenes Repo? Jedes Tool hat auch ein eigenes GitHub-Zuhause — ein Repo pro Tool, alle verlinken hierher zurück.",
+  },
   'card.recent': { en: 'recent', tr: 'son', de: 'kürzlich' },
   'verify.title': { en: 'Same files in, same files out — verified', tr: 'Aynı dosya giriş, aynı dosya çıkış — doğrulanmış', de: 'Gleiche Dateien rein, gleiche raus — verifiziert' },
   'verify.sub': {

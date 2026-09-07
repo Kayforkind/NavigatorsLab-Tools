@@ -73,6 +73,11 @@ function applyI18n(): void {
   bind('agentsSub', 'agents.sub');
   bind('ctaAgents', 'hero.cta.agents');
   bind('noResults', 'search.none');
+  const mirrors = document.getElementById('mirrorsLine');
+  if (mirrors) {
+    mirrors.innerHTML = t('mirrors.line', lang)
+      .replace('one repo per tool', '<a href="https://github.com/Kayforkind/NavigatorsLab-Tools#one-repo-per-tool">one repo per tool</a>');
+  }
   bind('vsTitle', 'vs.title');
   bind('vsSub', 'vs.sub');
   search.placeholder = t('tools.search', lang);
@@ -203,7 +208,9 @@ fetch('./tools.json')
   .then((r) => r.json())
   .then((data: Tool[]) => {
     tools = data;
-    applyI18n();
+      applyI18n();
+    const ml = document.getElementById('mirrorsLine');
+    if (ml) ml.hidden = false;
     search.addEventListener('input', render);
     setTimeout(showWhatsNew, 900);
   });
