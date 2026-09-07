@@ -141,3 +141,16 @@ async function exportPdf(): Promise<void> {
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c);
 }
+
+/* ---- agent mode: ?url=&size=4x6|a4|letter&orient=portrait|landscape — see agents.html ---- */
+import { agentInit, bindSelect, bindNumber, fetchFileParam, agentBanner, type QuerySpec } from '../lib/agent';
+{
+  const spec: QuerySpec = {
+    size: bindSelect(document.getElementById('size') as HTMLSelectElement),
+    orient: bindSelect(document.getElementById('orient') as HTMLSelectElement),
+    bleed: bindNumber(document.getElementById('bleed') as HTMLInputElement, 0, 6),
+  };
+  const applied = agentInit(spec, (k) => `applied ${k.join(', ')}`);
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'image.jpg').then((f) => { if (f) { agentBanner((applied.length ? `applied ${applied.join(', ')} · ` : '') + 'loaded file from <code>url</code> param'); add([f]); } });
+}

@@ -600,6 +600,52 @@ async function setFiles(page, files) {
     report('paste', /pasted\.png/.test(name || ''), `Ctrl+V image landed in Photo Privacy Kit (row: ${name?.trim().slice(0, 30)}…)`);
   });
 
+  /* ---------- 21. Agent Mode docs page + machine-readable indexes ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/agents.html`);
+    const panels = await page.locator('.cards3 .panel').count();
+    const title = await page.title();
+    const llms = await page.request.get(`${BASE}/llms.txt`);
+    const llmsFull = await page.request.get(`${BASE}/llms-full.txt`);
+    const llmsBody = await llms.text();
+    report('agents-page', panels === 6 && /Agent Mode/.test(title) &&
+      llms.status() === 200 && llmsFull.status() === 200 &&
+      llmsBody.includes('/tools/mcp') && llmsBody.includes('qr_payload'),
+      `agents.html renders (${panels} panels); llms.txt + llms-full.txt served, MCP documented`);
+  });
+
+  /* ---------- 22. Deep link: qr.html?text= renders without clicks ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/qr.html?text=Hello%20Agent%20Mode&ec=M`);
+    await page.waitForFunction(() => !document.getElementById('qrOut').hidden, { timeout: 10000 });
+    const txt = await page.inputValue('#qrText');
+    const meta = await page.textContent('#qrMeta');
+    const chip = await page.locator('.agent-chip').count();
+    report('deep-qr', txt === 'Hello Agent Mode' && /modules/.test(meta || '') && chip === 1,
+      `?text= rendered a QR automatically (${(meta || '').trim()}); agent chip shown`);
+  });
+
+  /* ---------- 23. Deep link: ?url= data: loads a file into a tool ---------- */
+  await withPage(async (page) => {
+    const text = 'The quick brown fox jumps over the lazy dog. Agent mode works. ';
+    const b64 = Buffer.from(text, 'utf8').toString('base64');
+    await page.goto(`${BASE}/textstats.html?url=data:text/plain;base64,${b64}`);
+    await page.waitForFunction(() => document.querySelectorAll('#cards .stat-card').length >= 11, { timeout: 10000 });
+    const words = await page.textContent('#cards .stat-card b');
+    const chip = await page.locator('.agent-chip').count();
+    report('deep-url', Number(words) === 12 && chip === 1,
+      `?url= (data:) analyzed 12 words -> "${words}" words, agent chip shown`);
+  });
+
+  /* ---------- 24. Deep link: params pre-set (shrink format/targetKB) ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/shrink.html?format=webp&targetKB=123`);
+    const fmt = await page.inputValue('#fmt');
+    const kb = await page.inputValue('#targetKB');
+    report('deep-params', (fmt === 'image/webp' || fmt === 'webp') && Number(kb) === 123,
+      `format=${fmt}, targetKB=${kb} pre-applied from the URL`);
+  });
+
   /* ---------- hub ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);

@@ -25,6 +25,22 @@ const DICT: Record<string, Record<Lang, string>> = {
   'hero.cta.browse': { en: 'Browse the tools ↓', tr: 'Araçlara göz at ↓', de: 'Tools ansehen ↓' },
   'hero.cta.github': { en: '★ Source on GitHub', tr: '★ Kaynak: GitHub', de: '★ Quelle auf GitHub' },
   'hero.cta.install': { en: '📲 Install as app', tr: '📲 Uygulama olarak yükle', de: '📲 Als App installieren' },
+  'hero.cta.agents': {
+    en: '🤖 Agent Mode — MCP & deep links',
+    tr: '🤖 Ajan Modu — MCP ve derin bağlantılar',
+    de: '🤖 Agent-Modus — MCP & Deep-Links',
+  },
+  'agents.pill': { en: '🤖 for AI agents, too', tr: '🤖 yapay zeka ajanları için de', de: '🤖 auch für KI-Agenten' },
+  'agents.head': {
+    en: 'Suite automation for humans — and for machines',
+    tr: 'İnsanlar için otomasyon — makineler için de',
+    de: 'Automatisierung für Menschen — und für Maschinen',
+  },
+  'agents.sub': {
+    en: "Every tool is scriptable. Drive them from an AI agent with a Model Context Protocol endpoint, or with plain parameterized URLs — the same pages, the same privacy: files stay on the device running the browser.",
+    tr: 'Her araç komut dosyasıyla çalıştırılabilir. Bir MCP uç noktasıyla veya parametreli URL’lerle sürün — aynı sayfalar, aynı gizlilik: dosyalar tarayıcıyı çalıştıran cihazda kalır.',
+    de: 'Jedes Tool ist skriptbar. Steuern Sie sie über einen MCP-Endpunkt oder parameterisierte URLs — dieselben Seiten, dieselbe Privatsphäre: Dateien bleiben auf dem Gerät.',
+  },
   'hero.proof.offline': { en: '✓ Works offline (PWA)', tr: '✓ Çevrimdışı çalışır (PWA)', de: '✓ Funktioniert offline (PWA)' },
   'hero.proof.tests': { en: '✓ Verified by 20 automated browser tests', tr: '✓ 20 otomatik tarayıcı testiyle doğrulandı', de: '✓ Mit 20 automatisierten Browser-Tests verifiziert' },
   'hero.proof.security': { en: '✓ Security-audited: zero network calls after load', tr: '✓ Güvenlik denetimli: yükleme sonrası sıfır ağ çağrısı', de: '✓ Sicherheitsgeprüft: null Netzwerkaufrufe nach dem Laden' },

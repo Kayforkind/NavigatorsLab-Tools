@@ -1,7 +1,7 @@
 /* In-app changelog: versions newest-first. Bump VERSION when shipping user-visible
  * changes; returning users get a "what's new" toast listing entries newer than
  * the last version they saw. localStorage only — no analytics, as always. */
-export const VERSION = '1.2.0';
+export const VERSION = '1.4.0';
 
 interface Entry {
   version: string;
@@ -10,6 +10,16 @@ interface Entry {
 }
 
 export const CHANGELOG: Entry[] = [
+  {
+    version: '1.4.0',
+    date: 'September 2026',
+    items: [
+      '🤖 New: Agent Mode — MCP endpoint (POST /tools/mcp) for AI agents',
+      '🔗 New: deep-link parameters on every tool (?text=, ?url=, ?format=…)',
+      '📚 New: llms.txt + llms-full.txt + a full Agent Mode reference page',
+      '🎨 Visual: aurora hero, glowing tool cards, scroll-reveal animations',
+    ],
+  },
   {
     version: '1.2.0',
     date: 'September 2026',

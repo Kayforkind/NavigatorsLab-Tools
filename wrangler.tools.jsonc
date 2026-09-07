@@ -1,9 +1,10 @@
 // Cloudflare deployment for https://navigatorslab.com/tools/
 // Usage: npm run build, then stage dist/ under deploy/ and copy worker.js:
-//   mkdir -p deploy && cp -r dist deploy/tools && cp wrangler.tools.jsonc deploy/wrangler.jsonc && cp worker.js deploy/
+//   mkdir -p deploy && cp -r dist deploy/tools && cp wrangler.tools.jsonc deploy/wrangler.jsonc && cp worker.js deploy/ && cp src/lib/mcp.ts deploy/
 //   cd deploy && npx wrangler deploy
-// worker.js runs first for every request (run_worker_first) and stamps the
-// security headers onto each response before it leaves the edge.
+// worker.js runs first for every request (run_worker_first), stamps the
+// security headers onto each response, serves the MCP endpoint at /tools/mcp
+// (bundling mcp.ts), and maps /llms.txt to the suite's agent docs.
 {
   "account_id": "56faf9a57ad29af2d943fdedfb5ecda9",
   "name": "navigatorslab-tools",

@@ -174,3 +174,25 @@ async function encode(canvas: HTMLCanvasElement): Promise<Blob> {
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c);
 }
+
+/* ---- agent mode: ?url=&format=jpg|webp&targetKB=N — see agents.html ---- */
+import { agentInit, bindSelect, bindNumber, fetchFileParam, agentBanner, type QuerySpec } from '../lib/agent';
+{
+  const fmtEl = document.getElementById('fmt') as HTMLSelectElement;
+  const kbEl = document.getElementById('targetKB') as HTMLInputElement;
+  const MIME: Record<string, string> = { jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', avif: 'image/avif', png: 'image/png' };
+  const spec: QuerySpec = {
+    format: {
+      parse: (v) => {
+        const key = String(v).toLowerCase();
+        if (MIME[key]) return MIME[key];
+        return Object.values(MIME).includes(String(v)) ? String(v) : null;
+      },
+      apply: (v) => { fmtEl.value = String(v); fmtEl.dispatchEvent(new Event('change')); },
+    },
+    targetKB: bindNumber(kbEl, 10, 20000),
+  };
+  const applied = agentInit(spec, (k) => `applied ${k.join(', ')}`);
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'image').then((f) => { if (f) { agentBanner((applied.length ? `applied ${applied.join(', ')} · ` : '') + 'loaded file from <code>url</code> param'); add([f]); } });
+}

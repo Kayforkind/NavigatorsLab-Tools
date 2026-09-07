@@ -206,3 +206,10 @@ async function rebuild(extractOnly = false): Promise<void> {
     status(stat, `Rebuild failed: ${(e as Error).message}`, 'err');
   }
 }
+
+/* ---- agent mode: ?url=<same-origin pdf URL> opens the organizer ---- */
+import { fetchFileParam, agentBanner } from '../lib/agent';
+{
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'document.pdf').then((f) => { if (f) { agentBanner('loaded PDF from <code>url</code> param'); void load([f]); } });
+}

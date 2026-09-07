@@ -20,7 +20,8 @@ const tools = JSON.parse(fs.readFileSync(path.join(ROOT, 'public', 'tools.json')
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
 
-  for (const t of tools) {
+  const agents = { id: 'agents', icon: '🤖', name: 'Agent Mode', tagline: 'An MCP endpoint + deep links for AI agents — same privacy, zero uploads.', url: 'https://navigatorslab.com/tools/agents.html' };
+  for (const t of [agents, ...tools]) {
     const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const html = `<!doctype html><html><head><style>
       body { margin:0; width:1200px; height:630px; background:linear-gradient(135deg,#0b0f17 0%,#101a2b 60%,#0b2620 100%);
@@ -67,8 +68,8 @@ const tools = JSON.parse(fs.readFileSync(path.join(ROOT, 'public', 'tools.json')
     <div class="brand">🧭 NavigatorsLab <b>Tools</b> · free · open source</div>
     <div>
       <h1>Fifteen tools that<br /><span>never phone home.</span></h1>
-      <p class="sub">Strip GPS · shrink images · clean scans · sign PDFs · organize PDF pages · OCR receipts · QR codes · diff texts · text stats · trim audio · invoices · rename · print prep — all inside your browser tab.</p>
-      <div class="icons">🛡️🔍🗜️📄✍️🧾🔢🔳📑🔬📊🎧🧮🗂️🖨️</div>
+      <p class="sub">Strip GPS · shrink images · clean scans · sign PDFs · organize PDF pages · OCR receipts · QR codes · diff texts · text stats · trim audio · invoices · rename · print prep — all inside your browser tab, plus an MCP endpoint for AI agents.</p>
+      <div class="icons">🛡️🔍🗜️📄✍️🧾🔢🔳📑🔬📊🎧🧮🗂️🖨️🤖</div>
     </div>
     <div class="foot"><span>navigatorslab.com/tools</span><span class="pill">✓ no uploads · no accounts · nothing retained</span></div>
   </body></html>`;

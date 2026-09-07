@@ -67,10 +67,15 @@ function applyI18n(): void {
   bind('proofTests', 'hero.proof.tests');
   bind('proofSecurity', 'hero.proof.security');
   bind('toolsHead', 'tools.head');
+  bind('agentsHead', 'agents.head');
+  bind('agentsSub', 'agents.sub');
+  bind('ctaAgents', 'hero.cta.agents');
   bind('noResults', 'search.none');
   bind('vsTitle', 'vs.title');
   bind('vsSub', 'vs.sub');
   search.placeholder = t('tools.search', lang);
+  const agentsPill = document.querySelector('.pill-agents');
+  if (agentsPill) agentsPill.textContent = t('agents.pill', lang);
   const brag = document.querySelector('.brag');
   if (brag) {
     brag.querySelector('h2')!.textContent = t('brag.title', lang);

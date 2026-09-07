@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent Mode — MCP server &amp; deep links — NavigatorsLab Tools</title>
+  <meta name="description" content="NavigatorsLab Tools speaks agent: an MCP (Model Context Protocol) JSON-RPC endpoint plus deep links with parameters for every tool. Zero uploads, MIT licensed." />
+  <meta name="theme-color" content="#0b0f17" />
+  <meta property="og:title" content="Agent Mode — NavigatorsLab Tools" />
+  <meta property="og:description" content="An MCP endpoint and parameterized deep links for all 15 private, in-browser tools. No uploads. No accounts." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-agents.png" />
+  <meta property="og:url" content="https://navigatorslab.com/tools/agents.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="tagline">free · open source · everything stays on your device</span>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+    <a class="plain" href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub ↗</a>
+  </header>
+
+  <main>
+    <section class="hero slim">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="hero-kicker"><span class="lock">🤖</span> Built for humans <b>and</b> AI agents</div>
+          <h1>Agent Mode</h1>
+          <p class="hero-sub">
+            Every tool in this suite can be driven two ways: an <b>MCP (Model Context Protocol) endpoint</b>
+            for deterministic compute (QR payloads, text diff, text stats, the catalog), and
+            <b>deep links with parameters</b> that pre-load files and pre-set options in the browser tools.
+            Same privacy rules as always: <b>no uploads, no accounts, nothing retained</b> — the file rule is
+            enforced in code (<code>?url=</code> is same-origin only).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <h2>1 · MCP endpoint (compute)</h2>
+      <p class="sub">Streamable-HTTP-style JSON-RPC 2.0. Stateless, no auth, no session. Protocol version <code>2025-06-18</code>.</p>
+      <div class="panel mono-block"><code>POST https://navigatorslab.com/tools/mcp</code><br />Headers: <code>Content-Type: application/json</code> · <code>Accept: application/json, text/event-stream</code></div>
+      <div class="panel mono-block">
+<b>initialize</b>
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"my-agent","version":"0.1"}}}
+
+<b>tools/list</b>
+{"jsonrpc":"2.0","id":2,"method":"tools/list"}
+
+<b>tools/call — Wi-Fi QR payload</b>
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"qr_payload","arguments":{"kind":"wifi","ssid":"Cafe Guest","password":"s3cret-pw"}}}</div>
+      <div class="cards3">
+        <div class="panel"><h3>nl_catalog</h3><p>Every tool with URL, accepted files, agent parameters and a one-line description. Call this first.</p></div>
+        <div class="panel"><h3>qr_payload</h3><p>WIFI / vCard / mailto / text → payload string with spec-correct escaping + a qr.html deep link. <code>\ ; , :</code> escaped properly.</p></div>
+        <div class="panel"><h3>text_diff · text_stats</h3><p>LCS line diff (added/removed/unchanged) and words/reading-time/keywords — computed at the edge, nothing stored.</p></div>
+      </div>
+      <p class="sub">Client config (any MCP-compatible client): server URL <code>https://navigatorslab.com/tools/mcp</code>, transport <code>http</code>.</p>
+    </section>
+
+    <section class="wrap">
+      <h2>2 · Deep links (drive the browser tools)</h2>
+      <p class="sub">
+        Parameters are applied through a strict allow-list (validated, clamped, capped). <code>?url=</code> loads a file
+        <b>from this origin only</b> (or a small <code>data:</code> URL) and feeds it through the tool's normal pipeline,
+        exactly like a drop. Pages show an “Agent mode” chip when parameters were applied.
+      </p>
+      <div class="ttable-wrap">
+        <table class="tbl ttable">
+          <thead><tr><th>Page</th><th>Parameters</th><th>What happens</th></tr></thead>
+          <tbody>
+            <tr><td><a href="./exif.html">exif.html</a></td><td class="mono">?url=&lt;image&gt;</td><td>loads + scans the image, shows/strips GPS &amp; camera EXIF</td></tr>
+            <tr><td><a href="./metadata.html">metadata.html</a></td><td class="mono">?url=&lt;file&gt;</td><td>inspects hidden metadata (JPG/PNG/PDF/DOCX/XLSX/PPTX)</td></tr>
+            <tr><td><a href="./shrink.html">shrink.html</a></td><td class="mono">?url=&lt;image&gt;&amp;format=webp&amp;targetKB=300</td><td>loads image; compression target + format pre-set</td></tr>
+            <tr><td><a href="./scan.html">scan.html</a></td><td class="mono">?url=&lt;image&gt;</td><td>opens the scan editor (straighten / levels / threshold / crop)</td></tr>
+            <tr><td><a href="./sign.html">sign.html</a></td><td class="mono">?url=&lt;pdf&gt;&amp;date=1</td><td>opens PDF for signing, date stamp pre-enabled</td></tr>
+            <tr><td><a href="./receipts.html">receipts.html</a></td><td class="mono">?url=&lt;image&gt;</td><td>adds the receipt to the date-sorted book</td></tr>
+            <tr><td><a href="./ocr.html">ocr.html</a></td><td class="mono">?url=&lt;image&gt;&amp;autostart=1</td><td>loads and immediately starts on-device OCR</td></tr>
+            <tr><td><a href="./qr.html">qr.html</a></td><td class="mono">?text=&lt;payload&gt;&amp;ec=M&amp;size=512 · ?url=&lt;qr-image&gt;</td><td>renders a QR from text, or loads an image to decode</td></tr>
+            <tr><td><a href="./audio.html">audio.html</a></td><td class="mono">?url=&lt;audio&gt;</td><td>loads the clip onto the waveform</td></tr>
+            <tr><td><a href="./rename.html">rename.html</a></td><td class="mono">?url=&lt;image&gt;&amp;prefix=receipt-&amp;start=1</td><td>loads file(s); naming options pre-set</td></tr>
+            <tr><td><a href="./printprep.html">printprep.html</a></td><td class="mono">?url=&lt;image&gt;&amp;size=4x6&amp;orient=portrait</td><td>loads image; print size + orientation pre-set</td></tr>
+            <tr><td><a href="./pdfpages.html">pdfpages.html</a></td><td class="mono">?url=&lt;pdf&gt;</td><td>opens the page organizer</td></tr>
+            <tr><td><a href="./textdiff.html">textdiff.html</a></td><td class="mono">?a=&lt;text-url&gt;&amp;b=&lt;text-url&gt;</td><td>fills both sides and compares</td></tr>
+            <tr><td><a href="./textstats.html">textstats.html</a></td><td class="mono">?url=&lt;text-url&gt;</td><td>loads text and analyzes live</td></tr>
+            <tr><td><a href="./invoice.html">invoice.html</a></td><td class="mono">— (UI-driven)</td><td>state lives in the form, not the URL</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <h2>3 · Machine-readable indexes</h2>
+      <div class="cards3">
+        <div class="panel"><h3><a href="./llms.txt">llms.txt</a></h3><p>The concise index — suite summary, MCP endpoint, every tool with its parameters.</p></div>
+        <div class="panel"><h3><a href="./llms-full.txt">llms-full.txt</a></h3><p>Complete integration guide: JSON-RPC examples, the full parameter table, worked recipes, verification guarantees.</p></div>
+        <div class="panel"><h3><a href="./tools.json">tools.json</a></h3><p>The hub's catalog — names, taglines, categories, keywords — as data.</p></div>
+      </div>
+      <p class="sub">Also served site-wide: <code>https://navigatorslab.com/llms.txt</code> (same file, root path).</p>
+    </section>
+
+    <section class="privacy-strip">
+      <div>
+        <h2>Agent safety, by construction</h2>
+        <p>
+          The <code>?url=</code> loader rejects every cross-origin URL <b>in code</b> — a crafted link can never make a tool
+          pull files from a third-party host. Parameters are allow-listed, clamped and size-capped. The MCP endpoint is
+          stateless compute with hard input caps and no storage. The same security suite that proves the pages never
+          phone home also runs on every release.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="nl-foot">
+    <span>🔒 100% client-side — nothing is uploaded, stored, or logged</span>
+    <span>·</span>
+    <span>MIT licensed</span>
+    <span>·</span>
+    <a href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub</a>
+    <span>·</span>
+    <a href="./index.html">All tools</a>
+  </footer>
+  <script type="module" src="/src/pages/agents.ts"></script>
+</body>
+</html>

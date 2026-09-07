@@ -15,7 +15,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.svg', 'icon.svg', 'og-image.png', 'robots.txt', 'sitemap.xml',
-        'tools.json', 'lamejs/lame.min.js', 'tess/worker.min.js',
+        'tools.json', 'llms.txt', 'llms-full.txt', 'lamejs/lame.min.js', 'tess/worker.min.js',
         'tess/tesseract-core-lstm.wasm.js', 'tess/tesseract-core-lstm.wasm',
         'tess/tesseract-core-simd-lstm.wasm.js', 'tess/tesseract-core-simd-lstm.wasm',
         'tessdata/eng.traineddata.gz',
@@ -51,7 +51,7 @@ export default defineConfig({
       },
       workbox: {
         // precache every page + asset so all tools work fully offline after first load
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,webmanifest,json,gz,wasm}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,webmanifest,json,gz,wasm,txt}'],
         maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
         navigateFallback: 'index.html',
         runtimeCaching: [
@@ -83,6 +83,7 @@ export default defineConfig({
         pdfpages: resolve(__dirname, 'pdfpages.html'),
         textdiff: resolve(__dirname, 'textdiff.html'),
         textstats: resolve(__dirname, 'textstats.html'),
+        agents: resolve(__dirname, 'agents.html'),
       },
     },
   },

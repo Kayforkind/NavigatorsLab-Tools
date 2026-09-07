@@ -258,3 +258,10 @@ async function exportPdf(): Promise<void> {
   status(stat, `PDF with ${pages.length} page${pages.length === 1 ? '' : 's'} exported at print resolution (${fmtBytes(bytes.length)}).`, 'ok');
   toast('PDF exported 📄');
 }
+
+/* ---- agent mode: ?url=<same-origin image URL> opens the page in the editor ---- */
+import { fetchFileParam, agentBanner } from '../lib/agent';
+{
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'page.jpg').then((f) => { if (f) { agentBanner('loaded file from <code>url</code> param'); add([f]); } });
+}

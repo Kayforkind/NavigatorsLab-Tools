@@ -252,3 +252,12 @@ async function doStamp(): Promise<void> {
     status(stat, `Flatten failed: ${(e as Error).message}`, 'err');
   }
 }
+
+/* ---- agent mode: ?url=<same-origin pdf URL>&date=1 — see agents.html ---- */
+import { agentInit, bindCheck, fetchFileParam, agentBanner, type QuerySpec } from '../lib/agent';
+{
+  const spec: QuerySpec = { date: bindCheck(document.getElementById('addDate') as HTMLInputElement) };
+  const applied = agentInit(spec, (k) => `applied ${k.join(', ')}`);
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'document.pdf').then((f) => { if (f) { agentBanner((applied.length ? `applied ${applied.join(', ')} · ` : '') + 'loaded PDF from <code>url</code> param'); loadPdf(f); } });
+}

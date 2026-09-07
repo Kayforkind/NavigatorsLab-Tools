@@ -171,3 +171,13 @@ function exportCsv(): void {
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c);
 }
+
+/* ---- agent mode: ?url=<same-origin image URL>&autostart=1 runs OCR on load ---- */
+import { fetchFileParam, agentBanner } from '../lib/agent';
+{
+  const qp = new URLSearchParams(location.search);
+  const u = qp.get('url');
+  if (u && qp.get('autostart') === '1') {
+    void fetchFileParam(u, 'receipt.jpg').then((f) => { if (f) { agentBanner('loaded file from <code>url</code> param — OCR starting'); void run([f]); } });
+  }
+}

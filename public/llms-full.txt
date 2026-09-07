@@ -1,0 +1,96 @@
+# NavigatorsLab Tools — full agent documentation
+
+> Fifteen free, open-source (MIT) utilities that run entirely in the user's browser. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. This page is the complete guide for AI agents and automation.
+
+## Architecture (what an agent must know)
+
+1. **Static suite, no backend.** Every tool is a static HTML+JS page. There is no upload endpoint — a server that could receive files does not exist. Verification: an automated security suite loads every page, records every network request, and asserts zero non-self requests.
+2. **Two integration modes:**
+   - **MCP (compute)** — `POST https://navigatorslab.com/tools/mcp` speaks JSON-RPC 2.0 (Model Context Protocol, Streamable-HTTP-style). Four deterministic tools run at the edge with no file I/O and no storage: `nl_catalog`, `qr_payload`, `text_diff`, `text_stats`.
+   - **Deep links (drive)** — every tool page accepts URL query parameters. The browser (the human's, or an automated one) loads the page; the page loads any input files **from this origin only** and applies the parameters. File processing (EXIF strip, compression, PDF work, OCR) happens in the page, never on a server.
+3. **Same-origin file rule.** `?url=…` accepts only: same-origin URLs (e.g. a file you or the user staged on navigatorslab.com) and small `data:` URLs. Cross-origin fetches are rejected in code, so a deep link can never make the page pull files from a third party.
+
+## MCP endpoint
+
+- URL: `https://navigatorslab.com/tools/mcp` (method `POST`)
+- Transport: JSON-RPC 2.0 messages over HTTP; responses are `application/json` (SSE is not required; GET returns 405).
+- Requests must carry `Content-Type: application/json` and `Accept: application/json, text/event-stream`.
+- Stateless: no session, no cookies, no auth. Send `initialize` once if you want the protocol handshake, then `tools/list` / `tools/call`.
+- Protocol version: `2025-06-18`.
+
+### Example: initialize
+
+```
+POST /tools/mcp
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"my-agent","version":"0.1"}}}
+```
+
+Response (shape): `result.protocolVersion = "2025-06-18"`, `result.serverInfo = { name: "navigatorslab-tools", version, title, description, instructions }`.
+
+### Example: tools/list
+
+```
+POST /tools/mcp
+{"jsonrpc":"2.0","id":2,"method":"tools/list"}
+```
+
+Returns four tools with JSON-Schema `inputSchema`: `nl_catalog`, `qr_payload`, `text_diff`, `text_stats`.
+
+### Example: tools/call — build a Wi-Fi QR payload
+
+```
+POST /tools/mcp
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"qr_payload","arguments":{"kind":"wifi","ssid":"Cafe Guest","password":"s3cret-pw"}}}
+```
+
+Result content: `{ "payload": "WIFI:T:WPA;S:Cafe Guest;P:s3cret-pw;;", "deep_link": "https://navigatorslab.com/tools/qr.html?text=WIFI%3A…", "note": … }`. Special characters in SSID/password (`\ ; , :`) are escaped per the Wi-Fi QR spec. Open `deep_link` in any browser to render the PNG/SVG — rendering happens on that device.
+
+### Compute tool reference
+
+- `nl_catalog` — no arguments. Returns the full tool catalog: each tool's id, name, URL, accepted files, agent parameters, and what it does.
+- `qr_payload` — `{ kind: "wifi" | "vcard" | "mailto" | "text", … }`. wifi: `ssid` (required), `password`, `type` (WPA/WEP/nopass), `hidden`. vcard: `name` (required), `org`, `tel`, `email`, `url`. mailto: `to` (required), `subject`, `body`. text: `text` (≤ 2000 chars). Returns `payload` + `deep_link` to qr.html.
+- `text_diff` — `{ text_a, text_b, ignoreWhitespace?, caseSensitive? }` (≤ 400k chars each). Returns `added`, `removed`, `unchanged`, per-line `lines` (capped at 2000).
+- `text_stats` — `{ text }` (≤ 400k chars). Returns words, characters, sentences, paragraphs, readMinutes, speakMinutes, topKeywords.
+
+## Deep-link parameters (drive mode)
+
+`?url=` loads a same-origin file and feeds it to the tool's normal pipeline, exactly as if the user had dropped it. Other parameters are applied through a strict allow-list (values validated, numbers clamped, text capped at 4000 chars). When parameters are present the page shows an "Agent mode" chip describing what was applied.
+
+| Page | Parameters | Effect |
+|---|---|---|
+| exif.html | `url` | load + scan an image, show and strip EXIF (GPS, camera, timestamps) |
+| metadata.html | `url` | load + inspect hidden metadata (JPG/PNG/PDF/DOCX/XLSX/PPTX) |
+| shrink.html | `url`, `format` (jpeg/webp), `targetKB` (10–20000) | load image; compression target pre-set |
+| scan.html | `url` | open image in the scan editor (straighten/levels/threshold/crop → PDF) |
+| sign.html | `url`, `date` (1/true) | open PDF for signing; date stamp pre-enabled |
+| receipts.html | `url` | add receipt image to the date-sorted book |
+| ocr.html | `url`, `autostart` (1) | load image and immediately start on-device OCR |
+| qr.html | `text`, `ec` (L/M/Q/H), `size` (256/512/768/1024), or `url` | pre-fill + render a QR, or load a QR image to decode |
+| audio.html | `url` | load an audio clip onto the waveform |
+| rename.html | `url`, `prefix`, `suffix`, `start` | load file(s); naming options pre-set |
+| printprep.html | `url`, `size` (4x6/5x7/letter/a4…), `orient` (portrait/landscape), `bleed` (0–6) | load image; print size pre-set |
+| pdfpages.html | `url` | open PDF in the page organizer |
+| textdiff.html | `a`, `b` (same-origin text URLs) | fill both sides and auto-compare |
+| textstats.html | `url` | load text and analyze live |
+| invoice.html | — (UI-driven) | line items → PDF; state lives in the UI |
+
+Example — compress a staged image to under 300 KB as WebP:
+`https://navigatorslab.com/tools/shrink.html?url=/tools/samples/photo.jpg&format=webp&targetKB=300`
+
+Example — compare two staged texts:
+`https://navigatorslab.com/tools/textdiff.html?a=/tools/samples/v1.txt&b=/tools/samples/v2.txt`
+
+## Recipes
+
+- **"Make me a Wi-Fi QR for the guest network"** → MCP `qr_payload {kind:"wifi", ssid, password}` → open the returned `deep_link` → print/PNG/SVG. The password never leaves the device.
+- **"Diff these two contract drafts"** → MCP `text_diff` for counts, or `textdiff.html?a=…&b=…` for the highlighted human-readable view.
+- **"Strip location from these photos before we publish"** → `exif.html?url=<image>` per file (or the page's normal drop flow); SHA-256 before/after proves only metadata changed.
+- **"Get this scan under the portal's 2 MB limit"** → `shrink.html?url=<image>&targetKB=2000`.
+- **"What's this QR code pointing at?"** → `qr.html?url=<image-of-qr>` decodes locally — the payload is not sent to any third-party scanner site.
+
+## Guarantees & verification
+
+- **Privacy**: no uploads, no accounts, no cookies, no analytics, nothing retained. Files stay in the tab's memory; closing the tab discards them.
+- **Cost**: free and open source (MIT). No premium tier, no watermark, no file-size upsell — the only limit is device memory.
+- **Verified every release**: 59+ unit tests, 23+ automated end-to-end browser checks (real files in, downloaded bytes asserted), a 24+ check security suite (network silence, exfil verbs, storage hygiene, malicious-file fuzzing, path traversal, header assertions), mobile-overflow checks, and Lighthouse 98–100 on every page.
+- **Offline**: after the first visit the PWA precaches every page and engine (including the OCR model); tools keep working with the network off.

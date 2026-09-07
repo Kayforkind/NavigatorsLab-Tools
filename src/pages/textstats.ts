@@ -83,3 +83,15 @@ onDrop($('#dz'), async (files) => {
     render();
   } catch { /* unreadable */ }
 });
+
+/* ---- agent mode: ?url=<same-origin text URL> analyzes the file ---- */
+import { fetchFileParam, agentBanner } from '../lib/agent';
+{
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'text.txt').then(async (f) => {
+    if (!f) return;
+    input.value = await f.text();
+    agentBanner('loaded text from <code>url</code> param');
+    render();
+  });
+}

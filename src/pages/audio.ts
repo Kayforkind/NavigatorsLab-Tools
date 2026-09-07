@@ -274,3 +274,10 @@ function floatTo16(f: Float32Array): Int16Array {
   }
   return out;
 }
+
+/* ---- agent mode: ?url=<same-origin audio URL> loads the clip ---- */
+import { fetchFileParam, agentBanner } from '../lib/agent';
+{
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'clip.wav').then((f) => { if (f) { agentBanner('loaded audio from <code>url</code> param'); void load(f); } });
+}

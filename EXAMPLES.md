@@ -215,6 +215,16 @@ Everything below works at **https://navigatorslab.com/tools/** (or `npm run dev`
 
 ---
 
+## Agent Mode — drive the suite from an AI agent
+
+**Scenario:** you are an AI agent (or a power user) and want results without clicking.
+
+1. **Compute at the edge** — `POST https://navigatorslab.com/tools/mcp` with JSON-RPC: `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"qr_payload","arguments":{"kind":"wifi","ssid":"Guest","password":"s3cret-pw"}}}` → returns the escaped `WIFI:T:WPA;…` payload and a ready `qr.html?text=…` deep link.
+2. **Render in the browser** — open that deep link (or `shrink.html?url=…&targetKB=300`, `textdiff.html?a=…&b=…`): the page shows an "Agent mode" chip describing what the URL applied, and the file — loaded **from this origin only** — flows through the same local pipeline a dropped file would.
+3. **Discover everything** — `tools/list`, [`llms.txt`](https://navigatorslab.com/llms.txt), [`llms-full.txt`](https://navigatorslab.com/tools/llms-full.txt), and the full reference on the [Agent Mode page](https://navigatorslab.com/tools/agents.html).
+
+**Verified:** `agents-page`, `deep-qr`, `deep-url` and `deep-params` in the automated E2E gate — `?text=` renders without clicks, `?url=` (data:) analyzes 12 words with the chip shown, and params pre-set the UI. The MCP handlers themselves are unit-tested (17 tests: initialize, tools/list, tools/call, error codes, Wi-Fi escaping).
+
 ## Everything works offline after the first visit
 
 The suite is a PWA: every page, script, engine (including the 24 MB OCR model) is precached. Turn off Wi-Fi and keep working — verified by a CI test that disables the network and runs a tool.

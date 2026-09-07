@@ -1,0 +1,36 @@
+# NavigatorsLab Tools
+
+> Fifteen free, open-source (MIT) utilities that run entirely in the user's browser: photo privacy (EXIF strip), metadata inspection, image compression, scan cleanup, PDF signing and page organizing, receipt OCR, QR generation/decoding, audio trimming, invoicing, batch renaming, print prep, text diff and text stats. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. An MCP (Model Context Protocol) server endpoint is available for AI agents.
+
+The suite processes files client-side (Canvas, Web Audio, WebAssembly, pdf-lib, Tesseract). Nothing is uploaded, stored, or logged. Every release passes an automated verification gate (unit + end-to-end browser tests + a security suite that proves zero non-self network calls on every page).
+
+## How agents use this suite
+
+- **MCP server**: `POST https://navigatorslab.com/tools/mcp` — Streamable-HTTP-style JSON-RPC 2.0 (initialize, tools/list, tools/call). Compute tools available to agents: `nl_catalog`, `qr_payload` (Wi-Fi/vCard/mailto/text, spec-correct escaping), `text_diff` (LCS), `text_stats`.
+- **Deep links**: every tool page accepts URL query parameters (documented in [Agent Mode](https://navigatorslab.com/tools/agents.html)) — e.g. `qr.html?text=<payload>` renders a QR, `shrink.html?url=<image>&format=webp&targetKB=300` compresses a same-origin image, `textdiff.html?a=<text-url>&b=<text-url>` compares two texts.
+- **Same-origin rule**: `?url=` file loading accepts only URLs on this origin (or small `data:` URLs) — a page will never fetch files from third-party hosts.
+
+## Tools
+
+- [Photo Privacy Kit](https://navigatorslab.com/tools/exif.html): strips GPS/camera/timestamp EXIF from photos; SHA-256 proof before/after. Params: `?url=<same-origin image>`
+- [Metadata & Hidden-Data Checker](https://navigatorslab.com/tools/metadata.html): shows and strips hidden metadata in JPG/PNG/PDF/DOCX/XLSX/PPTX. Params: `?url=<same-origin file>`
+- [Image Shrinker](https://navigatorslab.com/tools/shrink.html): binary-search quality to hit an exact KB target; JPG/WebP/AVIF; batch ZIP. Params: `?url=<image>&format=webp&targetKB=300`
+- [Scan & Screenshot Cleaner](https://navigatorslab.com/tools/scan.html): auto-straighten, auto-levels, threshold, crop → clean PDF. Params: `?url=<image>`
+- [Local E-Sign Pad](https://navigatorslab.com/tools/sign.html): draw/type a signature, place, optional date stamp, flatten into the PDF. Params: `?url=<pdf>&date=1`
+- [Receipts → One PDF](https://navigatorslab.com/tools/receipts.html): EXIF date-sorted receipt book PDF. Params: `?url=<image>`
+- [Receipt OCR → CSV](https://navigatorslab.com/tools/ocr.html): on-device Tesseract OCR of receipt totals → CSV. Params: `?url=<image>&autostart=1`
+- [QR Studio](https://navigatorslab.com/tools/qr.html): generate PNG/SVG or decode any QR image locally. Params: `?text=<payload>&ec=M&size=512` or `?url=<qr image>` to decode
+- [Audio Trimmer](https://navigatorslab.com/tools/audio.html): trim on the waveform, fades, peak normalize, WAV/MP3 out. Params: `?url=<audio>`
+- [Invoice / Quote Generator](https://navigatorslab.com/tools/invoice.html): line items → PDF invoice, live preview. UI-driven (no file params)
+- [Batch Rename & Sort](https://navigatorslab.com/tools/rename.html): EXIF-dated renaming, prefix/suffix/sequence, ZIP out. Params: `?url=<image>&prefix=receipt-&start=1`
+- [Print-Shop Prep](https://navigatorslab.com/tools/printprep.html): exact print sizes, bleed, 300 DPI checks, PDF out. Params: `?url=<image>&size=4x6&orient=portrait`
+- [PDF Pages](https://navigatorslab.com/tools/pdfpages.html): reorder/rotate/delete/extract/blank/merge pages. Params: `?url=<pdf>`
+- [Text Diff](https://navigatorslab.com/tools/textdiff.html): line diff, word-level highlights, similarity %. Params: `?a=<text-url>&b=<text-url>`
+- [Text Stats](https://navigatorslab.com/tools/textstats.html): counts, reading time, Flesch, keyword density. Params: `?url=<text-url>`
+
+## Optional
+
+- [Agent Mode docs](https://navigatorslab.com/tools/agents.html): full parameter reference and examples for both MCP and deep links
+- [Full agent docs](https://navigatorslab.com/tools/llms-full.txt): this document with complete details
+- [Tool catalog JSON](https://navigatorslab.com/tools/tools.json): the hub's machine-readable tool list
+- [Source (GitHub, MIT)](https://github.com/Kayforkind/NavigatorsLab-Tools)

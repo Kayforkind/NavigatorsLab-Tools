@@ -87,3 +87,21 @@ $('#btnDl').addEventListener('click', () => {
   const text = unifiedDiff(diffLines(ta.value, tb.value, { ignoreWs: ignoreWs.checked, caseSensitive: caseSense.checked }));
   download(new Blob([text], { type: 'text/x-diff' }), 'changes.diff');
 });
+
+/* ---- agent mode: ?a=<text-url>&b=<text-url> fills both sides and compares ---- */
+import { fetchFileParam, agentBanner } from '../lib/agent';
+{
+  const qp = new URLSearchParams(location.search);
+  const a = qp.get('a');
+  const b = qp.get('b');
+  if (a || b) {
+    void Promise.all([
+      a ? fetchFileParam(a, 'a.txt') : Promise.resolve(null),
+      b ? fetchFileParam(b, 'b.txt') : Promise.resolve(null),
+    ]).then(async ([fa, fb]) => {
+      if (fa) ta.value = await fa.text();
+      if (fb) tb.value = await fb.text();
+      if (fa || fb) { agentBanner('loaded texts from <code>a</code>/<code>b</code> params'); btnDiff.click(); }
+    });
+  }
+}

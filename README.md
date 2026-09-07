@@ -59,6 +59,20 @@ Every claim below is exercised by the automated gate (23 E2E checks, 59 unit tes
 - **Audio Trimmer** can **peak-normalize** the selection (quiet voice memos → uniform loudness) before WAV/MP3 export.
 - **Text Diff** shows a **similarity percentage** and has a swap button; **Text Stats** draws a live **sentence-rhythm histogram**.
 
+## 🤖 Built for AI agents, too (MCP + deep links)
+
+This suite is not just for humans. Every tool is scriptable, and an **MCP (Model Context Protocol) server** speaks directly to AI agents:
+
+- **MCP endpoint** — `POST https://navigatorslab.com/tools/mcp` — JSON-RPC 2.0, Streamable-HTTP-style, stateless, no auth. Methods: `initialize`, `tools/list`, `tools/call`. Compute tools: `nl_catalog`, `qr_payload` (Wi-Fi/vCard/mailto/text with spec-correct escaping), `text_diff` (LCS), `text_stats`.
+- **Deep links** — every page accepts a strict allow-list of URL parameters: `qr.html?text=<payload>&ec=M` renders a QR with zero clicks, `shrink.html?url=<image>&format=webp&targetKB=300` pre-loads a same-origin file and pre-sets the target, `textdiff.html?a=<u1>&b=<u2>` compares two texts. The `?url=` loader is **same-origin only, enforced in code** — a crafted link can never make a tool pull files from a third-party host.
+- **Machine-readable docs** — [`llms.txt`](public/llms.txt) + [`llms-full.txt`](public/llms-full.txt) (served at both `/tools/` and the site root), [`tools.json`](public/tools.json), and the full reference at **[/tools/agents](https://navigatorslab.com/tools/agents.html)**.
+
+Quick check from any terminal:
+
+```bash
+curl -s https://navigatorslab.com/tools/mcp   -H 'content-type: application/json'   -H 'accept: application/json'   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
 ## Privacy is the architecture, not a promise
 
 These are static pages. There is **no server that could receive your files** — no upload endpoint, no queue, no storage bucket, no analytics, no cookies, no accounts. We keep **no attachments and no user information**, ever. What you drop in is processed by your own device and forgotten when you close the tab.

@@ -202,3 +202,19 @@ async function copyText(text: string): Promise<void> {
     ta.remove();
   }
 }
+
+/* ---- agent mode: ?text=<payload>&ec=L|M|Q|H&size=256..1024 — see agents.html ---- */
+import { agentInit, bindSelect, fetchFileParam, agentBanner, type QuerySpec } from '../lib/agent';
+{
+  const spec: QuerySpec = {
+    text: {
+      parse: (v) => (String(v).trim() ? String(v).trim().slice(0, 2000) : null),
+      apply: (v) => { qrText.value = String(v); btnMake.click(); },
+    },
+    ec: bindSelect(document.getElementById('qrEc') as HTMLSelectElement, ['l', 'm', 'q', 'h']),
+    size: bindSelect(qrSize, ['256', '512', '768', '1024']),
+  };
+  const applied = agentInit(spec, (k) => `applied ${k.join(', ')}`);
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'qr.png').then((f) => { if (f) { agentBanner('loaded image from <code>url</code> param — decoding'); void decode(f); } });
+}

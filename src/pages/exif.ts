@@ -157,3 +157,10 @@ async function stripAll(asZip: boolean): Promise<void> {
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c);
 }
+
+/* ---- agent mode: ?url=<same-origin image URL> loads and scans the file ---- */
+import { fetchFileParam, agentBanner } from '../lib/agent';
+{
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'photo.jpg').then((f) => { if (f) { agentBanner('loaded file from <code>url</code> param'); scan([f]); } });
+}

@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NavigatorsLab Tools — 15 private, in-browser utilities</title>
+  <title>NavigatorsLab Tools — 15 private, in-browser utilities + an MCP endpoint for AI agents</title>
   <meta name="description" content="Fifteen free tools that run entirely in your browser: strip photo GPS, shrink images, clean scans, sign PDFs, organize PDF pages, merge receipts, OCR expenses, make & decode QR codes, diff texts, count words, inspect metadata, trim audio, make invoices, batch rename, prep files for print. No uploads." />
   <meta name="theme-color" content="#0b0f17" />
+  <link rel="llms" href="./llms.txt" />
   <meta property="og:title" content="NavigatorsLab Tools — 15 private, in-browser utilities" />
   <meta property="og:description" content="Fifteen free tools that run entirely in your browser. No accounts. No uploads. Nothing retained." />
   <meta property="og:type" content="website" />
@@ -26,6 +27,7 @@
     <span class="spacer"></span>
     <span id="langSel" class="lang-sel" aria-label="Language"></span>
     <a class="plain" href="https://navigatorslab.com/">PDF Studio ↗</a>
+    <a class="plain" href="./agents.html">🤖 Agent Mode</a>
     <a class="plain" href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub ↗</a>
   </header>
 
@@ -42,6 +44,7 @@
           </p>
           <div class="hero-cta">
             <a class="btn-hero primary" href="#tools" id="ctaBrowse">Browse the tools ↓</a>
+            <a class="btn-hero" href="./agents.html" id="ctaAgents">🤖 Agent Mode — MCP &amp; deep links</a>
             <a class="btn-hero" href="https://github.com/Kayforkind/NavigatorsLab-Tools" id="ctaGithub">★ Source on GitHub</a>
             <button class="btn-hero" id="installBtn" hidden>📲 Install as app</button>
           </div>
@@ -67,6 +70,33 @@
       <div class="sb-item"><b>98–100</b><span>Lighthouse, every page</span></div>
       <div class="sb-item"><b>0</b><span>accounts, cookies, trackers</span></div>
       <div class="sb-item"><b>∞</b><span>file size limits (your device decides)</span></div>
+    </section>
+
+    <section class="wrap" id="agents">
+      <span class="pill-agents">🤖 for AI agents, too</span>
+      <h2 id="agentsHead">Suite automation for humans — and for machines</h2>
+      <p class="sub" id="agentsSub">
+        Every tool is scriptable. Drive them from an AI agent with a Model Context Protocol endpoint, or with plain
+        parameterized URLs — the same pages, the same privacy: files stay on the device running the browser.
+      </p>
+      <div class="cards3">
+        <div class="panel">
+          <h3>MCP endpoint</h3>
+          <p>JSON-RPC 2.0 at <code>POST /tools/mcp</code> — <code>initialize</code>, <code>tools/list</code>, <code>tools/call</code>. Compute tools: catalog, QR payloads, text diff, text stats. Stateless, no auth, protocol <code>2025-06-18</code>.</p>
+        </div>
+        <div class="panel">
+          <h3>Deep links with parameters</h3>
+          <p>Every page accepts a strict allow-list of URL params — <code>qr.html?text=…</code> renders instantly, <code>shrink.html?url=…&amp;targetKB=300</code> pre-loads and pre-sets. <code>?url=</code> is <b>same-origin only</b>, enforced in code.</p>
+        </div>
+        <div class="panel">
+          <h3>Machine-readable docs</h3>
+          <p><code>llms.txt</code> + <code>llms-full.txt</code> at the site root, <code>tools.json</code> as data, and a full reference page — so an agent can discover and drive the whole suite without a human.</p>
+        </div>
+      </div>
+      <div class="agent-row">
+        <a class="btn-hero primary" href="./agents.html">Read the Agent Mode docs →</a>
+        <span class="mono dim">curl example: <code>{"jsonrpc":"2.0","id":1,"method":"tools/list"}</code> → POST /tools/mcp</span>
+      </div>
     </section>
 
     <section class="wrap" id="tools">

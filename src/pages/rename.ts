@@ -129,3 +129,16 @@ async function exportZip(): Promise<void> {
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c);
 }
+
+/* ---- agent mode: ?url=&prefix=&suffix=&start=N — see agents.html ---- */
+import { agentInit, bindText, bindNumber, fetchFileParam, agentBanner, type QuerySpec } from '../lib/agent';
+{
+  const spec: QuerySpec = {
+    prefix: bindText(document.getElementById('preTxt') as HTMLInputElement),
+    suffix: bindText(document.getElementById('sufTxt') as HTMLInputElement),
+    start: bindNumber(document.getElementById('startN') as HTMLInputElement, 0, 99999),
+  };
+  const applied = agentInit(spec, (k) => `applied ${k.join(', ')}`);
+  const u = new URLSearchParams(location.search).get('url');
+  if (u) void fetchFileParam(u, 'photo.jpg').then((f) => { if (f) { agentBanner((applied.length ? `applied ${applied.join(', ')} · ` : '') + 'loaded file from <code>url</code> param'); add([f]); } });
+}
