@@ -5,3 +5,4 @@ dist/
 node_modules/
 deploy/
 .profile-tmp/
+lh-*.json
