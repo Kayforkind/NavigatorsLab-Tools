@@ -353,7 +353,8 @@ def badges(t):
     pages = (f"https://img.shields.io/github/deployments/Kayforkind/{repo}/github-pages"
              "?label=Pages&logo=github&event=push")
     check = ("https://img.shields.io/endpoint?url="
-             "https%3A%2F%2Fnavigatorslab.com%2Ftools%2Fbadge-" + t['id'] + ".json")
+             "https%3A%2F%2Fnavigatorslab.com%2Ftools%2Fbadge-" + t['id'] + ".json"
+             "&cacheSeconds=300")
     return (f"![Pages]({pages}) ![Live check]({check})")
 
 

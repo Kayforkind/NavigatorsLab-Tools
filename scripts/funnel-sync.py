@@ -62,9 +62,10 @@ def main():
                  'commit', '-m',
                  'Sync from NavigatorsLab-Tools: regenerated repo content\n'
                  '\nBy scripts/funnel-gen.py — landing, runnable demo, README, screenshots.\n'
+                 '\nForce-pushed: these repos are generated artifacts of the hub build.\n'
                  '\n\U0001F916 Generated with Codebuff'
                  '\nCo-Authored-By: Codebuff <noreply@codebuff.com>'], cwd=d)
-            run(['git', 'push', 'origin', 'main'] + (['--force'] if fresh else []), cwd=d)
+            run(['git', 'push', 'origin', 'main', '--force'], cwd=d)
             print(f'pushed: {name}')
             pushed.append(name)
         except Exception as e:  # noqa: BLE001 — one bad repo must not stop the rest
