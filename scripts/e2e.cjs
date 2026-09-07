@@ -665,11 +665,11 @@ async function setFiles(page, files) {
     await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 15, { timeout: 15000 });
     const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', cards === 15, `${cards} tool cards on the redesigned hub (tools.json-driven)`);
+    report('hub', cards === 16, `${cards} tool cards on the redesigned hub (tools.json-driven; 15 hub tools + external Reimagine)`);
     const repoLinks = await page.evaluate(() =>
       Array.from(document.querySelectorAll('#grid .cards a.repo')).map((a) => a.href));
-    const allRepos = repoLinks.length === 15 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/NavigatorsLab-'));
-    report('hub-repo-links', allRepos, `${repoLinks.length}/15 cards carry a standalone GitHub repo link (funnel)`);
+    const allRepos = repoLinks.length === 16 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/'));
+    report('hub-repo-links', allRepos, `${repoLinks.length}/16 cards carry a standalone GitHub repo link (15 funnel + reimagine-it)`);
   });
 
   const failed = results.filter((r) => !r.ok);

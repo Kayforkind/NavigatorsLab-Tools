@@ -21,6 +21,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Build the hub (funnel-gen needs dist/ for the runnable demos)
+        run: |
+          npm ci
+          npm run build
       - name: Regenerate funnel content
         run: python scripts/funnel-gen.py
       - name: Push changes to the 15 per-tool repos
