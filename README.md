@@ -42,6 +42,28 @@ Every "Verified" cell is asserted by an automated browser test on every push —
 
 Companion project: **[PDF Studio](https://github.com/Kayforkind/NavigatorsLab-PDF-Studio)** — the full in-browser PDF editor (edit PDF text in place, OCR, forms, redaction).
 
+### One repo per tool
+
+Prefer a standalone repo? Each tool has its own home — every one links straight back to the hub, where all 15 live together:
+
+| | Tool | Standalone repo |
+|---|------|-----------------|
+| 🛡️ | Photo Privacy Kit | [NavigatorsLab-Photo-Privacy-Kit](https://github.com/Kayforkind/NavigatorsLab-Photo-Privacy-Kit) |
+| 🔍 | Metadata & Hidden-Data Checker | [NavigatorsLab-Metadata-Checker](https://github.com/Kayforkind/NavigatorsLab-Metadata-Checker) |
+| 🗜️ | Image Shrinker | [NavigatorsLab-Image-Shrinker](https://github.com/Kayforkind/NavigatorsLab-Image-Shrinker) |
+| 📄 | Scan & Screenshot Cleaner | [NavigatorsLab-Scan-Cleaner](https://github.com/Kayforkind/NavigatorsLab-Scan-Cleaner) |
+| ✍️ | Local E-Sign Pad | [NavigatorsLab-E-Sign-Pad](https://github.com/Kayforkind/NavigatorsLab-E-Sign-Pad) |
+| 🧾 | Receipts → One PDF | [NavigatorsLab-Receipts-to-PDF](https://github.com/Kayforkind/NavigatorsLab-Receipts-to-PDF) |
+| 🔢 | Receipt OCR → CSV | [NavigatorsLab-Receipt-OCR](https://github.com/Kayforkind/NavigatorsLab-Receipt-OCR) |
+| 🔳 | QR Studio | [NavigatorsLab-QR-Studio](https://github.com/Kayforkind/NavigatorsLab-QR-Studio) |
+| 🎧 | Audio Trimmer | [NavigatorsLab-Audio-Trimmer](https://github.com/Kayforkind/NavigatorsLab-Audio-Trimmer) |
+| 🧮 | Invoice / Quote Generator | [NavigatorsLab-Invoice-Generator](https://github.com/Kayforkind/NavigatorsLab-Invoice-Generator) |
+| 🗂️ | Batch Rename & Sort | [NavigatorsLab-Batch-Rename](https://github.com/Kayforkind/NavigatorsLab-Batch-Rename) |
+| 🖨️ | Print-Shop Prep | [NavigatorsLab-Print-Shop-Prep](https://github.com/Kayforkind/NavigatorsLab-Print-Shop-Prep) |
+| 📑 | PDF Pages | [NavigatorsLab-PDF-Pages](https://github.com/Kayforkind/NavigatorsLab-PDF-Pages) |
+| 🔬 | Text Diff | [NavigatorsLab-Text-Diff](https://github.com/Kayforkind/NavigatorsLab-Text-Diff) |
+| 📊 | Text Stats | [NavigatorsLab-Text-Stats](https://github.com/Kayforkind/NavigatorsLab-Text-Stats) |
+
 ---
 
 ## What the tools can do — v1.3 highlights
