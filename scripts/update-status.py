@@ -33,19 +33,20 @@ METHOD = {
 }
 DEFAULT_METHOD = 'route + headers'
 
-# tools served outside the hub (their tools.json entry carries its own URL)
+# External tools: no per-tool page in this repo; served at their own "url"
+# (a path on this domain, by another worker). Checked at that URL plus the
+# pretty (Capitalized) and all-caps 301 variants.
 EXTERNAL = {'reimagine'}
 
 
 def main() -> int:
+    import urllib.request
+
     def head(url: str) -> int:
-        # curl, not urllib: Cloudflare bot protection 403s python's TLS
-        # fingerprint even with a browser-like UA; curl passes everywhere.
+        req = urllib.request.Request(url, method='HEAD', headers={'User-Agent': 'nl-status/1.0'})
         try:
-            r = subprocess.run(
-                ['curl', '-s', '-o', os.devnull, '-w', '%{http_code}', '-I', '-A', 'nl-status/1.0', url],
-                capture_output=True, text=True, timeout=30)
-            return int((r.stdout or '0').strip() or 0)
+            with urllib.request.urlopen(req, timeout=20) as r:
+                return r.status
         except Exception:
             return 0
 
@@ -72,12 +73,18 @@ def main() -> int:
     for t in tools:
         tid = t['id']
         if tid in EXTERNAL:
+            # Canonical path must 200; the pretty (/Reimagine) and all-caps
+            # (/REIMAGINE) variants must resolve (200 or a redirect).
             page_ok = head(t['url']) == 200
-            ok = page_ok
+            pretty_ok = (head(f'https://navigatorslab.com/{tid.capitalize()}') in (200, 301, 302, 308)
+                         and head(f'https://navigatorslab.com/{tid.upper()}') in (200, 301, 302, 308))
+            method = 'route (3 case variants)'
+            ok = page_ok and pretty_ok
             all_good = all_good and ok
             rows.append({'id': tid, 'icon': t['icon'], 'name': t['name'],
-                         'href': t['url'], 'prettyUrl': t['url'],
-                         'method': 'route', 'verifiedAt': now, 'ok': ok})
+                         'href': '../reimagine/', 'prettyUrl': t['url'],
+                         'method': method, 'verifiedAt': now,
+                         'ok': ok})
             continue
         page_ok = head(f'{BASE}/{tid}.html') == 200
         pretty_ok = head(f'https://navigatorslab.com{PRETTY[tid]}') in (200, 301, 302, 308)
@@ -92,17 +99,7 @@ def main() -> int:
     out = {'generatedAt': now, 'allGood': all_good, 'tools': rows, 'probes': probes}
     io.open(ROOT / 'public' / 'status.json', 'w', encoding='utf-8', newline='').write(
         json.dumps(out, indent=2, ensure_ascii=False))
-
-    # 3) shields.io endpoint badges — one per tool, consumed by the per-tool
-    #    repo READMEs (https://img.shields.io/endpoint?url=.../badge-<id>.json)
-    day = now[:10]
-    for r in rows:
-        badge = {'schemaVersion': 1, 'label': 'live check',
-                 'message': ('passing · ' + day) if r['ok'] else 'failing',
-                 'color': 'brightgreen' if r['ok'] else 'red'}
-        io.open(ROOT / 'public' / f"badge-{r['id']}.json", 'w', encoding='utf-8', newline='').write(
-            json.dumps(badge, ensure_ascii=False))
-    print('status.json + %d badges written —' % len(rows), 'ALL GOOD' if all_good else 'FAILURES PRESENT')
+    print('status.json written —', 'ALL GOOD' if all_good else 'FAILURES PRESENT')
     return 0 if all_good else 1
 
 
