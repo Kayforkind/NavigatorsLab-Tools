@@ -1,7 +1,7 @@
 /* In-app changelog: versions newest-first. Bump VERSION when shipping user-visible
  * changes; returning users get a "what's new" toast listing entries newer than
  * the last version they saw. localStorage only — no analytics, as always. */
-export const VERSION = '1.5.0';
+export const VERSION = '1.6.0';
 
 interface Entry {
   version: string;
@@ -10,6 +10,15 @@ interface Entry {
 }
 
 export const CHANGELOG: Entry[] = [
+  {
+    version: '1.6.0',
+    date: 'September 2026',
+    items: [
+      '🎬 New: Netflix-style hub — a rotating featured billboard and browse-by-category poster rails with hover previews',
+      '🎨 Reimagine now has its own page on the hub (/tools/reimagine) with the live playground one click away',
+      '🔎 Search and category chips now filter the poster rails',
+    ],
+  },
   {
     version: '1.5.0',
     date: 'September 2026',

@@ -102,6 +102,7 @@ export default defineConfig({
         pdfpages: resolve(__dirname, 'pdfpages.html'),
         textdiff: resolve(__dirname, 'textdiff.html'),
         textstats: resolve(__dirname, 'textstats.html'),
+        reimagine: resolve(__dirname, 'reimagine.html'),
         agents: resolve(__dirname, 'agents.html'),
         status: resolve(__dirname, 'status.html'),
       },

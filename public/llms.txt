@@ -27,7 +27,7 @@ The suite processes files client-side (Canvas, Web Audio, WebAssembly, pdf-lib, 
 - [PDF Pages](https://navigatorslab.com/tools/pdfpages.html): reorder/rotate/delete/extract/blank/merge pages. Params: `?url=<pdf>`
 - [Text Diff](https://navigatorslab.com/tools/textdiff.html): line diff, word-level highlights, similarity %. Params: `?a=<text-url>&b=<text-url>`
 - [Text Stats](https://navigatorslab.com/tools/textstats.html): counts, reading time, Flesch, keyword density. Params: `?url=<text-url>`
-- [Reimagine](https://navigatorslab.com/reimagine/): redesigns an HTML page in 17 directions (infographic, 3D, cinematic, dashboard…) from its own nouns, dates, numbers and colors — nothing invented. Paste HTML in the page, or run the CLI: `npx reimagine-it --auto -i page.html -o out.html`
+- [Reimagine](https://navigatorslab.com/reimagine/): redesigns an HTML page in 17 directions (infographic, 3D, cinematic, dashboard…) from its own nouns, dates, numbers and colors — nothing invented. Paste HTML in the page, or run the CLI: `npx reimagine-it --auto -i page.html -o out.html`. Hub page: https://navigatorslab.com/tools/reimagine
 
 ## Standalone repos
 

@@ -32,35 +32,19 @@
   </header>
 
   <main>
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <div class="hero-kicker" id="heroKicker"><span class="lock">🔒</span> No uploads · No accounts · Nothing retained</div>
-          <h1><span id="heroT1">Sixteen tools that</span><br /><span id="heroT2">never phone home.</span></h1>
-          <p class="hero-sub">
-            Strip the GPS from vacation photos. Shrink a scan to hit a 2&nbsp;MB portal limit. Sign a lease at 11pm.
-            OCR a month of receipts. Reorganize a PDF. Diff two contract drafts. Make — or decode — a QR code without a sketchy generator site. Reimagine any HTML page from its own content. Every tool runs <b>inside this browser tab</b> — your files are processed by your
-            own device and never sent anywhere. <b>Free &amp; open source (MIT).</b>
-          </p>
-          <div class="hero-cta">
-            <a class="btn-hero primary" href="#tools" id="ctaBrowse">Browse the tools ↓</a>
-            <a class="btn-hero" href="./agents.html" id="ctaAgents">🤖 Agent Mode — MCP &amp; deep links</a>
-            <a class="btn-hero" href="https://github.com/Kayforkind/NavigatorsLab-Tools" id="ctaGithub">★ Source on GitHub</a>
-            <button class="btn-hero" id="installBtn" hidden>📲 Install as app</button>
-          </div>
-          <div class="hero-proof">
-            <span id="proofOffline">✓ Works offline (PWA)</span>
-            <span id="proofTests">✓ Verified by 20 automated browser tests</span>
-            <span id="proofSecurity">✓ Security-audited: zero network calls after load</span>
-          </div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hv-card hv-1">🛡️ <span>GPS stripped</span><em>41.0000, 29.0000 → removed</em></div>
-          <div class="hv-card hv-2">🗜️ <span>16.0 MB → 294 KB</span><em>under a 300 KB target</em></div>
-          <div class="hv-card hv-3">✍️ <span>Signed &amp; flattened</span><em>lease.pdf · 6 KB</em></div>
-          <div class="hv-card hv-4">🔢 <span>$23.98 → expenses.csv</span><em>OCR on-device, 95% confidence</em></div>
+    <section class="billboard" id="billboard" aria-label="Featured tool">
+      <img class="bb-art" id="bbArt" alt="" />
+      <div class="bb-scrim" aria-hidden="true"></div>
+      <div class="bb-inner">
+        <div class="bb-kicker" id="bbKicker"></div>
+        <div class="bb-cta">
+          <a class="btn-hero primary" id="bbOpen" href="#tools">▶ Open</a>
+          <a class="btn-hero" id="bbMore" href="#tools">ⓘ More info</a>
+          <a class="btn-hero" id="bbRepo" href="https://github.com/Kayforkind/NavigatorsLab-Tools" target="_blank" rel="noopener noreferrer">★ GitHub</a>
+          <button class="btn-hero" id="installBtn" hidden>📲 Install as app</button>
         </div>
       </div>
+      <div class="bb-dots" id="bbDots" role="tablist" aria-label="Spotlight"></div>
     </section>
 
     <section class="stats-band" aria-label="Suite statistics">
@@ -101,11 +85,11 @@
 
     <section class="wrap" id="tools">
       <div class="tools-head">
-        <h2 id="toolsHead">The toolbox</h2>
+        <h2 id="toolsHead">Browse the suite</h2>
         <input type="search" id="search" placeholder="Search — try “gps”, “2 mb”, “invoice”…" autocomplete="off" />
       </div>
       <div class="chips" id="chips"></div>
-      <div class="grid" id="grid"></div>
+      <div class="rails" id="grid"></div>
       <p class="no-results" id="noResults" hidden>Nothing matches — try a different word.</p>
       <p class="sub mirrors-line" id="mirrorsLine" hidden>
         Prefer a standalone repo? Every tool also has its own GitHub home —

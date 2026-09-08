@@ -136,4 +136,4 @@ Every tool also answers at a root-level short URL (the edge worker 301s it to th
 - https://navigatorslab.com/Text-Stats
 
 These mirror each tool's standalone repo name — one name, three surfaces (repo, mirror site, live tool).
-- `reimagine` — https://github.com/Kayforkind/reimagine-it (served at https://navigatorslab.com/reimagine/ — same-origin, no uploads)
+- `reimagine` — https://github.com/Kayforkind/reimagine-it (served at https://navigatorslab.com/reimagine/ — same-origin, no uploads; hub page https://navigatorslab.com/tools/reimagine)

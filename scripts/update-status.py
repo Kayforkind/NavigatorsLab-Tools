@@ -33,9 +33,10 @@ METHOD = {
 }
 DEFAULT_METHOD = 'route + headers'
 
-# External tools: no per-tool page in this repo; served at their own "url"
-# (a path on this domain, by another worker). Checked at that URL plus the
-# pretty (Capitalized) and all-caps 301 variants.
+# External tools: the app lives outside this repo at its own "url" (a path
+# on this domain, by another worker), but the hub also has a native page
+# ("page"). Checked at the hub page, the app URL, and the pretty (Capitalized)
+# and all-caps 301 variants.
 EXTERNAL = {'reimagine'}
 
 
@@ -73,16 +74,17 @@ def main() -> int:
     for t in tools:
         tid = t['id']
         if tid in EXTERNAL:
-            # Canonical path must 200; the pretty (/Reimagine) and all-caps
-            # (/REIMAGINE) variants must resolve (200 or a redirect).
+            # Hub page + canonical app path must 200; the pretty (/Reimagine)
+            # and all-caps (/REIMAGINE) variants must resolve (200 or redirect).
+            hub_ok = head(f'{BASE}/{tid}.html') == 200
             page_ok = head(t['url']) == 200
             pretty_ok = (head(f'https://navigatorslab.com/{tid.capitalize()}') in (200, 301, 302, 308)
                          and head(f'https://navigatorslab.com/{tid.upper()}') in (200, 301, 302, 308))
-            method = 'route (3 case variants)'
-            ok = page_ok and pretty_ok
+            method = 'hub page + route (3 case variants)'
+            ok = hub_ok and page_ok and pretty_ok
             all_good = all_good and ok
             rows.append({'id': tid, 'icon': t['icon'], 'name': t['name'],
-                         'href': '../reimagine/', 'prettyUrl': t['url'],
+                         'href': f'./{tid}.html', 'prettyUrl': t['url'],
                          'method': method, 'verifiedAt': now,
                          'ok': ok})
             continue

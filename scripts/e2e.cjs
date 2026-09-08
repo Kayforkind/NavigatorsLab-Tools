@@ -681,17 +681,49 @@ async function setFiles(page, files) {
       `format=${fmt}, targetKB=${kb} pre-applied from the URL`);
   });
 
-  /* ---------- hub ---------- */
+  /* ---------- hub: Netflix-style rails + billboard ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
     await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 15, { timeout: 15000 });
     const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', cards === 16, `${cards} tool cards on the redesigned hub (tools.json-driven; 15 hub tools + external Reimagine)`);
+    report('hub', cards === 16, `${cards} tool cards on the Netflix-style hub (tools.json-driven; 15 hub tools + Reimagine)`);
     const repoLinks = await page.evaluate(() =>
       Array.from(document.querySelectorAll('#grid .cards a.repo')).map((a) => a.href));
     const allRepos = repoLinks.length === 16 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/'));
     report('hub-repo-links', allRepos, `${repoLinks.length}/16 cards carry a standalone GitHub repo link (15 funnel + reimagine-it)`);
+    const rails = await page.locator('.rail').count();
+    const dots = await page.locator('.bb-dot').count();
+    const art = await page.evaluate(() => document.getElementById('bbArt')?.getAttribute('src') || '');
+    report('hub-rails', rails >= 6 && dots === 16 && /og-.*\.png$/.test(art),
+      `${rails} category rails, ${dots} billboard dots, billboard art ${art}`);
+  });
+
+  /* ---------- hub: search + chip filter still work on the rails ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 15, { timeout: 15000 });
+    await page.fill('#search', 'shrink');
+    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length === 1, { timeout: 10000 });
+    const one = await page.locator('#grid .cards').count();
+    await page.fill('#search', '');
+    await page.click('button.chip.on'); // back to All
+    await page.click('button.chip:has-text("Privacy")');
+    await page.waitForFunction(() => {
+      const c = document.querySelectorAll('#grid .cards');
+      return c.length === 2 && Array.from(c).every((x) => x.dataset.id === 'exif' || x.dataset.id === 'metadata');
+    }, { timeout: 10000 });
+    report('hub-filter', one === 1, `search "shrink" → ${one} card; Privacy chip → 2 cards (exif + metadata)`);
+  });
+
+  /* ---------- hub: Reimagine has its own page + opens the playground ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/reimagine.html`);
+    const title = await page.title();
+    const cta = await page.locator('a:has-text("Open the live playground")').count();
+    const art = await page.locator('.title-art').count();
+    report('reimagine-page', /Reimagine/.test(title) && cta === 1 && art === 1,
+      `reimagine.html renders (${title.trim()}) with playground CTA + title art`);
   });
 
   const failed = results.filter((r) => !r.ok);
