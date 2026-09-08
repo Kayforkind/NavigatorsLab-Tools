@@ -76,6 +76,8 @@ function toolHref(t: Tool): string {
 /* ---------- billboard ---------- */
 const bbArt = document.getElementById('bbArt') as HTMLImageElement;
 const bbKicker = document.getElementById('bbKicker')!;
+const bbTitle = document.getElementById('bbTitle')!;
+const bbTagline = document.getElementById('bbTagline')!;
 const bbOpen = document.getElementById('bbOpen') as HTMLAnchorElement;
 const bbMore = document.getElementById('bbMore') as HTMLAnchorElement;
 const bbRepo = document.getElementById('bbRepo') as HTMLAnchorElement;
@@ -98,6 +100,8 @@ function showBillboard(i: number): void {
   bbArt.src = `./og-${tool.id}.png`;
   bbArt.alt = `${tool.name} — ${tool.tagline}`;
   bbKicker.textContent = `${t('bb.kicker', lang)} · ${t(`cat.${tool.category}`, lang)}`;
+  bbTitle.textContent = `${tool.icon} ${tool.name}`;
+  bbTagline.textContent = toolTagline(tool.id, tool.tagline, lang);
   bbOpen.href = toolHref(tool);
   bbMore.href = tool.url ?? `./${tool.id}.html`;
   bbRepo.href = tool.repo ?? 'https://github.com/Kayforkind/NavigatorsLab-Tools';

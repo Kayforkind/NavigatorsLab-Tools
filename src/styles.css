@@ -193,6 +193,11 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: center 30%;
   opacity: 0; transition: opacity .6s ease;
+  /* the OG posters carry baked-in title text that would double the HTML
+     title and crop badly at phone widths — blur them into an ambient
+     color wash so the HTML title is the only title at every width */
+  filter: blur(16px) saturate(1.15) brightness(.85);
+  transform: scale(1.1); /* hide the blur's transparent edge vignette */
 }
 .bb-art.ready { opacity: 1; }
 .bb-scrim {
@@ -209,6 +214,15 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   display: inline-block; color: #7ce0ae; font-size: 13.5px; font-weight: 700;
   letter-spacing: .4px; text-transform: uppercase; margin-bottom: 18px;
 }
+.bb-title {
+  margin: 0 0 10px; font-size: clamp(30px, 5.4vw, 56px); line-height: 1.05;
+  font-weight: 800; letter-spacing: -.5px;
+  text-shadow: 0 2px 18px rgba(0,0,0,.55);
+}
+.bb-tagline {
+  margin: 0 0 22px; max-width: 560px; font-size: 16.5px; line-height: 1.55;
+  color: #cfd8e6; text-shadow: 0 1px 10px rgba(0,0,0,.5);
+}
 .bb-cta { display: flex; gap: 12px; flex-wrap: wrap; }
 .bb-dots {
   position: absolute; right: 26px; bottom: 18px; z-index: 3;
@@ -221,6 +235,12 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 }
 .bb-dot:hover { transform: scale(1.25); }
 .bb-dot.on { background: var(--acc); border-color: var(--acc); transform: scale(1.35); }
+
+@media (max-width: 720px) {
+  .bb-inner { padding: 54px 18px 58px; }
+  .bb-title { font-size: 28px; margin-bottom: 8px; }
+  .bb-tagline { font-size: 14.5px; margin-bottom: 16px; }
+}
 
 /* --- rails: one horizontal scroller per category --- */
 .rails { display: block; }
@@ -285,6 +305,11 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   .cards.poster { transition: none; }
   .cards.poster:hover, .cards.poster:focus-within { transform: none; }
   .bb-dot { transition: none; }
+}
+
+/* keep billboard text + CTAs clear of the dots row on short/narrow viewports */
+@media (max-width: 900px) {
+  .bb-dots { right: 18px; bottom: 14px; }
 }
 
 .tools-head { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 34px 0 6px; }
