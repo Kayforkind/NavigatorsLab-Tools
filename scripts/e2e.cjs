@@ -726,6 +726,42 @@ async function setFiles(page, files) {
       `reimagine.html renders (${title.trim()}) with playground CTA + title art`);
   });
 
+  /* ---------- 30. Netflix-style library + per-tool detail page ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForSelector('.nrow .pcard', { timeout: 15000 });
+    const lib = await page.evaluate(() => ({
+      billboard: !!document.querySelector('.nl-billboard'),
+      rows: document.querySelectorAll('.nrow').length,
+      posters: document.querySelectorAll('.pcard').length,
+      detailLinks: document.querySelectorAll('a[href*="detail.html?id="]').length,
+      cardOpacity: getComputedStyle(document.querySelector('.nrow .pcard')).opacity,
+    }));
+    report('library-hub', lib.billboard && lib.rows >= 4 && lib.posters >= 30 && lib.cardOpacity === '1',
+      `billboard + ${lib.rows} category rows, ${lib.posters} poster cards, all visible`);
+    report('library-detail-links', lib.detailLinks >= 30, `${lib.detailLinks} links to dedicated detail pages on the hub`);
+    // detail page renders in depth for a real tool id
+    await page.goto(`${BASE}/detail.html?id=exif`);
+    await page.waitForSelector('.d-feats li', { timeout: 15000 });
+    const det = await page.evaluate(() => ({
+      title: document.title.startsWith('Photo Privacy Kit'),
+      about: (document.querySelector('.d-about')?.textContent ?? '').length,
+      feats: document.querySelectorAll('.d-feats li').length,
+      steps: document.querySelectorAll('.d-steps li').length,
+      verify: !!document.querySelector('.d-verify'),
+      shot: !!document.querySelector('.d-shot img'),
+      minis: document.querySelectorAll('.mini').length,
+    }));
+    await page.screenshot({ path: path.join(SHOTS, '18-detail.png'), fullPage: false });
+    report('tool-detail-page', det.title && det.about > 200 && det.feats >= 4 && det.steps >= 3 && det.verify && det.shot && det.minis >= 15,
+      `detail.html?id=exif: ${det.about}-char story, ${det.feats} features, ${det.steps} steps, verification + ${det.minis} library cards`);
+    // unknown id shows a friendly catalog instead of a blank page
+    await page.goto(`${BASE}/detail.html?id=nope`);
+    await page.waitForSelector('.mini', { timeout: 15000 });
+    const nf = await page.evaluate(() => document.querySelectorAll('.mini').length);
+    report('detail-404-catalog', nf >= 16, `unknown ?id= shows the full ${nf}-tool catalog (no dead end)`);
+  });
+
   const failed = results.filter((r) => !r.ok);
   console.log(`\n=== ${results.length - failed.length}/${results.length} checks passed ===`);
   process.exit(failed.length ? 1 : 0);

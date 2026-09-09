@@ -18,6 +18,15 @@
 
 ---
 
+## 🎬 A streaming-style library, not a list of links
+
+The hub at [navigatorslab.com/tools](https://navigatorslab.com/tools/) browses like the apps you already know:
+
+- **Billboard spotlight** — one tool takes the stage each day with its real screenshot, headline features and one-click open
+- **Category rows** — 🔥 Trending now · 🛡️ Privacy first · 📄 Documents & PDF · 💰 Money & work · 🖼️ Images & print · 🎧 Media & text, each a horizontally scrolling shelf of poster cards (16:9 captures of the tools actually mid-task)
+- **Hover previews** — poster cards expand into a mini-billboard with description, chips and direct repo link
+- **A dedicated page per tool** — every tool has an in-depth details page (`?id=…`, also reachable via short `/p/<id>` links): what it does, the full feature list, step-by-step usage, the exact verification that gates it, related tools, and its agent deep links. Every poster and every claim is driven by [`public/tools.json`](public/tools.json) — one source of truth for humans, READMEs and AI agents alike.
+
 ## The toolbox
 
 | | Tool | The problem it kills | Verified in CI |

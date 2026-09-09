@@ -73,6 +73,10 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,webmanifest,json,gz,wasm,txt}'],
         maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
         navigateFallback: 'index.html',
+        // match precache entries regardless of query params — so returning
+        // users on deep links (detail.html?id=…, qr.html?text=…, ?url=…)
+        // get the real page, not the navigateFallback index.html
+        ignoreURLParametersMatching: [/./],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.origin === self.location.origin,
@@ -105,6 +109,7 @@ export default defineConfig({
         reimagine: resolve(__dirname, 'reimagine.html'),
         agents: resolve(__dirname, 'agents.html'),
         status: resolve(__dirname, 'status.html'),
+        detail: resolve(__dirname, 'detail.html'),
       },
     },
   },

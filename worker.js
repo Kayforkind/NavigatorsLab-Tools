@@ -101,6 +101,10 @@ export default {
     else if (assetPath === '/llms.txt') assetPath = '/tools/llms.txt'; // site-root alias for agents
     else if (assetPath === '/llms-full.txt') assetPath = '/tools/llms-full.txt';
     else if (assetPath === '/status' || assetPath === '/status.html') assetPath = '/tools/status.html';
+    else if (/^\/p\/[A-Za-z0-9-]+$/.test(assetPath)) {
+      // library deep link: /p/<tool-id> -> the tool's detail page (?id=…)
+      return new Response(null, { status: 301, headers: { location: `/tools/detail.html?id=${assetPath.slice(3)}`, 'cache-control': 'public, max-age=86400' } });
+    }
     else if (!assetPath.startsWith('/tools/')) {
       // Pretty tool URLs at the site root: /QR-Studio, /qr, /Photo-Privacy-Kit…
       // 301 to the canonical /tools/<id>.html (which is what the funnel repos

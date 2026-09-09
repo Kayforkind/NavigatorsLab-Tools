@@ -136,4 +136,17 @@ Every tool also answers at a root-level short URL (the edge worker 301s it to th
 - https://navigatorslab.com/Text-Stats
 
 These mirror each tool's standalone repo name — one name, three surfaces (repo, mirror site, live tool).
-- `reimagine` — https://github.com/Kayforkind/reimagine-it (served at https://navigatorslab.com/reimagine/ — same-origin, no uploads; hub page https://navigatorslab.com/tools/reimagine)
+- `reimagine` — https://github.com/Kayforkind/reimagine-it (served at https://navigatorslab.com/reimagine/ — same-origin, no uploads)
+
+
+## Tool detail pages (added v1.6.0)
+
+Every tool has a dedicated in-depth page: /tools/detail.html?id=<tool-id>
+Fields available per tool in /tools/tools.json: about (long-form story),
+features[] (specific claims), howto[] (3 steps), tech (engine summary),
+goodFor (audience), verified (the E2E assertion gating the tool), engine,
+catLabel, pretty (site-root short name), repo, page.
+
+Short deep links: https://navigatorslab.com/p/<tool-id> 301s to the tool's
+detail page (e.g. /p/qr -> /tools/detail.html?id=qr). Site-root pretty names
+(/QR-Studio, /qr, ...) continue to 301 to the runnable tool pages.

@@ -594,11 +594,13 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 }
 .agent-chip code { color: #b9b0ff; font-size: 12px; }
 
-/* --- scroll reveal (subtle; disabled for reduced motion) --- */
-.cards, .ex-card { opacity: 0; transform: translateY(10px); transition: opacity .45s ease, transform .45s ease; }
+/* --- scroll reveal (subtle; disabled for reduced motion) ---
+ * Scoped under .nl-reveal, which is added by hublib ONLY when JS and
+ * IntersectionObserver are available — no-JS users always see everything. */
+.nl-reveal .cards, .nl-reveal .ex-card { opacity: 0; transform: translateY(10px); transition: opacity .45s ease, transform .45s ease; }
 .cards.in, .ex-card.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .cards, .ex-card { opacity: 1; transform: none; transition: none; }
+  .nl-reveal .cards, .nl-reveal .ex-card { opacity: 1; transform: none; transition: none; }
   .agent-chip, .hv-card { transition: none; animation: none; }
 }
 
@@ -636,3 +638,191 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   .status-row { grid-template-columns: 1.6rem 1fr; grid-auto-rows: auto; }
   .status-row .sr-pretty, .status-row .sr-method, .status-row .sr-when { grid-column: 2; }
 }
+
+/* ================================================================
+   NETFLIX-STYLE LIBRARY — billboard, rows, poster cards
+   ================================================================ */
+
+/* ---------- compact intro (replaces old hero) ---------- */
+.lib-intro { max-width: 1080px; margin: 0 auto; padding: 34px 22px 6px; }
+.lib-title { font-size: 40px; letter-spacing: -.5px; margin: 10px 0 12px; }
+.lib-title span { color: var(--acc); }
+.lib-sub { color: var(--mut); font-size: 16.5px; max-width: 720px; line-height: 1.6; margin: 0 0 14px; }
+.lib-sub b { color: var(--txt); }
+
+/* ---------- billboard ---------- */
+.nl-billboard {
+  position: relative; margin: 26px auto 8px; max-width: 1180px; min-height: 430px;
+  border-radius: 18px; overflow: hidden; border: 1px solid #1b2436;
+  display: flex; align-items: flex-end;
+}
+.bb-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; transform: scale(1.02); filter: saturate(1.05); }
+.bb-shade {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(7,10,17,.96) 0%, rgba(7,10,17,.82) 38%, rgba(7,10,17,.28) 70%, rgba(7,10,17,.15) 100%),
+              linear-gradient(0deg, #0b0f17 2%, rgba(11,15,23,0) 46%);
+}
+.bb-body { position: relative; padding: 34px 38px 30px; max-width: 640px; }
+.bb-now { color: #7ce0ae; font-size: 12.5px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 12px; }
+.bb-title { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.bb-title .bb-ico { font-size: 40px; filter: drop-shadow(0 4px 14px rgba(0,0,0,.5)); }
+.bb-title h1 { font-size: 44px; margin: 0; letter-spacing: -.5px; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
+.bb-tag { color: #dbe6f5; font-size: 17px; margin: 0 0 14px; }
+.bb-feats { margin: 0 0 18px; padding: 0; list-style: none; color: var(--mut); font-size: 13.5px; line-height: 1.75; }
+.bb-feats li::before { content: '▸ '; color: var(--acc); }
+.bb-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.bb-meta { color: #8ea3bd; font-size: 12.5px; }
+
+/* ---------- section heads ---------- */
+.rowhead { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 40px 34px 8px; }
+.rowhead h2 { margin: 0; font-size: 26px; letter-spacing: -.3px; }
+.rowhead .sub { margin: 0; }
+
+/* ---------- poster cards (rows) ---------- */
+.pcard {
+  position: relative; flex: 0 0 236px; width: 236px; border-radius: 12px; overflow: visible;
+  background: #0e1524; border: 1px solid #1b2436; transition: transform .22s ease, box-shadow .22s ease;
+}
+.pcard:hover, .pcard:focus-within { transform: scale(1.06); z-index: 30; box-shadow: 0 18px 44px rgba(0,0,0,.55); }
+.pcard-link { display: block; color: inherit; text-decoration: none; border-radius: 12px; overflow: hidden; }
+.pcard-poster { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center top; background-color: #101828; display: block; }
+.pcard-cap { display: flex; align-items: center; gap: 8px; padding: 9px 12px; }
+.pcard-cap .pc-ico { font-size: 16px; }
+.pcard-cap .pc-name { font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pcard-hover {
+  position: absolute; left: 0; right: 0; top: 100%; z-index: 40; opacity: 0; pointer-events: none;
+  background: #101a2c; border: 1px solid #24314a; border-radius: 0 0 12px 12px; border-top: 0;
+  padding: 12px 14px 12px; box-shadow: 0 22px 44px rgba(0,0,0,.6); transition: opacity .18s ease .06s;
+}
+.pcard:hover .pcard-hover, .pcard:focus-within .pcard-hover { opacity: 1; pointer-events: auto; }
+.pcard-hover h3 { margin: 0 0 4px; font-size: 15px; }
+.pc-tag { color: #9fb0c8; font-size: 12.5px; margin: 0 0 8px; }
+.pc-desc { color: #8ea3bd; font-size: 12px; line-height: 1.55; margin: 0 0 10px; }
+.pc-actions { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.pc-play { background: var(--acc); color: #081226; font-weight: 700; font-size: 12.5px; padding: 5px 12px; border-radius: 7px; }
+.pc-repo { color: #9fb0c8; font-size: 12px; text-decoration: none; border: 1px solid #2a3854; padding: 4px 9px; border-radius: 7px; }
+.pc-repo:hover { color: var(--txt); border-color: var(--acc); }
+.pc-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.pc-chips span { font-size: 10.5px; color: #9fb0c8; border: 1px solid #24314a; border-radius: 999px; padding: 2px 8px; }
+.pcard:hover .pcard-link, .pcard:focus-within .pcard-link { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+
+/* ---------- scroller rows ---------- */
+#rows { margin-top: 6px; }
+.nrow { margin: 8px 0 26px; }
+.nrow-h { margin: 0 0 12px; padding: 0 34px; font-size: 20px; letter-spacing: -.2px; }
+.nrow-scroller {
+  display: flex; gap: 14px; overflow-x: auto; padding: 8px 34px 22px;
+  scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #24314a transparent;
+}
+.nrow-scroller .pcard { scroll-snap-align: start; }
+
+/* ---------- grid cards get poster art + previews ---------- */
+#grid .cards { overflow: hidden; display: flex; flex-direction: column; }
+#grid .grid-poster { border-radius: 10px 10px 0 0; }
+#grid .cards h3 { margin: 10px 14px 4px; display: flex; align-items: center; gap: 8px; }
+#grid .cards h3 .ico { font-size: 20px; }
+#grid .cards .tag { margin: 0 14px; }
+#grid .cards .detail { margin: 6px 14px 10px; }
+#grid .cards .open { margin: 0 14px 12px; }
+#grid .cards .repo { margin: 0 14px 12px; }
+#grid .pcard-more { border-top: 1px dashed #223050; margin-top: auto; }
+#grid .pcard-more summary { cursor: pointer; color: var(--acc); font-size: 12.5px; font-weight: 600; padding: 9px 14px; list-style: none; user-select: none; }
+#grid .pcard-more summary::after { content: ' +'; float: right; }
+#grid .pcard-more[open] summary::after { content: ' −'; }
+#grid .pcard-more .pc-about { color: var(--mut); font-size: 12.5px; line-height: 1.6; padding: 0 14px; margin: 0 0 8px; }
+#grid .pcard-more .pc-feats { color: var(--mut); font-size: 12px; line-height: 1.6; padding: 0 14px 0 30px; margin: 0 0 10px; }
+#grid .pcard-more .pc-more-link { display: inline-block; margin: 0 14px 12px; color: var(--acc); font-size: 12.5px; font-weight: 600; }
+
+/* ---------- top nav ---------- */
+.nl-top { position: sticky; top: 0; z-index: 100; background: rgba(11,15,23,.88); backdrop-filter: blur(10px); }
+.nav-install { background: var(--acc); border: 0; color: #081226; font-weight: 700; font-size: 12.5px; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+.nav-install[hidden] { display: none; }
+
+/* ---------- search & chips stay; center the empty-grid state ---------- */
+#grid:empty + .no-results { margin: 8px 34px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 860px) {
+  .bb-title h1 { font-size: 30px; }
+  .bb-title .bb-ico { font-size: 30px; }
+  .bb-body { padding: 22px 22px 24px; max-width: none; }
+  .nl-billboard { margin: 18px 14px 6px; min-height: 0; }
+  .bb-feats { display: none; }
+  .bb-bg { filter: saturate(1.05) brightness(.9); }
+  .rowhead { margin: 30px 16px 4px; }
+  .nrow-h { padding: 0 16px; }
+  .nrow-scroller { padding: 8px 16px 20px; gap: 10px; }
+  .pcard { flex-basis: 200px; width: 200px; }
+  .lib-intro { padding: 22px 16px 2px; }
+  .lib-title { font-size: 28px; }
+}
+@media (max-width: 520px) {
+  .pcard { flex-basis: 78vw; width: 78vw; }
+  .pc-desc { display: none; }
+  .bb-title h1 { font-size: 24px; }
+  .bb-tag { font-size: 14px; }
+}
+
+/* ================================================================
+   DEDICATED TOOL DETAIL PAGE (detail.html?id=…)
+   ================================================================ */
+.detail-bb { min-height: 400px; }
+.detail-bb .pc-chips, .detail-bb .pill { font-size: 11.5px; color: #9fb0c8; border: 1px solid #24314a; border-radius: 999px; padding: 3px 10px; margin-right: 6px; display: inline-block; text-decoration: none; }
+.detail-bb .bb-cta { margin-top: 16px; }
+.detail-bb .pill:hover { color: var(--txt); border-color: var(--acc); }
+
+.detail-grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 28px; margin-top: 26px; }
+.d-main { min-width: 0; }
+.d-side { display: flex; flex-direction: column; gap: 16px; }
+.d-side .panel { margin: 0; }
+.d-sec { margin: 0 0 26px; }
+.d-sec h2 { font-size: 23px; margin: 0 0 10px; letter-spacing: -.3px; }
+.d-about { color: #c9d6e8; font-size: 15.5px; line-height: 1.75; margin: 0 0 10px; }
+.d-about em { color: var(--txt); }
+.d-goodfor { color: var(--mut); font-size: 14px; line-height: 1.65; border-left: 3px solid var(--acc); padding: 8px 14px; background: rgba(56,189,248,.06); border-radius: 0 10px 10px 0; }
+.d-goodfor b { color: var(--txt); }
+.d-feats { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }
+.d-feats li { background: rgba(148,163,184,.07); border: 1px solid rgba(148,163,184,.18); border-radius: 11px; padding: 11px 14px; font-size: 14px; color: #c9d6e8; line-height: 1.55; }
+.d-feats li::before { content: '✓ '; color: #7ce0ae; font-weight: 700; }
+.d-steps { padding-left: 22px; color: #c9d6e8; font-size: 14.5px; line-height: 1.7; }
+.d-steps li { margin: 7px 0; }
+.d-steps b { color: var(--txt); }
+.d-verify p { color: #c9d6e8; font-size: 13.5px; line-height: 1.6; }
+.d-meta { color: var(--mut); font-size: 12.5px; }
+.d-meta a { color: var(--acc); }
+.d-shot { margin: 22px 0 0; }
+.d-shot img { width: 100%; border-radius: 14px; border: 1px solid #1b2436; }
+.d-shot figcaption { color: var(--mut); font-size: 12.5px; text-align: center; margin-top: 8px; }
+
+.mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.mini { display: flex; flex-direction: column; gap: 3px; padding: 13px 15px; border-radius: 12px; text-decoration: none; background: rgba(148,163,184,.06); border: 1px solid rgba(148,163,184,.16); transition: border-color .15s ease, transform .15s ease; }
+.mini:hover { border-color: var(--acc); transform: translateY(-2px); }
+.mini-ico { font-size: 20px; }
+.mini-name { color: var(--txt); font-weight: 700; font-size: 14.5px; }
+.mini-tag { color: var(--mut); font-size: 12.5px; line-height: 1.45; }
+
+@media (max-width: 900px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-bb { min-height: 0; }
+  .detail-bb .bb-title h1 { font-size: 28px; }
+}
+
+/* detail billboard: keep poster art legible but never competing with the title */
+.detail-bb .bb-shade {
+  background: linear-gradient(90deg, rgba(7,10,17,.97) 0%, rgba(7,10,17,.9) 45%, rgba(7,10,17,.55) 75%, rgba(7,10,17,.4) 100%),
+              linear-gradient(0deg, #0b0f17 3%, rgba(11,15,23,.25) 60%, rgba(11,15,23,.55) 100%);
+}
+@media (max-width: 900px) {
+  .detail-bb .bb-shade { background: rgba(7,10,17,.82); }
+  .detail-bb .bb-bg { filter: blur(2px) brightness(.75); }
+  .detail-bb .bb-title { gap: 10px; }
+  .detail-bb .bb-title h1 { font-size: 26px; }
+  .detail-bb .bb-cta .btn-hero { padding: 10px 16px; font-size: 14px; }
+}
+
+/* details affordances on cards */
+.pcard-cap .pc-info { margin-left: auto; color: #9fb0c8; font-size: 14px; text-decoration: none; padding: 2px 6px; border-radius: 6px; }
+.pcard-cap .pc-info:hover { color: var(--acc); background: rgba(56,189,248,.12); }
+#grid .details-link { display: inline-block; margin: 0 14px 12px; color: #9fb0c8; font-size: 12.5px; text-decoration: none; }
+#grid .details-link:hover { color: var(--acc); }
+#grid .cards .open { margin-bottom: 4px; }
