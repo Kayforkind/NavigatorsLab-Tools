@@ -1,7 +1,15 @@
-/* Hub: renders the grid from public/tools.json (single source of truth),
- * powers search + category chips + "recently used" (localStorage only),
- * the PWA install button, an EN/TR/DE language switcher, and a
- * "what's new" toast for returning users. No network beyond tools.json. */
+/* Hub: Netflix-style browse surface rendered from public/tools.json.
+ *
+ *  - Billboard: a rotating featured spotlight (art, kicker, open/more/repo)
+ *    that cycles through every tool; dots to jump, auto-advance, pauses on
+ *    hover/focus, and stands still under prefers-reduced-motion.
+ *  - Rails: one horizontal scroller per category (Privacy, Documents, …),
+ *    poster cards with the tool's og art + hover scale and an info cap.
+ *  - Search / category chips switch to a flat grid of matches (like search
+ *    results), same cards.
+ *  - PWA install button, EN/TR/DE switcher, "recently used" pill, and the
+ *    "what's new" toast all survive. No network beyond tools.json.
+ */
 import { registerSW } from 'virtual:pwa-register';
 import { LANGS, getLang, setLang, t, toolTagline, type Lang } from '../lib/i18n';
 import { whatsNew, markSeen } from '../lib/changelog';
@@ -18,9 +26,10 @@ interface Tool {
   keywords: string;
   /** standalone GitHub funnel repo (links back to the hub) */
   repo?: string;
-  /** external URL for tools served outside the hub (e.g. /reimagine/)
-   * — when set, the card opens this instead of ./<id>.html */
+  /** external URL for tools served outside the hub (e.g. the Reimagine playground) */
   url?: string;
+  /** hub-native page for tools that also live outside (e.g. reimagine.html) */
+  page?: string;
 }
 
 const CATS: [string, string][] = [
@@ -33,6 +42,9 @@ const CATS: [string, string][] = [
   ['files', 'cat.files'],
   ['design', 'cat.design'],
 ];
+
+/** rail order for the Netflix-style rows (category id → i18n key) */
+const RAILS: [string, string][] = CATS.slice(1);
 
 const grid = document.getElementById('grid')!;
 const chips = document.getElementById('chips')!;
@@ -55,6 +67,61 @@ function markUsed(id: string): void {
   localStorage.setItem(RECENTS_KEY, JSON.stringify(r.slice(0, 3)));
 }
 
+/** primary destination for a tool card: hub page > external url > tool page */
+function toolHref(t: Tool): string {
+  if (t.page) return `./${t.page}`;
+  return t.url ?? `./${t.id}.html`;
+}
+
+/* ---------- billboard ---------- */
+const bbArt = document.getElementById('bbArt') as HTMLImageElement;
+const bbKicker = document.getElementById('bbKicker')!;
+const bbTitle = document.getElementById('bbTitle')!;
+const bbTagline = document.getElementById('bbTagline')!;
+const bbOpen = document.getElementById('bbOpen') as HTMLAnchorElement;
+const bbMore = document.getElementById('bbMore') as HTMLAnchorElement;
+const bbRepo = document.getElementById('bbRepo') as HTMLAnchorElement;
+const bbDots = document.getElementById('bbDots')!;
+
+let bbIdx = 0;
+let bbTimer: number | null = null;
+let bbPaused = false;
+// window.matchMedia is Chrome/Edge; fall back to no auto-advance concerns elsewhere
+let bbReduced = typeof window.matchMedia === 'function'
+  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  : false;
+
+function showBillboard(i: number): void {
+  if (!tools.length) return;
+  bbIdx = ((i % tools.length) + tools.length) % tools.length;
+  const tool = tools[bbIdx];
+  bbArt.classList.remove('ready');
+  bbArt.onload = () => bbArt.classList.add('ready');
+  bbArt.src = `./og-${tool.id}.png`;
+  bbArt.alt = `${tool.name} — ${tool.tagline}`;
+  bbKicker.textContent = `${t('bb.kicker', lang)} · ${t(`cat.${tool.category}`, lang)}`;
+  bbTitle.textContent = `${tool.icon} ${tool.name}`;
+  bbTagline.textContent = toolTagline(tool.id, tool.tagline, lang);
+  bbOpen.href = toolHref(tool);
+  bbMore.href = tool.url ?? `./${tool.id}.html`;
+  bbRepo.href = tool.repo ?? 'https://github.com/Kayforkind/NavigatorsLab-Tools';
+  const dots = bbDots.querySelectorAll<HTMLButtonElement>('button');
+  dots.forEach((d, j) => {
+    d.classList.toggle('on', j === bbIdx);
+    d.setAttribute('aria-current', j === bbIdx ? 'true' : 'false');
+  });
+}
+
+function advanceBillboard(): void {
+  if (!bbPaused && !bbReduced) showBillboard(bbIdx + 1);
+}
+
+function startBillboard(): void {
+  if (bbTimer !== null) return;
+  if (bbReduced) return; // reduced motion: no auto-advance, dots still work
+  bbTimer = setInterval(advanceBillboard, 8000);
+}
+
 /* ---------- i18n: translate static chrome ---------- */
 function applyI18n(): void {
   document.documentElement.lang = lang;
@@ -64,9 +131,6 @@ function applyI18n(): void {
   };
   bind('tagline', 'brand.tagline');
   bind('installBtn', 'hero.cta.install');
-  bind('proofOffline', 'hero.proof.offline');
-  bind('proofTests', 'hero.proof.tests');
-  bind('proofSecurity', 'hero.proof.security');
   bind('toolsHead', 'tools.head');
   bind('agentsHead', 'agents.head');
   bind('agentsSub', 'agents.sub');
@@ -107,9 +171,41 @@ function applyI18n(): void {
   }
   renderChips();
   render();
+  showBillboard(bbIdx);
 }
 
-/* ---------- grid ---------- */
+/* ---------- cards ---------- */
+function makeCard(tool: Tool, used: Set<string>): HTMLElement {
+  const card = document.createElement('article');
+  card.className = 'cards poster';
+  card.dataset.id = tool.id;
+  const open = document.createElement('a');
+  open.className = 'poster-link';
+  open.href = toolHref(tool);
+  open.addEventListener('click', () => markUsed(tool.id));
+  open.innerHTML = `
+    <img class="poster-art" src="./og-${tool.id}.png" alt="" loading="lazy" />
+    <span class="poster-cap">
+      <span class="ico">${tool.icon}</span>
+      <b>${tool.name}</b>
+      ${used.has(tool.id) ? `<span class="pill">${t('card.recent', lang)}</span>` : ''}
+    </span>`;
+  card.appendChild(open);
+  if (tool.repo) {
+    const repo = document.createElement('a');
+    repo.className = 'repo';
+    repo.href = tool.repo;
+    repo.target = '_blank';
+    repo.rel = 'noopener noreferrer';
+    repo.title = 'Standalone GitHub repository — the tool itself runs on NavigatorsLab';
+    repo.setAttribute('aria-label', `${tool.name} — GitHub repository`);
+    repo.textContent = t('card.repo', lang);
+    card.appendChild(repo);
+  }
+  return card;
+}
+
+/* ---------- rails / grid ---------- */
 function render(): void {
   const q = search.value.trim().toLowerCase();
   const used = new Set(recents());
@@ -120,35 +216,39 @@ function render(): void {
   });
   noResults.hidden = visible.length > 0;
   grid.innerHTML = '';
-  const sorted = [...visible].sort((a, b) => {
-    if (q || cat !== 'all') return 0;
-    return (used.has(b.id) ? 1 : 0) - (used.has(a.id) ? 1 : 0);
-  });
-  for (const tool of sorted) {
-    const card = document.createElement('article');
-    card.className = 'cards';
-    const open = document.createElement('a');
-    open.href = tool.url ?? `./${tool.id}.html`;
-    open.addEventListener('click', () => markUsed(tool.id));
-    open.innerHTML = `
-      <div class="card-top"><span class="ico">${tool.icon}</span>${used.has(tool.id) ? `<span class="pill">${t('card.recent', lang)}</span>` : ''}</div>
-      <h3>${tool.name}</h3>
-      <p class="tag">${toolTagline(tool.id, tool.tagline, lang)}</p>
-      <p class="detail">${tool.detail}</p>
-      <span class="open">${t('card.open', lang)}</span>`;
-    card.appendChild(open);
-    if (tool.repo) {
-      const repo = document.createElement('a');
-      repo.className = 'repo';
-      repo.href = tool.repo;
-      repo.target = '_blank';
-      repo.rel = 'noopener noreferrer';
-      repo.title = 'Standalone GitHub repository — the tool itself runs on NavigatorsLab';
-      repo.setAttribute('aria-label', `${tool.name} — GitHub repository`);
-      repo.textContent = t('card.repo', lang);
-      card.appendChild(repo);
+
+  if (q || cat !== 'all') {
+    // flat search/filter grid — same poster cards, one per tool
+    for (const tool of visible) grid.appendChild(makeCard(tool, used));
+    if (!visible.length) grid.classList.add('empty');
+    else grid.classList.remove('empty');
+    return;
+  }
+
+  // Netflix-style rails: one horizontal scroller per category
+  grid.classList.remove('empty');
+  for (const [cid, key] of RAILS) {
+    const group = tools.filter((t) => t.category === cid);
+    if (!group.length) continue;
+    const rail = document.createElement('section');
+    rail.className = 'rail';
+    rail.setAttribute('aria-label', t(key, lang));
+    const h = document.createElement('h3');
+    h.className = 'rail-title';
+    h.textContent = t(key, lang);
+    rail.appendChild(h);
+    const scroller = document.createElement('div');
+    scroller.className = 'rail-scroll';
+    scroller.setAttribute('role', 'list');
+    for (const tool of group) {
+      const wrap = document.createElement('div');
+      wrap.className = 'rail-item';
+      wrap.setAttribute('role', 'listitem');
+      wrap.appendChild(makeCard(tool, used));
+      scroller.appendChild(wrap);
     }
-    grid.appendChild(card);
+    rail.appendChild(scroller);
+    grid.appendChild(rail);
   }
 }
 
@@ -176,13 +276,13 @@ for (const [code, label] of LANGS) {
 
 /* ---------- PWA install button ---------- */
 let deferredPrompt: { prompt: () => void } | null = null;
-const installBtn = document.getElementById('installBtn') as HTMLButtonElement | null;
+const installBtn = document.getElementById('installBtn') as HTMLButtonElement;
 addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e as unknown as { prompt: () => void };
-  if (installBtn) installBtn.hidden = false;
+  installBtn.hidden = false;
 });
-installBtn?.addEventListener('click', () => { deferredPrompt?.prompt(); deferredPrompt = null; if (installBtn) installBtn.hidden = true; });
+installBtn.addEventListener('click', () => { deferredPrompt?.prompt(); deferredPrompt = null; installBtn.hidden = true; });
 
 /* ---------- what's new toast (returning users only) ---------- */
 function showWhatsNew(): void {
@@ -207,9 +307,25 @@ fetch('./tools.json')
   .then((r) => r.json())
   .then((data: Tool[]) => {
     tools = data;
-      applyI18n();
-    const ml = document.getElementById('mirrorsLine');
-    if (ml) ml.hidden = false;
+    // billboard dots: one per tool, in catalog order
+    bbDots.innerHTML = '';
+    for (let i = 0; i < tools.length; i++) {
+      const d = document.createElement('button');
+      d.className = 'bb-dot';
+      d.setAttribute('role', 'tab');
+      d.setAttribute('aria-label', `${t('bb.spotlight', lang)}: ${tools[i].name}`);
+      d.addEventListener('click', () => { showBillboard(i); startBillboard(); });
+      bbDots.appendChild(d);
+    }
+    // billboard hover/focus pauses the auto-advance (Netflix behavior)
+    const bb = document.getElementById('billboard')!;
+    bb.addEventListener('mouseenter', () => { bbPaused = true; });
+    bb.addEventListener('mouseleave', () => { bbPaused = false; });
+    bb.addEventListener('focusin', () => { bbPaused = true; });
+    bb.addEventListener('focusout', () => { bbPaused = false; });
+    applyI18n();
+    showBillboard(0);
+    startBillboard();
     search.addEventListener('input', render);
     setTimeout(showWhatsNew, 900);
-  });
+  });
