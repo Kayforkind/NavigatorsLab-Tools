@@ -535,7 +535,8 @@
     "engine": "18 deterministic HTML checks",
     "verified": "CI gate in reimagine-it's audit — same HTML, same verdict, always",
     "shot": "og",
-    "kind": "local"
+    "kind": "local",
+    "url": "https://github.com/Kayforkind/design-health-action"
   },
   {
     "id": "skillslice",
@@ -566,7 +567,8 @@
     "engine": "SKILL.md folders + npx skills add",
     "verified": "12 chairs Read-verified in docs/WORKS_VERIFIED.md",
     "shot": "og",
-    "kind": "local"
+    "kind": "local",
+    "url": "https://github.com/Kayforkind/skill-slice"
   },
   {
     "id": "liecatchers",
@@ -597,7 +599,8 @@
     "engine": "10 workspace sensors → RECEIPT.json",
     "verified": "fail-demo exits 1 with a signed RECEIPT.json",
     "shot": "og",
-    "kind": "local"
+    "kind": "local",
+    "url": "https://github.com/Kayforkind/liecatchers"
   },
   {
     "id": "bookguide",
@@ -628,7 +631,8 @@
     "engine": "MCP stdio server (Python)",
     "verified": "CI badge on the repo; MCP handshake tested in CI",
     "shot": "og",
-    "kind": "local"
+    "kind": "local",
+    "url": "https://github.com/Kayforkind/book-guide-mcp"
   },
   {
     "id": "datainsights",
@@ -660,7 +664,8 @@
     "engine": "Signal aggregation + reporting",
     "verified": "Runs locally — npm install && npm run dev; CI status on the repo",
     "shot": "og",
-    "kind": "local"
+    "kind": "local",
+    "url": "https://github.com/Kayforkind/data-insights"
   },
   {
     "id": "ironaxe",
@@ -692,6 +697,7 @@
     "engine": "Godot 4",
     "verified": "Open in Godot 4.3+ and run the main scene — full source in the repo",
     "shot": "og",
-    "kind": "local"
+    "kind": "local",
+    "url": "https://github.com/Kayforkind/iron-axe-legacy"
   }
 ]
