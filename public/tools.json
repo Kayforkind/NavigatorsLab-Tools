@@ -478,7 +478,7 @@
     "detail": "True in-place text editing, form filling, OCR for scans, sign, redact, organize pages, diff revisions, and an on-device AI — all in your browser. No uploads, no accounts, no watermarks, no page limits.",
     "category": "documents",
     "keywords": "pdf editor text edit ocr sign redact forms merge split organize diff on-device ai documents",
-    "url": "https://navigatorslab.com/",
+    "url": "https://navigatorslab.com/pdf-studio/",
     "repo": "https://github.com/Kayforkind/NavigatorsLab-PDF-Studio",
     "page": "detail.html?id=pdfstudio",
     "about": "PDF Studio is the PDF editor you keep trying to find and never find — one that actually rewrites the text already in the document, fills real forms, OCRs scans, signs, redacts, reorganizes pages, diffs two revisions, and answers questions about the file with an on-device AI. It does all of it without your document ever leaving your computer — no upload endpoint exists, no account, no watermark, no quota, no “pro” tier.",

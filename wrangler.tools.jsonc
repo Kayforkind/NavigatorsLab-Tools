@@ -24,6 +24,11 @@
   // non-wildcard pattern in this file silently breaks production on the next
   // release. Keep the star. (See the status page: it probes these URLs.)
   "routes": [
+    // Catch-all: the hub itself lives at the site root (PDF Studio moved to
+    // /pdf-studio*, which is more specific and wins). More specific patterns
+    // (tools*, llms*, status*, pretty aliases, reimagine*, pdf-studio*) all
+    // take precedence over this wildcard.
+    { "pattern": "navigatorslab.com/*", "zone_name": "navigatorslab.com" },
     { "pattern": "navigatorslab.com/tools*", "zone_name": "navigatorslab.com" },
     { "pattern": "navigatorslab.com/llms*", "zone_name": "navigatorslab.com" },
     { "pattern": "navigatorslab.com/status*", "zone_name": "navigatorslab.com" },
