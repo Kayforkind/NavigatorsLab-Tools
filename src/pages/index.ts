@@ -177,11 +177,34 @@ function applyI18n(): void {
   showBillboard(bbIdx);
 }
 
+/* ---------- scroll reveal ---------- */
+/* CSS starts .cards / .ex-card at opacity 0 and fades them in via a .in
+ * class (see styles.css). An IntersectionObserver adds .in as each card
+ * enters the viewport; environments without IO get everything instantly,
+ * and prefers-reduced-motion forces opacity 1 via media query. */
+let revealObs: IntersectionObserver | null = null;
+function reveal(el: Element): void {
+  if (typeof IntersectionObserver === 'undefined') {
+    el.classList.add('in');
+    return;
+  }
+  revealObs ??= new IntersectionObserver((entries) => {
+    for (const en of entries) {
+      if (en.isIntersecting) {
+        en.target.classList.add('in');
+        revealObs!.unobserve(en.target);
+      }
+    }
+  }, { rootMargin: '0px 0px -40px 0px', threshold: 0.05 });
+  revealObs.observe(el);
+}
+
 /* ---------- cards ---------- */
 function makeCard(tool: Tool, used: Set<string>): HTMLElement {
   const card = document.createElement('article');
   card.className = 'cards poster';
   card.dataset.id = tool.id;
+  reveal(card);
   const open = document.createElement('a');
   open.className = 'poster-link';
   open.href = toolHref(tool);
@@ -330,5 +353,7 @@ fetch('./tools.json')
     showBillboard(0);
     startBillboard();
     search.addEventListener('input', render);
+    // static example cards (the "real numbers" section) reveal the same way
+    document.querySelectorAll('.ex-card').forEach(reveal);
     setTimeout(showWhatsNew, 900);
   });

@@ -32,13 +32,11 @@ export default defineConfig({
     },
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: [
-        'favicon.svg', 'icon.svg', 'og-image.png', 'robots.txt', 'sitemap.xml',
-        'tools.json', 'status.json', 'llms.txt', 'llms-full.txt', 'lamejs/lame.min.js', 'tess/worker.min.js',
-        'tess/tesseract-core-lstm.wasm.js', 'tess/tesseract-core-lstm.wasm',
-        'tess/tesseract-core-simd-lstm.wasm.js', 'tess/tesseract-core-simd-lstm.wasm',
-        'tessdata/eng.traineddata.gz',
-      ],
+      // Everything below is covered by workbox's globPatterns; the heavy OCR
+      // engines (tess/tessdata, ~25 MB) are deliberately left OUT of the
+      // precache — they are fetched on first OCR use and held by the runtime
+      // NetworkFirst rule, so install stays fast and the SW activates on the
+      // first visit even on slow connections.
       manifest: {
         name: 'NavigatorsLab Tools — private, in-browser utilities',
         short_name: 'NL Tools',
@@ -71,6 +69,11 @@ export default defineConfig({
       workbox: {
         // precache every page + asset so all tools work fully offline after first load
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,mjs,webmanifest,json,gz,wasm,txt}'],
+        // Heavy lazy-loaded engines + dev fixtures are fetched at first use and
+        // held by the runtime NetworkFirst rule below — precaching them made
+        // first-visit install ~58 MB and the SW activate slowly on real
+        // networks (offline-pwa e2e flaked against production).
+        globIgnores: ['**/tess/**', '**/tessdata/**', '**/lamejs/**', '**/fx/**', '**/shots/**', 'reimagine.html'],
         maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
         navigateFallback: 'index.html',
         // match precache entries regardless of query params — so returning

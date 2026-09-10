@@ -95,7 +95,9 @@ async function setFiles(page, files) {
     await page.goto(`${BASE}/index.html`);
     let swReady = true;
     try {
-      await page.waitForFunction(() => navigator.serviceWorker?.controller, { timeout: 15000 });
+      // First-visit install over a real network can take a while (precache
+      // includes the poster art + all 23 pages); 30s covers production.
+      await page.waitForFunction(() => navigator.serviceWorker?.controller, { timeout: 30000 });
     } catch { swReady = false; }
     if (swReady) {
       await ctx.setOffline(true);
@@ -107,6 +109,30 @@ async function setFiles(page, files) {
       report('offline-pwa', false, 'service worker did not activate within 15s');
     }
     await browser.close();
+  }
+
+  /* ---------- 0b. SW precache URLs must all resolve on the origin ---------- */
+  // Guards the class of outage where a precached URL 404s on the live origin
+  // (e.g. /reimagine.html is owned by the playground proxy worker, not the
+  // tools worker) — one 404 makes the whole SW install fail and unregister.
+  {
+    const sw = path.join(__dirname, '..', 'dist', 'sw.js');
+    let ok = false;
+    let detail = 'sw.js not found';
+    if (fs.existsSync(sw)) {
+      const text = fs.readFileSync(sw, 'utf8');
+      const urls = [...text.matchAll(/\{url:"([^"]+)"/g)].map((m) => m[1]);
+      const bad = [];
+      for (const u of urls) {
+        try {
+          const r = await fetch(`${BASE}/${u}`, { cache: 'no-store' });
+          if (!r.ok) bad.push(`${r.status} ${u}`);
+        } catch { bad.push(`ERR ${u}`); }
+      }
+      ok = bad.length === 0 && urls.length > 0;
+      detail = ok ? `${urls.length} precache URLs all resolve` : `${bad.length} fail: ${bad.slice(0, 3).join(', ')}`;
+    }
+    report('sw-precache-urls', ok, detail);
   }
 
   /* ---------- 1. Photo Privacy Kit ---------- */
@@ -688,6 +714,17 @@ async function setFiles(page, files) {
     const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
     report('hub', cards === 23, `${cards} project cards on the Netflix-style hub (tools.json-driven; every public Kayforkind project)`);
+    // cards must be VISIBLE after scrolling into view, not just present — the
+    // scroll-reveal observer adds .in (opacity 1); a lost observer leaves every
+    // card at opacity 0 forever (regression)
+    const cardOpacity = await page.evaluate(async () => {
+      const c = document.querySelector('#grid .cards');
+      if (!c) return 'none';
+      c.scrollIntoView({ block: 'center' });
+      await new Promise((r) => setTimeout(r, 700));
+      return getComputedStyle(c).opacity;
+    });
+    report('hub-cards-visible', cardOpacity === '1', `first card computed opacity after scroll is ${cardOpacity} (reveal must add .in)`);
     const repoLinks = await page.evaluate(() =>
       Array.from(document.querySelectorAll('#grid .cards a.repo')).map((a) => a.href));
     const allRepos = repoLinks.length === 23 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/'));
@@ -737,7 +774,7 @@ async function setFiles(page, files) {
     const lib = await page.evaluate(() => ({
       title: document.title.startsWith('PDF Studio'),
       art: (() => { const i = document.querySelector('.d-shot img'); return !!i && i.getAttribute('src').includes('og-pdfstudio.png') && i.naturalWidth > 100; })(),
-      openBtn: (() => { const a = document.querySelector('.bb-cta a.btn-hero.primary'); return !!a && a.getAttribute('href') === 'https://navigatorslab.com/'; })(),
+      openBtn: (() => { const a = document.querySelector('.bb-cta a.btn-hero.primary'); return !!a && a.getAttribute('href') === 'https://navigatorslab.com/pdf-studio/'; })(),
       repoBtn: !!document.querySelector('.bb-cta a[href*="NavigatorsLab-PDF-Studio"]'),
       runPanel: !!document.querySelector('.d-side .panel h3') === false || document.querySelectorAll('.d-side .panel').length >= 3,
     }));
@@ -763,8 +800,10 @@ async function setFiles(page, files) {
   });
 
   /* ---------- hub: Reimagine has its own page + opens the playground ---------- */
+  // Canonical URL is /tools/reimagine.html — site-root /reimagine.html is owned
+  // by the playground proxy worker (it proxies kayforkind.github.io there).
   await withPage(async (page) => {
-    await page.goto(`${BASE}/reimagine.html`);
+    await page.goto(`${BASE}/tools/reimagine.html`);
     const title = await page.title();
     const cta = await page.locator('a:has-text("Open the live playground")').count();
     const art = await page.locator('.title-art').count();
