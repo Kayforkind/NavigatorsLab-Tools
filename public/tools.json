@@ -469,5 +469,229 @@
     "verified": "Counts & keyword table asserted",
     "page": "https://navigatorslab.com/tools/textstats.html",
     "pretty": "Text-Stats"
+  },
+  {
+    "id": "pdfstudio",
+    "icon": "📜",
+    "name": "PDF Studio",
+    "tagline": "Edit the text inside your PDF — private, free, open source",
+    "detail": "True in-place text editing, form filling, OCR for scans, sign, redact, organize pages, diff revisions, and an on-device AI — all in your browser. No uploads, no accounts, no watermarks, no page limits.",
+    "category": "documents",
+    "keywords": "pdf editor text edit ocr sign redact forms merge split organize diff on-device ai documents",
+    "url": "https://navigatorslab.com/",
+    "repo": "https://github.com/Kayforkind/NavigatorsLab-PDF-Studio",
+    "page": "detail.html?id=pdfstudio",
+    "about": "PDF Studio is the PDF editor you keep trying to find and never find — one that actually rewrites the text already in the document, fills real forms, OCRs scans, signs, redacts, reorganizes pages, diffs two revisions, and answers questions about the file with an on-device AI. It does all of it without your document ever leaving your computer — no upload endpoint exists, no account, no watermark, no quota, no “pro” tier.",
+    "features": [
+      "Edit the text already inside the PDF — in place, like a document, not an overlay",
+      "Fill real form fields; OCR scanned pages so they become editable and searchable",
+      "Sign with ink or type, redact with vector-level removal, reorganize pages",
+      "Diff two revisions of the same document",
+      "On-device AI answers questions about the file",
+      "Runs 100% client-side — there is no server to upload to"
+    ],
+    "howto": [
+      "Open PDF Studio at navigatorslab.com",
+      "Drop a PDF — it opens in your browser tab",
+      "Edit text, fill forms, OCR, sign, redact, or ask the on-device AI",
+      "Download the edited file — nothing was ever uploaded"
+    ],
+    "tech": "A full client-side PDF engine: pdf.js rendering plus a rewrite layer that modifies the content streams in place; Tesseract WASM for OCR; on-device model for the AI. 30+ browser tests gate every release.",
+    "goodFor": "Anyone whose “free” PDF editor hit a paywall at the moment of Save — contracts, IDs, scans, forms. MIT licensed, forkable, self-hostable.",
+    "catLabel": "Documents",
+    "engine": "Client-side PDF engine + OCR + on-device AI",
+    "verified": "30 passing browser tests per release; live probes against production",
+    "shot": "og",
+    "kind": "app"
+  },
+  {
+    "id": "designhealth",
+    "icon": "🩺",
+    "name": "Design Health",
+    "tagline": "18 deterministic design-quality checks for HTML — no LLM, no API key",
+    "detail": "The CI-quality-gate half of Reimagine: 18 deterministic checks across typography, palette, motion, content, structure and performance — fails a build when design quality slips.",
+    "category": "design",
+    "keywords": "design quality audit html checks ci accessibility typography palette motion linter deterministic",
+    "repo": "https://github.com/Kayforkind/design-health-action",
+    "page": "detail.html?id=designhealth",
+    "about": "Design Health is the CI-quality-gate half of reimagine-it. While reimagine-it creates pages, Design Health checks pages — 18 deterministic rules across typography, palette, motion, content, structure and performance — and fails a build when design quality slips. No model in the loop, no API key, no network call: every rule is a deterministic check on the rendered HTML. Runs in seconds as a GitHub Action.",
+    "features": [
+      "Typography: hierarchy levels, text measure, missing display fonts",
+      "Palette: off-palette accents, unstyled ::selection, more than 5 non-neutral colors",
+      "Motion: missing prefers-reduced-motion, missing :focus-visible, non-compositor animation",
+      "Content: blank plates, placeholder labels, fabricated content",
+      "Structure: no hero SVG, missing landmarks, broken images",
+      "Performance: missing content-visibility, CLS risk, DOM depth",
+      "Runs as a GitHub Action — fails the build when design quality slips"
+    ],
+    "howto": [
+      "Add Kayforkind/design-health-action to your workflow",
+      "Point it at your HTML: path: \"**/*.html\"",
+      "Merge only when the gate passes"
+    ],
+    "tech": "Deterministic checks on rendered HTML — the same HTML always produces the same verdict. No LLM, no API key, no network call.",
+    "goodFor": "Teams that want design quality enforced in CI instead of reviewed by eye; the quality gate behind reimagine-it's own audit.",
+    "catLabel": "Design",
+    "engine": "18 deterministic HTML checks",
+    "verified": "CI gate in reimagine-it's audit — same HTML, same verdict, always",
+    "shot": "og",
+    "kind": "local"
+  },
+  {
+    "id": "skillslice",
+    "icon": "🔪",
+    "name": "Skill Slice",
+    "tagline": "Copy one Read-verified skill folder — a slice, not the pie",
+    "detail": "Copy one unique, Read-verified skill folder for Cursor, Claude and other agentskills.io hosts — start with the 12 chairs that were verified, never --all.",
+    "category": "agents",
+    "keywords": "skills agents claude cursor codex skills.md verified slice copy install",
+    "repo": "https://github.com/Kayforkind/skill-slice",
+    "page": "detail.html?id=skillslice",
+    "about": "Skill Slice copies one unique skill folder — a slice, not the pie. Do not copy a tag, a parent pack, or the whole tree. Start with the 12 chairs that were Read-verified (procedure plus claimed files, commands or APIs) — that is not a runtime bake, and untested copies are not a claim they work. One install command per skill: npx skills add kazimrmerchant/skill-slice --skill <name>, with a searchable explorer to browse them all.",
+    "features": [
+      "One-folder copies: a slice, not the pie — never --all, never a whole tree",
+      "12 Read-verified chairs documented in docs/WORKS_VERIFIED.md",
+      "Progressive-disclosure skills (name + description trigger; body loads when the task matches)",
+      "Works for Cursor, Claude, Hermes and other agentskills.io hosts",
+      "Explorer site to browse, search and copy one install command"
+    ],
+    "howto": [
+      "Browse the Skill Slice explorer",
+      "Copy one install command — npx skills add kazimrmerchant/skill-slice --skill <name>",
+      "Swap <name> for any chair on the list — never --all"
+    ],
+    "tech": "Plain SKILL.md folders with progressive-disclosure frontmatter; installs via npx skills add or a direct folder copy into the host's skills root.",
+    "goodFor": "Anyone installing agent skills one at a time and wanting Read-verified, honest copies instead of whole-tree grabs.",
+    "catLabel": "Agents",
+    "engine": "SKILL.md folders + npx skills add",
+    "verified": "12 chairs Read-verified in docs/WORKS_VERIFIED.md",
+    "shot": "og",
+    "kind": "local"
+  },
+  {
+    "id": "liecatchers",
+    "icon": "🕵️",
+    "name": "liecatchers",
+    "tagline": "Your agent said Done. Prove it — ten sensors, one RECEIPT.json",
+    "detail": "Runs after your coding agent claims completion and checks the claim against the real workspace — declared commands, git diff, lockfiles, native modules, handoff packets. Zero API keys, Windows-first.",
+    "category": "agents",
+    "keywords": "agent verification receipt proof completion git diff lockfiles handoff sensors cli",
+    "repo": "https://github.com/Kayforkind/liecatchers",
+    "page": "detail.html?id=liecatchers",
+    "about": "liecatchers runs after your coding agent claims completion and checks the claim against the real workspace: declared commands actually ran, files appeared only inside the agreed contract, the PR's paths exist in the diff, npm looks green and native bits are present, the next agent gets a structured handoff. Ten sensors, one signed RECEIPT.json, zero API keys. If the agent lied, you get a machine-readable receipt you can paste back into the next turn.",
+    "features": [
+      "Ten sensors check the completion claim against the real workspace",
+      "Catches: tests never ran, files outside the agreed contract, invented PR paths, missing native modules, no structured handoff",
+      "Signed RECEIPT.json — machine-readable, paste it back into the next turn",
+      "Cursor stop-hook integration",
+      "Zero API keys, Windows-first, runs in ~60 seconds"
+    ],
+    "howto": [
+      "Install (Windows, ~60 seconds)",
+      "Run: uvx --from . liecatcher run",
+      "If the agent lied, paste the receipt into the next turn"
+    ],
+    "tech": "Python + uv; the fail-demo exits 1 with a signed receipt, proving the sensors fire.",
+    "goodFor": "Anyone supervising coding agents and tired of “Done” meaning nothing — solo devs, teams running agent-driven PRs.",
+    "catLabel": "Agents",
+    "engine": "10 workspace sensors → RECEIPT.json",
+    "verified": "fail-demo exits 1 with a signed RECEIPT.json",
+    "shot": "og",
+    "kind": "local"
+  },
+  {
+    "id": "bookguide",
+    "icon": "📚",
+    "name": "Book Guide MCP",
+    "tagline": "Ship improvements with your books — agents cite, run playbooks, learn",
+    "detail": "Turn the shelf you already trust into agent-callable skills: cite with locators, run playbooks, apply frameworks, teach with Socratic and Avicenna tutors. Local-first MCP, no API keys.",
+    "category": "agents",
+    "keywords": "mcp books playbooks citations socratic avicenna tutors agents claude cursor local-first",
+    "repo": "https://github.com/Kayforkind/book-guide-mcp",
+    "page": "detail.html?id=bookguide",
+    "about": "Book Guide MCP turns the books you already trust into agent-callable skills: cite with locators, run playbooks, apply frameworks, and teach with Socratic and Avicenna tutors. Local-first, no API keys. Plugs into any MCP host over stdio — Cursor, Claude Desktop and Claude Code, VS Code Copilot, Google Antigravity, Zed, Cline, Continue, JetBrains — and progresses from L0 Library through L4 Mentor.",
+    "features": [
+      "MCP stdio server — plugs into Cursor, Claude Desktop/Code, VS Code, Antigravity, Zed, Cline, Continue, JetBrains",
+      "Citations with locators, not vague references",
+      "Playbooks your agents can actually run",
+      "Socratic and Avicenna tutors for teaching",
+      "Local-first, no API keys, MIT"
+    ],
+    "howto": [
+      "Add the MCP server to your host (stdio)",
+      "Point it at your book shelf",
+      "Ask the agent to cite, apply, or teach from the books"
+    ],
+    "tech": "Python MCP server (modelcontextprotocol SDK), stdio transport; CI-tested handshake.",
+    "goodFor": "Anyone who wants their agent's advice grounded in the books they already trust — shipped improvements, not generic advice.",
+    "catLabel": "Agents",
+    "engine": "MCP stdio server (Python)",
+    "verified": "CI badge on the repo; MCP handshake tested in CI",
+    "shot": "og",
+    "kind": "local"
+  },
+  {
+    "id": "datainsights",
+    "icon": "📡",
+    "name": "Data Insights",
+    "tagline": "Founder intelligence — daily & weekly tech signal briefs",
+    "detail": "A founder intelligence platform that turns public technology, startup, research, security and industry signals into daily and weekly decision briefs — headline river, 5W1H daily report, weekly synthesis, command center.",
+    "category": "intelligence",
+    "keywords": "intelligence signals startups research security weekly report daily briefs founders analytics",
+    "repo": "https://github.com/Kayforkind/data-insights",
+    "page": "detail.html?id=datainsights",
+    "about": "Data Insights is a founder intelligence platform that turns public technology, startup, research, security and industry signals into daily and weekly decision briefs. Product surfaces: a headline river portal without licensed full text, a daily 5W1H report, a weekly synthesis with themes, momentum, opportunities, risks and experiments, a command-center search workspace, topic deep dives, a source registry with availability history, and JSON APIs for agents.",
+    "features": [
+      "Portal — MSN-style headline river (headlines, capped teasers, outbound links)",
+      "Daily 5W1H report and weekly synthesis with themes, momentum, opportunities, risks, experiments",
+      "Command center: search and filter workspace with analyst recommendations",
+      "Topic deep dives and source registry with availability history",
+      "JSON APIs for agent interfaces",
+      "Print-optimized weekly report (Print → Save as PDF)"
+    ],
+    "howto": [
+      "Clone the repo: git clone https://github.com/Kayforkind/data-insights",
+      "npm install && npm run dev",
+      "Open http://localhost:3000 — or deploy it yourself"
+    ],
+    "tech": "Node app; runs locally with npm install && npm run dev.",
+    "goodFor": "Founders and operators who want daily tech/startup signal digestion without reading everything.",
+    "catLabel": "Intelligence",
+    "engine": "Signal aggregation + reporting",
+    "verified": "Runs locally — npm install && npm run dev; CI status on the repo",
+    "shot": "og",
+    "kind": "local"
+  },
+  {
+    "id": "ironaxe",
+    "icon": "🪓",
+    "name": "Iron Axe: Legacy",
+    "tagline": "An original side-scrolling beat 'em up — Godot 4",
+    "detail": "An original side-scrolling beat 'em up inspired by the classic Golden Axe formula — completely original characters, story and assets. Combos, throws, specials, team magic, modern juice.",
+    "category": "games",
+    "keywords": "game godot beat em up side-scrolling golden axe fighters combos magic open source",
+    "repo": "https://github.com/Kayforkind/iron-axe-legacy",
+    "page": "detail.html?id=ironaxe",
+    "about": "Iron Axe: Legacy is an original side-scrolling beat 'em up inspired by the classic Golden Axe formula — with completely original characters, story and assets; no Sega / Golden Axe copyrighted material is used. Multiple playable fighters with unique movesets and magic, side-scrolling stages with elevation and multiple paths, a combo system, throws, specials and team magic, and modern juice: hitstop, screen shake, particles. Built in Godot 4.",
+    "features": [
+      "Multiple playable fighters with unique movesets and magic",
+      "Side-scrolling stages with elevation and multiple paths",
+      "Combo system, throws, specials, team magic",
+      "Modern juice: hitstop, screen shake, particles",
+      "Completely original characters, story and assets",
+      "Built in Godot 4 — full source in the repo"
+    ],
+    "howto": [
+      "Clone the repo",
+      "Open the project in Godot 4.3+",
+      "Run the main scene"
+    ],
+    "tech": "Godot 4 (GDScript); project foundation and core systems committed, expanded system-by-system.",
+    "goodFor": "Players and tinkerers — and anyone who wants to see a NavigatorsLab original game take shape in the open.",
+    "catLabel": "Games",
+    "engine": "Godot 4",
+    "verified": "Open in Godot 4.3+ and run the main scene — full source in the repo",
+    "shot": "og",
+    "kind": "local"
   }
 ]

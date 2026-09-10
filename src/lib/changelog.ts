@@ -1,7 +1,7 @@
 /* In-app changelog: versions newest-first. Bump VERSION when shipping user-visible
  * changes; returning users get a "what's new" toast listing entries newer than
  * the last version they saw. localStorage only — no analytics, as always. */
-export const VERSION = '1.6.0';
+export const VERSION = '1.7.0';
 
 interface Entry {
   version: string;
@@ -11,6 +11,18 @@ interface Entry {
 
 export const CHANGELOG: Entry[] = [
   {
+    version: '1.7.0',
+    date: 'September 2026',
+    items: [
+      '🖼️ New: the library now features every public Kayforkind project — 23 cards across 10 rails (Privacy, Documents, Money, Images, Media, Files, Design, Agents, Intelligence, Games)',
+      '📜 New: PDF Studio — the full client-side PDF editor (edit text inside PDFs, OCR, sign, redact, on-device AI) — now featured in the library with its own detail page',
+      '🤖 New: Agents rail — Skill Slice, liecatchers and Book Guide MCP; 📡 Data Insights; 🪓 Iron Axe: Legacy (Godot 4)',
+      '🩺 New: Design Health joins the Design rail — 18 deterministic HTML quality checks',
+      '🔗 Fixed: card links on the hub were 404ing on production (absolute page URLs were double-prefixed) — every card now resolves',
+      '📊 Hub copy, OG art and the PWA manifest now say twenty-three',
+    ],
+  },
+  {
     version: '1.6.0',
     date: 'September 2026',
     items: [
@@ -19,11 +31,7 @@ export const CHANGELOG: Entry[] = [
       '🖼️ New: real in-action screenshots as poster art for all 16 tools',
       '🩺 Fixed: grid cards stayed invisible past the first scroll on the old hub (lost scroll-reveal observer)',
       '🩺 Fixed: deep links with query params (qr.html?text=…, detail.html?id=…) were hijacked by the offline service worker on repeat visits',
-      '🎬 New: the hub is now a streaming-style library — billboard spotlight, category rows with poster art, hover previews',
-      '📖 New: a dedicated detail page for every tool (with /p/<id> deep links): what it does, features, how it works, verification, related tools',
-      '🖼️ New: real in-action screenshots as poster art for all 16 tools',
-      '🩺 Fixed: grid cards stayed invisible past the first scroll on the old hub (lost scroll-reveal observer)',
-      '🩺 Fixed: deep links with query params (qr.html?text=…, detail.html?id=…) were hijacked by the offline service worker on repeat visits',],
+    ],
   },
   {
     version: '1.5.0',

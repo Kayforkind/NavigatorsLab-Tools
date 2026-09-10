@@ -1,6 +1,6 @@
 # NavigatorsLab Tools
 
-> Sixteen free, open-source (MIT) utilities that run entirely in the user's browser: photo privacy (EXIF strip), metadata inspection, image compression, scan cleanup, PDF signing and page organizing, receipt OCR, QR generation/decoding, audio trimming, invoicing, batch renaming, print prep, text diff, text stats — plus Reimagine, which redesigns an HTML page in 17 directions from the content already in it. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. An MCP (Model Context Protocol) server endpoint is available for AI agents.
+> Twenty-three free, open-source (MIT) projects. In-browser utilities: photo privacy (EXIF strip), metadata inspection, image compression, scan cleanup, PDF signing and page organizing, receipt OCR, QR generation/decoding, audio trimming, invoicing, batch renaming, print prep, text diff, text stats — plus Reimagine, which redesigns an HTML page in 17 directions from the content already in it, and PDF Studio, the full client-side PDF editor. Developer projects: Design Health (18 deterministic design checks), Skill Slice (Read-verified skill folders), liecatchers (agent completion receipts), Book Guide MCP, Data Insights (founder intelligence), and Iron Axe: Legacy (Godot 4 game). Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. An MCP (Model Context Protocol) server endpoint is available for AI agents.
 
 The suite processes files client-side (Canvas, Web Audio, WebAssembly, pdf-lib, Tesseract). Nothing is uploaded, stored, or logged. Every release passes an automated verification gate (unit + end-to-end browser tests + a security suite that proves zero non-self network calls on every page).
 
@@ -28,6 +28,13 @@ The suite processes files client-side (Canvas, Web Audio, WebAssembly, pdf-lib, 
 - [Text Diff](https://navigatorslab.com/tools/textdiff.html): line diff, word-level highlights, similarity %. Params: `?a=<text-url>&b=<text-url>`
 - [Text Stats](https://navigatorslab.com/tools/textstats.html): counts, reading time, Flesch, keyword density. Params: `?url=<text-url>`
 - [Reimagine](https://navigatorslab.com/reimagine/): redesigns an HTML page in 17 directions (infographic, 3D, cinematic, dashboard…) from its own nouns, dates, numbers and colors — nothing invented. Paste HTML in the page, or run the CLI: `npx reimagine-it --auto -i page.html -o out.html`. Hub page: https://navigatorslab.com/tools/reimagine
+- [PDF Studio](https://navigatorslab.com/): the full client-side PDF editor — edits the text inside your PDF, fills forms, OCRs scans, signs, redacts, diffs revisions, on-device AI. Hub page: https://navigatorslab.com/tools/detail.html?id=pdfstudio
+- [Design Health](https://github.com/Kayforkind/design-health-action): 18 deterministic design-quality checks for HTML; the CI gate behind Reimagine's audit. Hub page: https://navigatorslab.com/tools/detail.html?id=designhealth
+- [Skill Slice](https://github.com/Kayforkind/skill-slice): copy one Read-verified skill folder — a slice, not the pie; 12 verified chairs. Hub page: https://navigatorslab.com/tools/detail.html?id=skillslice
+- [liecatchers](https://github.com/Kayforkind/liecatchers): verify an agent's "Done" — ten sensors, one signed RECEIPT.json, zero API keys. Hub page: https://navigatorslab.com/tools/detail.html?id=liecatchers
+- [Book Guide MCP](https://github.com/Kayforkind/book-guide-mcp): agent-callable books — cite with locators, run playbooks, Socratic & Avicenna tutors; local-first MCP. Hub page: https://navigatorslab.com/tools/detail.html?id=bookguide
+- [Data Insights](https://github.com/Kayforkind/data-insights): founder intelligence — daily 5W1H report, weekly synthesis, headline river, JSON APIs. Hub page: https://navigatorslab.com/tools/detail.html?id=datainsights
+- [Iron Axe: Legacy](https://github.com/Kayforkind/iron-axe-legacy): original side-scrolling beat 'em up in Godot 4. Hub page: https://navigatorslab.com/tools/detail.html?id=ironaxe
 
 ## Standalone repos
 

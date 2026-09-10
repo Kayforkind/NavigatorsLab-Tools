@@ -684,19 +684,27 @@ async function setFiles(page, files) {
   /* ---------- hub: Netflix-style rails + billboard ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
-    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 15, { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 23, { timeout: 15000 });
     const cards = await page.locator('#grid .cards').count();
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', cards === 16, `${cards} tool cards on the Netflix-style hub (tools.json-driven; 15 hub tools + Reimagine)`);
+    report('hub', cards === 23, `${cards} project cards on the Netflix-style hub (tools.json-driven; every public Kayforkind project)`);
     const repoLinks = await page.evaluate(() =>
       Array.from(document.querySelectorAll('#grid .cards a.repo')).map((a) => a.href));
-    const allRepos = repoLinks.length === 16 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/'));
-    report('hub-repo-links', allRepos, `${repoLinks.length}/16 cards carry a standalone GitHub repo link (15 funnel + reimagine-it)`);
+    const allRepos = repoLinks.length === 23 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/'));
+    report('hub-repo-links', allRepos, `${repoLinks.length}/23 cards carry a GitHub repo link (all public projects)`);
     const rails = await page.locator('.rail').count();
     const dots = await page.locator('.bb-dot').count();
     const art = await page.evaluate(() => document.getElementById('bbArt')?.getAttribute('src') || '');
-    report('hub-rails', rails >= 6 && dots === 16 && /og-.*\.png$/.test(art),
+    report('hub-rails', rails >= 9 && dots === 23 && /og-.*\.png$/.test(art),
       `${rails} category rails, ${dots} billboard dots, billboard art ${art}`);
+    // card links must resolve inside the hub origin (regression: absolute
+    // "page" URLs were prefixed with ./ and 404'd on production)
+    const badLinks = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('#grid .cards a.poster-link')).map((a) => a.href)
+        .filter((h) => h.includes('https://') && new URL(h).pathname.includes('https://')));
+    report('hub-card-links', badLinks.length === 0, badLinks.length
+      ? `${badLinks.length} card links resolve to a double-origin 404: ${badLinks[0]}`
+      : 'all card links resolve within the hub origin');
   });
 
   /* ---------- dedicated per-tool detail page (detail.html?id=…) ---------- */
@@ -719,13 +727,28 @@ async function setFiles(page, files) {
     await page.goto(`${BASE}/detail.html?id=nope`);
     await page.waitForSelector('.mini', { timeout: 15000 });
     const nf = await page.evaluate(() => document.querySelectorAll('.mini').length);
-    report('detail-404-catalog', nf >= 16, `unknown ?id= renders the full ${nf}-tool catalog`);
+    report('detail-404-catalog', nf >= 23, `unknown ?id= renders the full ${nf}-project catalog`);
+  });
+
+  /* ---------- library project detail page (repo-backed, og poster art) ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/detail.html?id=pdfstudio`);
+    await page.waitForSelector('.d-feats li', { timeout: 15000 });
+    const lib = await page.evaluate(() => ({
+      title: document.title.startsWith('PDF Studio'),
+      art: (() => { const i = document.querySelector('.d-shot img'); return !!i && i.getAttribute('src').includes('og-pdfstudio.png') && i.naturalWidth > 100; })(),
+      openBtn: (() => { const a = document.querySelector('.bb-cta a.btn-hero.primary'); return !!a && a.getAttribute('href') === 'https://navigatorslab.com/'; })(),
+      repoBtn: !!document.querySelector('.bb-cta a[href*="NavigatorsLab-PDF-Studio"]'),
+      runPanel: !!document.querySelector('.d-side .panel h3') === false || document.querySelectorAll('.d-side .panel').length >= 3,
+    }));
+    report('library-project-detail', lib.title && lib.art && lib.openBtn && lib.repoBtn,
+      `detail.html?id=pdfstudio: og poster art, Open→app, repo CTA present`);
   });
 
   /* ---------- hub: search + chip filter still work on the rails ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
-    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 15, { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 23, { timeout: 15000 });
     await page.fill('#search', 'shrink');
     await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length === 1, { timeout: 10000 });
     const one = await page.locator('#grid .cards').count();

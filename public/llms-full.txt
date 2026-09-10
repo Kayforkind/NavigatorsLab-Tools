@@ -1,6 +1,6 @@
 # NavigatorsLab Tools — full agent documentation
 
-> Sixteen free, open-source (MIT) utilities that run entirely in the user's browser — fifteen file utilities plus Reimagine, the HTML redesign engine. Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. This page is the complete guide for AI agents and automation.
+> Twenty-three free, open-source (MIT) projects — fifteen in-browser file utilities, Reimagine (the HTML redesign engine), PDF Studio (the full client-side PDF editor), and six developer projects (Design Health, Skill Slice, liecatchers, Book Guide MCP, Data Insights, Iron Axe: Legacy). Zero uploads, zero accounts, zero tracking — files are processed on the user's device and never sent to any server. This page is the complete guide for AI agents and automation.
 
 ## Architecture (what an agent must know)
 

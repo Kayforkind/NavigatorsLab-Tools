@@ -41,6 +41,9 @@ const CATS: [string, string][] = [
   ['media', 'cat.media'],
   ['files', 'cat.files'],
   ['design', 'cat.design'],
+  ['agents', 'cat.agents'],
+  ['intelligence', 'cat.intelligence'],
+  ['games', 'cat.games'],
 ];
 
 /** rail order for the Netflix-style rows (category id → i18n key) */
@@ -69,7 +72,7 @@ function markUsed(id: string): void {
 
 /** primary destination for a tool card: hub page > external url > tool page */
 function toolHref(t: Tool): string {
-  if (t.page) return `./${t.page}`;
+  if (t.page) return t.page.startsWith('http') ? t.page : `./${t.page}`;
   return t.url ?? `./${t.id}.html`;
 }
 

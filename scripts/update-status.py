@@ -88,13 +88,24 @@ def main() -> int:
                          'method': method, 'verifiedAt': now,
                          'ok': ok})
             continue
-        page_ok = head(f'{BASE}/{tid}.html') == 200
-        pretty_ok = head(f'https://navigatorslab.com{PRETTY[tid]}') in (200, 301, 302, 308)
-        method = METHOD.get(tid, DEFAULT_METHOD)
+        if tid in PRETTY:
+            # Hub tool: page + pretty 301 must both resolve.
+            page_ok = head(f'{BASE}/{tid}.html') == 200
+            pretty_ok = head(f'https://navigatorslab.com{PRETTY[tid]}') in (200, 301, 302, 308)
+            method = METHOD.get(tid, DEFAULT_METHOD)
+            href, pretty_url = f'./{tid}.html', f'https://navigatorslab.com{PRETTY[tid]}'
+        else:
+            # Library project: detail page on the hub must 200; its canonical
+            # destination (app URL or GitHub repo) must be reachable.
+            page_ok = head(f'{BASE}/detail.html?id={tid}') == 200
+            dest = t.get('url') or t.get('repo') or ''
+            pretty_ok = head(dest) in (200, 301, 302, 308) if dest else True
+            method = 'hub detail page + destination'
+            href, pretty_url = f'./detail.html?id={tid}', dest
         ok = page_ok and pretty_ok
         all_good = all_good and ok
         rows.append({'id': tid, 'icon': t['icon'], 'name': t['name'],
-                     'href': f'./{tid}.html', 'prettyUrl': f'https://navigatorslab.com{PRETTY[tid]}',
+                     'href': href, 'prettyUrl': pretty_url,
                      'method': method, 'verifiedAt': now,
                      'ok': ok})
 

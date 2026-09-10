@@ -20,4 +20,11 @@
   <url><loc>https://navigatorslab.com/tools/printprep</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://navigatorslab.com/tools/reimagine</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://navigatorslab.com/reimagine/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://navigatorslab.com/tools/detail.html?id=pdfstudio</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://navigatorslab.com/tools/detail.html?id=designhealth</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://navigatorslab.com/tools/detail.html?id=skillslice</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://navigatorslab.com/tools/detail.html?id=liecatchers</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://navigatorslab.com/tools/detail.html?id=bookguide</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://navigatorslab.com/tools/detail.html?id=datainsights</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://navigatorslab.com/tools/detail.html?id=ironaxe</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

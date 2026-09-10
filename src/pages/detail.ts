@@ -10,7 +10,12 @@ interface Tool {
   category: string; keywords: string; repo?: string; url?: string;
   about?: string; features?: string[]; howto?: string[]; tech?: string;
   goodFor?: string; catLabel?: string; engine?: string; verified?: string;
-  pretty?: string;
+  pretty?: string; shot?: string; kind?: string;
+}
+
+/** hero/poster art: in-action screenshot for browser tools, og poster otherwise */
+function artSrc(tool: Tool): string {
+  return tool.shot === 'og' ? `./og-${tool.id}.png` : `./shots/${tool.id}.jpg`;
 }
 
 let tools: Tool[] = [];
@@ -31,7 +36,9 @@ function esc(s: string): string {
 function metaCard(tool: Tool): string {
   const chips: string[] = [];
   if (tool.catLabel) chips.push(`<a href="./index.html" class="pill">${esc(tool.catLabel)}</a>`);
-  chips.push('<span class="pill">🔒 runs in your browser</span>');
+  chips.push(tool.kind === 'local'
+    ? '<span class="pill">💻 runs on your machine</span>'
+    : '<span class="pill">🔒 runs in your browser</span>');
   chips.push('<span class="pill">🆓 free · open source (MIT)</span>');
   if (tool.engine) chips.push(`<span class="pill">⚙️ ${esc(tool.engine)}</span>`);
   return chips.join('');
@@ -41,7 +48,7 @@ function hero(tool: Tool): string {
   const href = toolHref(tool);
   return `
   <section class="nl-billboard detail-bb">
-    <div class="bb-bg" style="background-image:url('./shots/${tool.id}.jpg')" aria-hidden="true"></div>
+    <div class="bb-bg" style="background-image:url('${artSrc(tool)}')" aria-hidden="true"></div>
     <div class="bb-shade" aria-hidden="true"></div>
     <div class="bb-body">
       <div class="bb-now">🧭 NavigatorsLab Library · ${esc(tool.catLabel ?? '')} · tool details</div>
@@ -87,13 +94,20 @@ function sections(tool: Tool): string {
         <p class="d-meta">Every release drops real files into this tool and checks the downloaded bytes.
         <a href="./status.html">Live status →</a></p>
       </section>
-      <section class="panel">
+      ${tool.kind === 'local'
+        ? `<section class="panel">
+        <h3>🧱 Run it yourself</h3>
+        <p>This is a standalone project — not a hosted web app. Clone the repo and run it locally:</p>
+        <p class="mono dim"><code>git clone ${esc(tool.repo ?? '')}</code></p>
+        <p class="d-meta">MIT licensed — fork it, self-host it, ship it. Full instructions in the README.</p>
+      </section>`
+        : `<section class="panel">
         <h3>🤖 For AI agents</h3>
         <p>Drive this tool without clicks:</p>
         <p class="mono dim"><code>${toolHref(tool)}?url=&hellip;</code></p>
         <p class="d-meta">Strict allow-listed params, same-origin only. Full guide in
         <a href="./agents.html">Agent Mode</a>; the suite also speaks <b>MCP</b> at <code>POST /tools/mcp</code>.</p>
-      </section>
+      </section>`}
       <section class="panel">
         <h3>🔒 Private by architecture</h3>
         <p>Static page, no upload endpoint, no accounts, no analytics. We keep <b>no attachments and no user information</b>. The security suite watches every network request on every release and asserts nothing leaves the site.</p>
@@ -104,11 +118,14 @@ function sections(tool: Tool): string {
 }
 
 function poster(tool: Tool): string {
+  const isOg = tool.shot === 'og';
   return `
   <div class="wrap">
     <figure class="d-shot">
-      <img src="./shots/${tool.id}.jpg" alt="${esc(tool.name)} in action" loading="lazy" />
-      <figcaption>${esc(tool.name)} mid-task — captured by the automated verification run.</figcaption>
+      <img src="${artSrc(tool)}" alt="${esc(tool.name)} — ${esc(tool.tagline)}" loading="lazy" />
+      <figcaption>${isOg
+        ? `${esc(tool.name)} — official poster. ${esc(tool.tagline)}.`
+        : `${esc(tool.name)} mid-task — captured by the automated verification run.`}</figcaption>
     </figure>
   </div>`;
 }
