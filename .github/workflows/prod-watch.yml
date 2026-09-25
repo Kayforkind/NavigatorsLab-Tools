@@ -41,9 +41,17 @@ jobs:
           git diff --cached --quiet || git commit -m "chore: refresh prod status (weekly watch)"
           git push
       - name: Deploy refreshed status to production
+        # The probes and status commit above are the point of the watch; the
+        # Cloudflare redeploy is opportunistic. A missing/expired token must
+        # skip the deploy with a notice instead of failing the whole watch
+        # (probes ran, status committed — that work should still land).
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::notice::CLOUDFLARE_API_TOKEN not set — probes + status committed, skipping the Cloudflare redeploy."
+            exit 0
+          fi
           npm run build
           mkdir -p deploy && cp -r dist deploy/tools && cp wrangler.tools.jsonc deploy/wrangler.jsonc && cp worker.js deploy/ && cp src/lib/mcp.ts deploy/
           cd deploy && npx wrangler deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
