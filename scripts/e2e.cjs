@@ -802,14 +802,31 @@ async function setFiles(page, files) {
   /* ---------- hub: Reimagine has its own page + opens the playground ---------- */
   // Canonical URL is /tools/reimagine.html — site-root /reimagine.html is owned
   // by the playground proxy worker (it proxies kayforkind.github.io there).
-  await withPage(async (page) => {
-    await page.goto(`${BASE}/tools/reimagine.html`);
-    const title = await page.title();
-    const cta = await page.locator('a:has-text("Open the live playground")').count();
-    const art = await page.locator('.title-art').count();
-    report('reimagine-page', /Reimagine/.test(title) && cta === 1 && art === 1,
-      `reimagine.html renders (${title.trim()}) with playground CTA + title art`);
-  });
+  // HISTORY: this check used to request `${BASE}/tools/reimagine.html`, but
+  // BASE already carries the /tools/ subpath (E2E_BASE=…/tools/ in CI), so the
+  // real request was /tools/tools/reimagine.html → 404 → page.title() === ''
+  // forever. It failed on every CI run since it was written (2026-09-24 root
+  // cause). Every other check builds URLs as `${BASE}/<page>.html`; this one
+  // now does the same. Production's canonical-URL routing (site-root
+  // /reimagine.html is owned by the playground proxy worker) is covered by the
+  // sw-precache-urls check, which resolves every precache URL on the origin.
+  let reimagine = null;
+  for (let attempt = 0; attempt < 2 && !(reimagine && reimagine.ok); attempt++) {
+    await withPage(async (page) => {
+      await page.goto(`${BASE}/reimagine.html`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      await page.waitForFunction(() => document.title.length > 0, null, { timeout: 15000 });
+      await page.waitForSelector('.title-art', { state: 'attached', timeout: 15000 });
+      const title = await page.title();
+      const cta = await page.locator('a:has-text("Open the live playground")').count();
+      const art = await page.locator('.title-art').count();
+      reimagine = { ok: /Reimagine/.test(title) && cta === 1 && art === 1,
+        detail: `reimagine.html renders (${title.trim()}) with playground CTA + title art` +
+          (attempt ? ' [after retry]' : '') };
+    }).catch((e) => {
+      if (attempt === 1) throw e;
+    });
+  }
+  report('reimagine-page', reimagine.ok, reimagine.detail);
 
   const failed = results.filter((r) => !r.ok);
   console.log(`\n=== ${results.length - failed.length}/${results.length} checks passed ===`);

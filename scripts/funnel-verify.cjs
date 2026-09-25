@@ -4,7 +4,19 @@
  * Usage: node scripts/funnel-verify.cjs  (expects a server serving funnel/ on VERIFY_PORT, default 5321) */
 const path = require('node:path');
 const fs = require('node:fs');
-const { chromium } = require(path.join(process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules', 'playwright'));
+/* Playwright resolution mirrors scripts/security.cjs: PW_MODULES override,
+ * global @playwright/test, then the repo-local install. The previous
+ * machine-specific hardcoded path broke for any other checkout/CI. */
+function resolvePlaywright() {
+  const candidates = [
+    process.env.PW_MODULES,
+    (process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : ''),
+    path.resolve(__dirname, '..', 'node_modules'),
+  ].filter(Boolean);
+  for (const c of candidates) { try { return require(path.join(c, 'playwright')); } catch { /* next */ } }
+  throw new Error('playwright not found; set PW_MODULES or npm i -D playwright');
+}
+const { chromium } = resolvePlaywright();
 
 const PORT = process.env.VERIFY_PORT || 5321;
 const BASE = `http://localhost:${PORT}`;

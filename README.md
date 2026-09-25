@@ -337,7 +337,7 @@ Lighthouse: 98–100 ✅ (perf / a11y / best-practices / SEO, all 13 pages)
 
 ```bash
 npm install
-npm run dev          # http://localhost:5177 — the hub with all 16 tools
+npm run dev          # http://localhost:5177 — the hub with the whole catalog
 npm test             # unit tests incl. EXIF fuzzing
 npm run typecheck    # strict TypeScript
 npm run build        # static build in dist/ — deployable anywhere

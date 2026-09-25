@@ -13,7 +13,7 @@
 # Prereqs:  npm run build  (dist/ must be current)
 # Run:      python scripts/funnel-gen.py
 # Push:     GH_TOKEN=$(gh auth token) python scripts/funnel-sync.py
-import io, json, os, re, shutil
+import io, json, os, re, shutil, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, 'funnel')
@@ -46,10 +46,28 @@ SLUGS = {
     'textstats': 'text-stats',
 }
 
+# Every browser tool that gets a funnel repo must appear here; the hub
+# catalog (tools.json) may list more than these 15 — the excess must be
+# in EXTERNAL. main() cross-checks all three sets so the funnel-sync CI
+# fails loudly here instead of shipping stale mirrors (see the 16→23
+# catalog growth that silently broke this script in Sep 2026).
+
 # Tools listed in tools.json but WITHOUT a funnel landing repo: they live
 # outside the hub (their card opens their own URL) and already have a
-# full-scale repo of their own.
-EXTERNAL = {'reimagine'}
+# full-scale repo of their own, or are not browser tools at all.
+# Everything listed here is skipped by funnel-gen; keep it in sync with
+# tools.json — every tools.json id must be in FUNNEL_SLUGS or EXTERNAL,
+# which main() asserts so funnel-sync CI can never silently drift again.
+EXTERNAL = {
+    'reimagine',    # lives at /reimagine/ via the reimagine-lab worker
+    'pdfstudio',    # full-scale app with its own repo + Pages deploy
+    'designhealth', # GitHub Action, not a browser tool
+    'skillslice',   # skill-folder library, not a browser tool
+    'liecatchers',  # Python CLI, not a browser tool
+    'bookguide',    # MCP server, not a browser tool
+    'datainsights', # self-hosted Node app, not a browser tool
+    'ironaxe',      # Godot game, not a browser tool
+}
 
 # GitHub repo name per tool id (for README badges)
 REPO = {
@@ -324,7 +342,7 @@ def landing(t, all_tools):
   sent to any server. No accounts, no tracking, no cookies, nothing retained. Prefer the hub?
   The same tool lives at <a href="{tool_url}">{tool_url}</a>.</div>
 
-  <h2>The suite: 16 tools, one zero-upload promise</h2>
+  <h2>The suite: 23 projects, one zero-upload promise</h2>
   <div class="grid">
 {others}
   </div>
@@ -420,7 +438,7 @@ Third-party components are catalogued in [NOTICE](NOTICE); this repo is MIT-lice
 
 ## 🗂 The NavigatorsLab Tools suite
 
-Fifteen free tools, one hub — all with the same zero-upload promise — plus Reimagine, the design engine at /reimagine/:
+The full catalog — every tool in the hub with the same zero-upload promise, plus the lab's apps, CLIs and engines:
 
 | Tool | What it does | |
 |---|---|---|
@@ -467,8 +485,28 @@ def build_demo(t):
 
 
 def main():
+    # Windows consoles default to cp1252 and die on the emoji icons in
+    # tool names — replace instead of crash so local runs match CI.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8', errors='replace')
     tools = json.load(io.open(os.path.join(ROOT, 'public', 'tools.json'), encoding='utf-8'))
-    assert len(tools) == 16, f'expected 16 tools, got {len(tools)}'
+    # The catalog may list any number of projects, but every id must be
+    # classified: either it gets a funnel repo (in SLUGS) or it is
+    # explicitly external (in EXTERNAL). A hard count broke here once the
+    # catalog grew 16→23 and funnel-sync CI crashed for two weeks; a set
+    # check survives catalog growth while still failing on an unclassified id.
+    ids = {t['id'] for t in tools}
+    classified = set(SLUGS) | EXTERNAL
+    unclassified = ids - classified
+    if unclassified:
+        raise SystemExit(
+            'tools.json ids not classified in funnel-gen.py '
+            f'(add to SLUGS or EXTERNAL): {sorted(unclassified)}')
+    stale = classified - ids
+    if stale:
+        print(f'warning: funnel-gen knows ids missing from tools.json: {sorted(stale)}')
+    print(f'catalog: {len(ids)} tools, {len(SLUGS)} funnel repos, {len(EXTERNAL)} external')
     dist = os.path.join(ROOT, 'dist')
     for t in tools:
         if t['id'] in EXTERNAL:
