@@ -3,7 +3,19 @@
  * read it, export the CSV. Strongest proof that the engine base-URL fix
  * works — no localhost involved. */
 const path = require('node:path');
-const { chromium } = require(path.join(process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules', 'playwright'));
+/* Playwright resolution: PW_MODULES → global @playwright/test → repo-local.
+ * (Was a hardcoded per-machine APPDATA path; APPDATA is unset on Linux, which
+ * broke the prod-watch workflow's probes on CI.) */
+function resolvePlaywright() {
+  const candidates = [
+    process.env.PW_MODULES,
+    (process.env.APPDATA ? process.env.APPDATA + '/npm/node_modules/@playwright/test/node_modules' : ''),
+    path.resolve(__dirname, '..', 'node_modules'),
+  ].filter(Boolean);
+  for (const c of candidates) { try { return require(path.join(c, 'playwright')); } catch { /* next */ } }
+  throw new Error('playwright not found; set PW_MODULES or npm i -D playwright');
+}
+const { chromium } = resolvePlaywright();
 
 (async () => {
   const b = await chromium.launch();
