@@ -75,12 +75,20 @@ Prefer a standalone repo? Each tool has its own home — every one links straigh
 
 ---
 
-## What the tools can do — v1.4 highlights
+## What the tools can do — v1.5 highlights
 
 Every claim below is exercised by the automated gate (38 E2E checks, 84 unit tests, 28 security checks — all at the production URL shape). Not marketing — test results.
 
+- **Copy is a first-class output, everywhere.** Shrunken images, cleaned photos, QR PNGs, stats tables and CSV rows all go to the clipboard with one click — plus the download for archiving. Single cleaned photo copies automatically; paste it in the tab that is already open.
+- **Image Shrinker** has **hold-to-compare**: press the eye to see the original, release for the shrunk file — quality judgment is a comparison, not a guess.
+- **QR Studio** keeps a **session gallery**: every code you generate stays on the page — click to restore the payload, shift-click to re-download — and Copy PNG puts it straight on the clipboard.
+- **Text Stats** gained a **word-goal tracker** (type the limit, watch the bar; remembered between visits) and **Copy stats as Markdown** — the table goes where the writing goes.
+- **Receipt OCR** shows a **running total of selected rows** and flags **possible duplicates** (same merchant + amount) — the most common expense-report rejection, caught before submission. CSV copies as text for a direct Sheets paste.
+- **PDF Pages** has real **undo/redo** (Ctrl+Z / Ctrl+Shift+Z, buttons too) over every page mutation — delete, drag, rotate, insert are all reversible now.
+- **Invoice / Quote** **saves your draft** in this browser as you type (refresh-safe, device-local) and **auto-numbers** documents: export INV-001 and the form is already showing INV-002.
+- **Local E-Sign Pad** remembers your **last six signatures** (device-local) — sign once, click to reuse forever.
 - **Everything accepts paste.** Ctrl/Cmd+V a screenshot or copied file on any tool page and it lands in the drop zone. Snip → paste → done.
-- **Fully keyboard-driven.** Every drop zone is a real tab stop: Enter/Space opens the file picker with the tool's own constraints (PDF-only for Sign, single-file for QR decode, `image/*` batches for Shrink). Press **?** on any page for the live cheat-sheet; **g h** hops to the hub, **g a** to agent docs, **g s** to status. QR Studio adds **m** (make) and **d** (decode tab).
+- **Fully keyboard-driven.** Every drop zone is a real tab stop: Enter/Space opens the file picker with the tool's own constraints (PDF-only for Sign, single-file for QR decode, `image/*` batches for Shrink). Press **?** on any page for the live cheat-sheet; **g h** hops to the hub, **g a** to agent docs, **g s** to status. QR Studio adds **m** (make) and **d** (decode tab); PDF Pages adds Ctrl+Z / Ctrl+Shift+Z undo and redo.
 - **Screen readers hear the results.** Every tool's status line routes through one polite aria-live region (WCAG 2.2 4.1.3), so "12 photos cleaned, 3.1 MB saved" is announced, not just painted.
 - Drop zones carry real semantics now: `role=button`, labels, visible focus — and native controls (the text tools' textareas) keep theirs.
 - **Photo Privacy Kit** strips GPS/camera/timestamps and now shows **SHA-256 fingerprints** of original vs. cleaned files — cryptographic proof that "same picture, minus the metadata" (the E2E suite verifies pixel-identical output). Paste support means screenshots get scrubbed in two keystrokes.

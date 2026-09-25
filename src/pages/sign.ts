@@ -116,9 +116,70 @@ useSig.addEventListener('click', async () => {
   out.getContext('2d')!.drawImage(src, minX - 4, minY - 4, w, h, 0, 0, w, h);
   sigPng = await new Promise<Blob>((res) => out.toBlob((b) => res(b!), 'image/png'));
   sigAspect = w / h;
+  saveToGallery(out);
   status(stat, 'Signature ready. Now drop a PDF and click where it goes.', 'ok');
   if (doc) stampBtn.disabled = false;
 });
+
+/* ---- saved signatures: sign once, reuse forever (device-local) ----
+ * A returning user should never redraw their signature. Stored as data
+ * URLs in this browser's localStorage — never uploaded, like everything
+ * else on this page. Click a saved mark to load it as the active ink. */
+const SIGS_KEY = 'sign-nl-sigs-v1';
+function loadGallery(): { dataUrl: string; aspect: number }[] {
+  try { return JSON.parse(localStorage.getItem(SIGS_KEY) || '[]'); } catch { return []; }
+}
+function saveToGallery(c: HTMLCanvasElement): void {
+  try {
+    const sigs = loadGallery();
+    const entry = { dataUrl: c.toDataURL('image/png'), aspect: c.width / c.height };
+    if (!sigs.some((s) => s.dataUrl === entry.dataUrl)) {
+      sigs.unshift(entry);
+      if (sigs.length > 6) sigs.pop();
+      localStorage.setItem(SIGS_KEY, JSON.stringify(sigs));
+    }
+    renderGallery();
+  } catch { /* private mode / quota — gallery is best-effort */ }
+}
+function renderGallery(): void {
+  const sigs = loadGallery();
+  gallery.hidden = sigs.length === 0;
+  galleryRow.innerHTML = '';
+  for (const s of sigs) {
+    const img = document.createElement('img');
+    img.src = s.dataUrl;
+    img.alt = 'Saved signature';
+    img.style.cssText = 'height:34px;max-width:110px;object-fit:contain;background:#fff;border-radius:6px;padding:3px;cursor:pointer;border:1px solid rgba(148,163,184,.3)';
+    img.title = 'Use this saved signature';
+    img.setAttribute('role', 'button');
+    img.tabIndex = 0;
+    img.setAttribute('aria-label', 'Use this saved signature');
+    const use = () => {
+      sigPng = dataUrlToBlob(s.dataUrl);
+      sigAspect = s.aspect;
+      status(stat, 'Saved signature loaded. Drop a PDF and click where it goes.', 'ok');
+      if (doc) stampBtn.disabled = false;
+      toast('Saved signature ready');
+    };
+    img.addEventListener('click', use);
+    img.addEventListener('keydown', (e) => { if (e.key === 'Enter') use(); });
+    galleryRow.appendChild(img);
+  }
+}
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [, b64] = dataUrl.split(',');
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: 'image/png' });
+}
+const gallery = document.createElement('div');
+gallery.className = 'panel';
+gallery.hidden = true;
+gallery.innerHTML = '<b>Your saved signatures</b> <span class="meta">— stored only in this browser, never uploaded. Click to use.</span><div id="sigGalleryRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"></div>';
+useSig.closest('.panel')?.after(gallery);
+const galleryRow = gallery.querySelector('#sigGalleryRow') as HTMLElement;
+renderGallery();
 
 dz.addEventListener('click', () => void pickPdf());
 onDrop(dz, (files) => { const f = files[0]; if (f) void loadPdf(f); }, { accept: 'application/pdf', multiple: false });

@@ -302,6 +302,66 @@ export function imageToCanvas(img: HTMLImageElement | ImageBitmap, maxW?: number
   return c;
 }
 
+/* ---------- clipboard: copy anything, announce the outcome ----------
+ * Downloads are a commitment; copy is a decision the user can undo by
+ * overwriting their clipboard. The best-in-class tools (Squoosh, Figma)
+ * offer both on every output. These helpers make that a one-liner. */
+
+/** Copy a blob (PNG canvas output, PDF, CSV bytes…) to the clipboard. */
+export async function copyBlobToClipboard(blob: Blob): Promise<boolean> {
+  try {
+    // ClipboardItem accepts a promise so the MIME sniff happens while the
+    // permission prompt is still up — snappier on Chrome, works on Safari.
+    const item = new ClipboardItem({ [blob.type || 'application/octet-stream']: blob });
+    await navigator.clipboard.write([item]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Copy text; falls back to the legacy path when the async API is blocked. */
+export async function copyTextToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+}
+
+/** Wire a copy button: copies, toasts, announces. Returns the handler for
+ *  rebinding after re-renders. */
+export function bindCopyButton(
+  btn: HTMLButtonElement,
+  getPayload: () => Promise<Blob | string> | Blob | string,
+  label = 'Copied to clipboard',
+): void {
+  btn.addEventListener('click', async () => {
+    try {
+      const payload = await getPayload();
+      const ok = typeof payload === 'string'
+        ? await copyTextToClipboard(payload)
+        : await copyBlobToClipboard(payload);
+      toast(ok ? label : 'Copy failed — use Download instead');
+      if (!ok) announce('Copy failed. The download button still works.');
+    } catch {
+      toast('Nothing to copy yet');
+    }
+  });
+}
+
 /** minimum viable toast — some flows want a transient confirmation */
 export function toast(msg: string): void {
   const t = document.createElement('div');

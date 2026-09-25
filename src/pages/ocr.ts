@@ -1,4 +1,4 @@
-import { $, pickFiles, onDrop, download, status, fmtBytes, fmtDate, toast } from '../lib/dom';
+import { $, pickFiles, onDrop, download, status, fmtBytes, fmtDate, toast, copyTextToClipboard } from '../lib/dom';
 import { parseExif } from '../lib/exif';
 import { pickTotal, firstMerchantLine } from '../lib/receipts';
 
@@ -24,6 +24,13 @@ const enginePanel = $('#enginePanel');
 const engineStat = $('#engineStat');
 const tbody = document.querySelector('#tbl tbody') as HTMLElement;
 const rowCount = $('#rowCount');
+/* Running total + duplicate flags live under the selection count. Created
+ * here (not in index.html) so the HTML stays declarative and the element
+ * only exists when the page script runs. */
+const totalEl = document.createElement('p');
+totalEl.className = 'stat';
+totalEl.setAttribute('role', 'status');
+rowCount.after(totalEl);
 const btnCsv = $('#csv') as HTMLButtonElement;
 
 let workerPromise: Promise<import('tesseract.js').Worker> | null = null;
@@ -111,7 +118,27 @@ async function run(files: File[]): Promise<void> {
 
 function render(): void {
   resultsPanel.hidden = rows.length === 0;
-  rowCount.textContent = `${rows.filter((r) => r.include).length} selected`;
+  const sel = rows.filter((r) => r.include);
+  rowCount.textContent = `${sel.length} selected`;
+  // Running total of SELECTED rows, restated on every edit — the question
+  // this tool answers is "what am I claiming?", not just "what did I scan?".
+  // Duplicate totals (same amount, same merchant) get flagged: the most
+  // common expense-report rejection.
+  const grand = sel.reduce((a, r) => a + (r.total ?? 0), 0);
+  const seen = new Map<string, number>();
+  let dupes = 0;
+  for (const r of sel) {
+    if (r.total == null) continue;
+    const k = `${r.merchant.toLowerCase()}|${r.total.toFixed(2)}`;
+    seen.set(k, (seen.get(k) ?? 0) + 1);
+    if (seen.get(k)! === 2) dupes++;
+  }
+  if (totalEl) {
+    totalEl.textContent = sel.some((r) => r.total != null)
+      ? `Total: ${grand.toFixed(2)} ${($('#cur') as HTMLSelectElement).value}${dupes ? ` · ⚠ ${dupes} possible duplicate${dupes === 1 ? '' : 's'}` : ''}`
+      : '';
+    totalEl.style.color = dupes ? '#ffcf70' : '';
+  }
   tbody.innerHTML = '';
   rows.forEach((r, i) => {
     const tr = document.createElement('tr');
@@ -135,7 +162,7 @@ function render(): void {
     inp.style.width = '110px';
     inp.value = r.total != null ? String(r.total) : '';
     inp.placeholder = '—';
-    inp.addEventListener('input', () => { r.total = parseFloat(inp.value) || null; });
+    inp.addEventListener('input', () => { r.total = parseFloat(inp.value) || null; render(); });
     tdTotal.appendChild(inp);
     const tdConf = document.createElement('td');
     const conf = r.confidence;
@@ -169,6 +196,25 @@ function exportCsv(): void {
   download(new Blob([lines.join('\n')], { type: 'text/csv' }), 'expenses.csv');
   status(stat, `Exported ${sel.length} expense${sel.length === 1 ? '' : 's'} to expenses.csv.`, 'ok');
 }
+
+/* Copy CSV as text — Sheets pastes it straight into columns. */
+const btnCopyCsv = document.createElement('button');
+btnCopyCsv.className = 'btn';
+btnCopyCsv.textContent = '⧉ Copy CSV';
+btnCopyCsv.addEventListener('click', async () => {
+  const sel = rows.filter((r) => r.include);
+  if (!sel.length) return;
+  const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
+  const cur = ($('#cur') as HTMLSelectElement).value;
+  const lines = ['date,merchant,category,amount,currency,file,ocr_confidence'];
+  for (const r of sel) {
+    const d = r.date ? r.date.toISOString().slice(0, 10) : '';
+    lines.push([d, esc(r.merchant), esc(r.category), r.total != null ? cur + r.total.toFixed(2) : '', cur, esc(r.file.name), String(r.confidence)].join(','));
+  }
+  const ok = await copyTextToClipboard(lines.join('\n'));
+  toast(ok ? `CSV for ${sel.length} rows copied — paste into Sheets` : 'Copy blocked by the browser');
+});
+btnCsv.after(btnCopyCsv);
 
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] || c);

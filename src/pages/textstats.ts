@@ -1,5 +1,7 @@
-/* Text Stats page — live-updating stats cards + keyword list, file drop to fill. */
-import { $, onDrop } from '../lib/dom';
+/* Text Stats page — live-updating stats cards + keyword list, file drop to fill.
+ * Plus a word-goal tracker (writers do not count words for fun; they are
+ * hitting a limit) and one-click copy of the whole card set as Markdown. */
+import { $, onDrop, copyTextToClipboard, toast } from '../lib/dom';
 import { analyze, type TextStats } from '../lib/textstats';
 
 /** words per sentence → bucketed rhythm histogram (pure, local) */
@@ -74,6 +76,65 @@ function render(): void {
 
 input.addEventListener('input', render);
 render();
+
+/* ---- word goal: set a target, watch the ring fill ---- */
+const GOAL_KEY = 'textstats-goal';
+const goalPanel = document.createElement('div');
+goalPanel.className = 'panel';
+goalPanel.innerHTML = `
+  <label for="goalInput"><b>Word goal</b> <span class="meta">— essays, applications, posts have limits; type yours</span></label>
+  <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+    <input id="goalInput" type="number" min="0" step="50" placeholder="e.g. 650"
+      style="width:120px" aria-label="Word count goal" />
+    <div id="goalBar" role="progressbar" aria-valuemin="0" style="flex:1;height:10px;border-radius:6px;background:rgba(148,163,184,.15);overflow:hidden">
+      <div id="goalFill" style="height:100%;width:0%;background:var(--acc);transition:width .25s ease"></div>
+    </div>
+    <b id="goalPct" class="meta" style="min-width:90px;text-align:right"></b>
+  </div>`;
+input.closest('.panel')?.after(goalPanel);
+const goalInput = $('#goalInput') as HTMLInputElement;
+const goalFill = $('#goalFill') as HTMLElement;
+const goalBar = $('#goalBar') as HTMLElement;
+const goalPct = $('#goalPct') as HTMLElement;
+goalInput.value = localStorage.getItem(GOAL_KEY) ?? '';
+
+function renderGoal(): void {
+  const goal = parseInt(goalInput.value, 10);
+  if (!goal || goal <= 0) {
+    goalFill.style.width = '0%';
+    goalBar.removeAttribute('aria-valuenow');
+    goalPct.textContent = '';
+    localStorage.removeItem(GOAL_KEY);
+    return;
+  }
+  localStorage.setItem(GOAL_KEY, goalInput.value);
+  const words = analyze(input.value).words;
+  const pct = Math.min(100, Math.round((words / goal) * 100));
+  goalFill.style.width = `${pct}%`;
+  goalFill.style.background = pct >= 100 ? '#7ce0ae' : 'var(--acc)';
+  goalBar.setAttribute('aria-valuenow', String(pct));
+  goalBar.setAttribute('aria-label', `Word goal progress: ${words} of ${goal} words`);
+  goalPct.textContent = `${words} / ${goal} · ${pct}%`;
+}
+goalInput.addEventListener('input', renderGoal);
+input.addEventListener('input', renderGoal);
+renderGoal();
+
+/* ---- copy the whole card set as Markdown — numbers go where the writing goes ---- */
+const btnCopyStats = document.createElement('button');
+btnCopyStats.className = 'btn';
+btnCopyStats.textContent = '⧉ Copy stats as Markdown';
+btnCopyStats.style.marginTop = '10px';
+$('#keywords').closest('.panel')?.querySelector('h2')?.before(btnCopyStats);
+btnCopyStats.addEventListener('click', async () => {
+  const s = analyze(input.value);
+  const lines = [
+    '| Metric | Value |', '|---|---|',
+    ...CARD_DEFS.map(([k, label, fmt]) => `| ${label} | ${fmt(s[k])} |`),
+  ];
+  const ok = await copyTextToClipboard(lines.join('\n'));
+  toast(ok ? 'Stats table copied — paste into any doc' : 'Copy blocked by the browser');
+});
 
 onDrop($('#dz'), async (files) => {
   const f = files[0];

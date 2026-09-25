@@ -2,7 +2,7 @@
  * Generation renders to canvas at the requested pixel size (nearest-neighbor,
  * so modules stay perfectly square); decoding reuses the shared file→canvas
  * helpers and samples pixels for jsQR. Nothing leaves the tab. */
-import { $, onDrop, download, status, canvasBlob, fileToCanvas, onKey } from '../lib/dom';
+import { $, onDrop, download, status, canvasBlob, fileToCanvas, onKey, bindCopyButton, toast } from '../lib/dom';
 import qrcode from 'qrcode-generator';
 import jsQR from 'jsqr';
 
@@ -119,6 +119,7 @@ btnMake.addEventListener('click', () => {
     btnPng.disabled = false;
     btnSvgDl.disabled = false;
     qrMeta.textContent = `${count}×${count} modules · error correction ${ec} · ${size}px`;
+    pushHistory(text, ec);
     status(qrStat, `QR generated locally — ${text.length} characters encoded.`, 'ok');
   } catch (e) {
     status(qrStat, `Could not encode that content: ${(e as Error).message}`, 'err');
@@ -132,6 +133,76 @@ btnPng.addEventListener('click', async () => {
 btnSvgDl.addEventListener('click', () => {
   download(new Blob([lastSvg], { type: 'image/svg+xml' }), lastPngName.replace(/\.png$/, '.svg'));
 });
+
+/* Copy PNG straight to the clipboard — for chats and docs where an attached
+ * file is friction and a pasted image is not. Enabled exactly when the PNG
+ * download is. */
+const btnCopy = document.createElement('button');
+btnCopy.id = 'qrCopyPng';
+btnCopy.className = 'btn';
+btnCopy.textContent = '⧉ Copy PNG';
+btnCopy.disabled = true;
+btnPng.after(btnCopy);
+bindCopyButton(btnCopy, () => canvasBlob(qrCanvas, 'image/png'), 'QR PNG copied — paste it anywhere');
+new MutationObserver(() => { btnCopy.disabled = qrOut.hidden || btnPng.disabled; })
+  .observe(qrOut, { attributes: true, attributeFilter: ['hidden'] });
+
+/* ---- session history: every QR generated this visit, re-usable ----
+ * Generating a second QR silently destroying the first is the classic
+ * single-buffer tool mistake. The history strip keeps them all: click to
+ * restore the payload + settings, copy or download from any thumbnail. */
+interface HistEntry { text: string; dataUrl: string; png: Blob; name: string; }
+const hist: HistEntry[] = [];
+const histPanel = document.createElement('div');
+histPanel.className = 'panel';
+histPanel.hidden = true;
+histPanel.innerHTML = '<h2 style="margin:0 0 8px;font-size:16px">This session\'s codes <span class="meta">(kept only on this page — leave and they are gone)</span></h2><div id="qrHistRow" class="kw-row"></div>';
+qrOut.closest('.panel')?.after(histPanel);
+const histRow = histPanel.querySelector('#qrHistRow') as HTMLElement;
+
+function pushHistory(text: string, ec: string): void {
+  qrCanvas.toBlob(async (b) => {
+    if (!b) return;
+    const entry: HistEntry = { text, dataUrl: qrCanvas.toDataURL('image/png'), png: b, name: 'qr-' + slug(text) + '.png' };
+    hist.unshift(entry);
+    if (hist.length > 12) hist.pop();
+    renderHistory();
+  });
+}
+
+function renderHistory(): void {
+  histPanel.hidden = hist.length === 0;
+  histRow.innerHTML = '';
+  for (const h of hist) {
+    const cell = document.createElement('div');
+    cell.className = 'kw';
+    cell.style.cssText = 'display:inline-flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:6px;';
+    const img = document.createElement('img');
+    img.src = h.dataUrl;
+    img.width = 72; img.height = 72;
+    img.alt = `QR for ${h.text}`;
+    img.style.cssText = 'border-radius:6px;background:#fff;';
+    const cap = document.createElement('span');
+    cap.className = 'meta';
+    cap.style.cssText = 'max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    cap.textContent = h.text;
+    cell.title = 'Click to restore this payload · shift-click to download';
+    cell.setAttribute('role', 'button');
+    cell.tabIndex = 0;
+    cell.setAttribute('aria-label', `Restore QR for ${h.text}`);
+    const activate = (ev: Event) => {
+      if (ev instanceof MouseEvent && ev.shiftKey) { download(h.png, h.name); return; }
+      qrText.value = h.text;
+      btnMake.click();
+      toast('Payload restored — tweak and regenerate, or shift-click a tile to download it');
+    };
+    cell.addEventListener('click', activate);
+    cell.addEventListener('keydown', (e) => { if (e.key === 'Enter') activate(e); });
+    cell.appendChild(img);
+    cell.appendChild(cap);
+    histRow.appendChild(cell);
+  }
+}
 
 function slug(s: string): string {
   return s.replace(/^[a-z]+:\/\//, '').replace(/[^\w]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).toLowerCase() || 'code';

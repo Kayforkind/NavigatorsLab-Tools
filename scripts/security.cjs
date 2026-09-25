@@ -167,7 +167,10 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
         // best-effort cookie count (httpOnly cookies can't be read from JS — but there's no server to set any)
         return { ls, ss, cookies: document.cookie };
       });
-      const knownLs = ['nl-tools-recents', 'invoice-nl', 'nl-lang', 'nl-seen-version', 'nl-billboard-v1', 'nl-expand-cards', 'workbox-precache-v2'];
+      const knownLs = ['nl-tools-recents', 'invoice-nl', 'nl-lang', 'nl-seen-version', 'nl-billboard-v1', 'nl-expand-cards', 'workbox-precache-v2',
+        // v1.5 tool features: word-goal (textstats), saved signatures (sign),
+        // invoice draft — all device-local by design, audited here by name.
+        'textstats-goal', 'sign-nl-sigs', 'invoice-nl-draft', 'invoice-nl-next'];
       const bad = [...s.ls, ...s.ss].filter((k) => !knownLs.some((w) => k.startsWith(w)));
       if (bad.length || s.cookies) storageFindings.push(`${p}: ${bad.join(',')}${s.cookies ? '+cookies' : ''}`);
     }

@@ -247,7 +247,8 @@ async function exportPdf(): Promise<void> {
     const bytes = await doc.save();
     download(new Blob([bytes as unknown as BlobPart], { type: 'application/pdf' }), `${m.no || 'invoice'}.pdf`);
     status(stat, `PDF exported (${m.items.length} items, total ${money(m.total)}).`, 'ok');
-    toast('Invoice PDF ⬇️');
+    nextDocNumber();
+    toast('Invoice PDF ⬇️ — next number ready');
   } catch (e) {
     status(stat, `Export failed: ${(e as Error).message}`, 'err');
   }
@@ -269,14 +270,63 @@ function drawLines(
   if (line) page.drawText(line, { x, y: yy, size, font, color });
 }
 
-// seed rows + defaults
+// seed rows + defaults — restored from this browser when present, because
+// a drafted invoice that vanishes on refresh is a trust-destroying event.
+// Nothing leaves the device; the draft lives in localStorage only.
+const DRAFT_KEY = 'invoice-nl-draft-v1';
+const FIELDS = ['docType', 'tpl', 'biz', 'bizSub', 'client', 'clientSub', 'docNo', 'date', 'due', 'cur', 'tax', 'disc', 'notes'] as const;
+try {
+  const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null') as Record<string, string> | null;
+  if (draft) {
+    for (const id of FIELDS) {
+      const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+      if (el && draft[id]) (el as HTMLInputElement).value = draft[id];
+    }
+  }
+} catch { /* corrupted draft — start fresh */ }
+
+function saveDraft(): void {
+  try {
+    const d: Record<string, string> = {};
+    for (const id of FIELDS) {
+      const el = document.getElementById(id) as HTMLInputElement | null;
+      d[id] = el?.value ?? '';
+    }
+    d.__items = JSON.stringify(items());
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+  } catch { /* private mode / quota — drafts are best-effort */ }
+}
+
+// auto-numbering: an untouched docNo advances INV-001 → INV-002 after export
+let docNoTouched = false;
+document.getElementById('docNo')?.addEventListener('input', () => { docNoTouched = true; });
+
+if (!draftHadValue('docNo')) {
+  const n = parseInt(localStorage.getItem('invoice-nl-next') || '1', 10);
+  ($('#docNo') as HTMLInputElement).value = `INV-${String(n).padStart(3, '0')}`;
+}
+function draftHadValue(id: string): boolean {
+  try { return !!(JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null') as Record<string, string> | null)?.[id]; } catch { return false; }
+}
+
 addItem('Example service', 2, 50);
 ($('#date') as HTMLInputElement).value = new Date().toISOString().slice(0, 10);
 render();
-// delegate: any input/select change anywhere re-renders (item rows render twice; harmless)
+
+function nextDocNumber(): void {
+  if (docNoTouched) return;
+  const cur = ($('#docNo') as HTMLInputElement).value;
+  const m = cur.match(/^(.*?)(\d+)$/);
+  if (!m) return;
+  const next = parseInt(m[2], 10) + 1;
+  ($('#docNo') as HTMLInputElement).value = `${m[1]}${String(next).padStart(m[2].length, '0')}`;
+  localStorage.setItem('invoice-nl-next', String(next));
+}
+// delegate: any input/select change anywhere re-renders + saves the draft
+// (item rows render twice; harmless)
 document.addEventListener('input', (e) => {
-  if ((e.target as HTMLElement).matches?.('input, select')) render();
+  if ((e.target as HTMLElement).matches?.('input, select')) { render(); saveDraft(); }
 });
 document.addEventListener('change', (e) => {
-  if ((e.target as HTMLElement).matches?.('input, select')) render();
+  if ((e.target as HTMLElement).matches?.('input, select')) { render(); saveDraft(); }
 });

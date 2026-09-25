@@ -15,7 +15,7 @@ if ('launchQueue' in window) {
   });
 }
 
-import { $, pickFiles, onDrop, download, status, fmtBytes, toast, sha256Hex, fileToCanvas } from '../lib/dom';
+import { $, pickFiles, onDrop, download, status, fmtBytes, toast, sha256Hex, fileToCanvas, bindCopyButton, copyBlobToClipboard } from '../lib/dom';
 import { parseExif, stripExif, exifSummary, type ExifData } from '../lib/exif';
 
 interface Row { file: File; exif: ExifData | null; clean?: Blob; origHash?: string; cleanHash?: string; hashes?: string; }
@@ -115,6 +115,17 @@ function render(): void {
       h.textContent = r.hashes;
       info.appendChild(h);
     }
+    if (r.clean) {
+      // Copy the cleaned photo straight to the clipboard: the "post it now"
+      // path. Download stays for archiving; copy is for the social tab that
+      // is already open.
+      const cp = document.createElement('button');
+      cp.textContent = '⧉';
+      cp.title = 'Copy the cleaned photo to the clipboard';
+      cp.setAttribute('aria-label', `Copy cleaned ${r.file.name} to clipboard`);
+      bindCopyButton(cp, () => r.clean!, 'Cleaned image copied — paste it in your post');
+      div.appendChild(cp);
+    }
     div.appendChild(info);
     list.appendChild(div);
   }
@@ -157,10 +168,17 @@ async function stripAll(asZip: boolean): Promise<void> {
     const zblob = await zip.generateAsync({ type: 'blob' });
     download(zblob, 'clean-photos.zip');
     status(stat, `Done — ${out.length} clean photos zipped (${fmtBytes(zblob.size)}), ${gps} had GPS removed.${extraNote}${proof}`, 'ok');
+  } else if (out.length === 1) {
+    // Single photo: copy by default (posting is the common case), download
+    // too — one clean photo usually goes straight into a tab.
+    const copied = await copyBlobToClipboard(out[0].blob);
+    download(out[0].blob, out[0].name);
+    status(stat, `Done — clean photo ${copied ? 'copied to clipboard and ' : ''}downloaded, ${gps} had GPS removed.${extraNote}${proof}`, 'ok');
   } else {
     for (const o of out) download(o.blob, o.name);
     status(stat, `Done — ${out.length} clean photo${out.length === 1 ? '' : 's'} downloaded, ${gps} had GPS removed.${extraNote}${proof}`, 'ok');
   }
+  render();
   toast('Metadata stripped 🔒');
 }
 

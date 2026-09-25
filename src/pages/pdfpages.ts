@@ -14,8 +14,55 @@ interface PageItem {
 let items: PageItem[] = [];
 let dragIdx = -1;
 
+/* ---- undo/redo over page mutations ----
+ * Destructive-but-invisible operations (delete, drag, rotate) deserve an
+ * escape hatch. Snapshots are cheap: they hold references to the same
+ * canvases, not copies, so a 40-page doc snapshots in microseconds.
+ * Only structure (order/rotation/selection/existence) is captured. */
+type Snapshot = { order: PageItem[] };
+const undoStack: Snapshot[] = [];
+const redoStack: Snapshot[] = [];
+const snap = (): Snapshot => ({ order: [...items] });
+function mutate(): void {
+  undoStack.push(snap());
+  if (undoStack.length > 50) undoStack.shift();
+  redoStack.length = 0;
+}
+function undo(): void {
+  const prev = undoStack.pop();
+  if (!prev) { toast('Nothing to undo'); return; }
+  redoStack.push(snap());
+  items = prev.order;
+  render();
+  toast('Undone');
+}
+function redo(): void {
+  const next = redoStack.pop();
+  if (!next) { toast('Nothing to redo'); return; }
+  undoStack.push(snap());
+  items = next.order;
+  render();
+  toast('Redone');
+}
+
+let undoButtonsPlaced = false;
+function renderUndoButtons(): void {
+  if (!undoButtonsPlaced) { $('#rotSel').before(btnUndo, btnRedo); undoButtonsPlaced = true; }
+  btnUndo.disabled = undoStack.length === 0;
+  btnRedo.disabled = redoStack.length === 0;
+}
+
 const dz = $('#dz');
 const panel = $('#panel');
+/* Undo/redo buttons, injected next to the existing bulk actions. Wired in
+ * renderUndoButtons(), which every render() call ends with. */
+const btnUndo = document.createElement('button') as HTMLButtonElement;
+btnUndo.className = 'btn'; btnUndo.textContent = '↩ Undo'; btnUndo.title = 'Undo (Ctrl+Z)';
+const btnRedo = document.createElement('button') as HTMLButtonElement;
+btnRedo.className = 'btn'; btnRedo.textContent = '↪ Redo'; btnRedo.title = 'Redo (Ctrl+Shift+Z)';
+btnUndo.disabled = true; btnRedo.disabled = true;
+btnUndo.addEventListener('click', undo);
+btnRedo.addEventListener('click', redo);
 const pagesEl = $('#pages');
 const stat = $('#stat');
 const pageCount = $('#pageCount');
@@ -98,7 +145,7 @@ function render(): void {
     rot.className = 'pp-r';
     rot.textContent = '↻';
     rot.setAttribute('aria-label', `Rotate page ${i + 1}`);
-    rot.addEventListener('click', () => { it.rotation = (it.rotation + 90) % 360; render(); });
+    rot.addEventListener('click', () => { mutate(); it.rotation = (it.rotation + 90) % 360; render(); });
     cell.appendChild(wrap);
     cell.appendChild(rot);
     const chk = document.createElement('input');
@@ -114,6 +161,7 @@ function render(): void {
     cell.addEventListener('drop', (e) => {
       e.preventDefault();
       if (dragIdx < 0 || dragIdx === i) return;
+      mutate();
       const [moved] = items.splice(dragIdx, 1);
       items.splice(i, 0, moved);
       dragIdx = -1;
@@ -121,6 +169,7 @@ function render(): void {
     });
     pagesEl.appendChild(cell);
   });
+  renderUndoButtons();
 }
 
 pagesEl.addEventListener('dragover', (e) => e.preventDefault());
@@ -128,6 +177,7 @@ pagesEl.addEventListener('drop', (e) => {
   // drop past the last cell (on the grid itself) → move page to the end
   if (dragIdx < 0 || e.target !== pagesEl) return;
   e.preventDefault();
+  mutate();
   const [moved] = items.splice(dragIdx, 1);
   items.push(moved);
   dragIdx = -1;
@@ -146,6 +196,7 @@ $('#rotSel').addEventListener('click', () => {
 });
 
 $('#delSel').addEventListener('click', () => {
+  mutate();
   items = items.filter((it) => !it.selected);
   render();
   if (!items.length) { panel.hidden = true; status(stat, 'All pages removed. Drop PDFs to start over.', 'info'); return; }
@@ -165,10 +216,20 @@ $('#blank').addEventListener('click', () => {
   const cx = c.getContext('2d')!;
   cx.fillStyle = '#ffffff';
   cx.fillRect(0, 0, c.width, c.height);
+  mutate();
   items.splice(at + 1, 0, { docIdx: -1, srcIdxInDoc: 0, rotation: 0, canvas: c, selected: true });
   dragIdx = -1;
   render();
   status(stat, 'Blank page inserted — sized to match its neighbor.', 'ok');
+});
+
+/* Ctrl+Z / Ctrl+Shift+Z — the native reflexes, page-level. */
+document.addEventListener('keydown', (e) => {
+  const t = e.target as HTMLElement | null;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
+  else if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.key.toLowerCase() === 'y') && e.key.toLowerCase() === 'z') { e.preventDefault(); redo(); }
+  else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
 });
 
 async function rebuild(extractOnly = false): Promise<void> {

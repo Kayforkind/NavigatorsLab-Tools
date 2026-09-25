@@ -1,4 +1,4 @@
-import { $, pickFiles, onDrop, download, status, fmtBytes, fileToCanvas, canvasBlob, toast } from '../lib/dom';
+import { $, pickFiles, onDrop, download, status, fmtBytes, fileToCanvas, canvasBlob, toast, bindCopyButton } from '../lib/dom';
 
 interface Row { file: File; out?: Blob; w?: number; h?: number; }
 let batch = 0; // increments per run — lets a stale loop abort
@@ -59,6 +59,26 @@ function render(): void {
     } else info.innerHTML = base;
     div.appendChild(info);
     if (r.out) {
+      // Hold-to-compare: press to see the ORIGINAL, release for the shrunk
+      // one. The judgment "is this quality still good enough?" is a
+      // comparison, and flipping two files in a folder is the old way.
+      const cmp = document.createElement('button');
+      cmp.textContent = '👁';
+      cmp.title = 'Hold to see the original';
+      cmp.setAttribute('aria-label', `Hold to compare with original ${r.file.name}`);
+      const show = (which: 'out' | 'orig') => { img.src = URL.createObjectURL(which === 'out' ? r.out! : r.file); };
+      cmp.addEventListener('pointerdown', () => show('orig'));
+      cmp.addEventListener('pointerup', () => show('out'));
+      cmp.addEventListener('pointerleave', () => show('out'));
+      cmp.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') show('orig'); });
+      cmp.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') show('out'); });
+      div.appendChild(cmp);
+      const cp = document.createElement('button');
+      cp.textContent = '⧉';
+      cp.title = 'Copy this image to the clipboard';
+      cp.setAttribute('aria-label', `Copy shrunk ${r.file.name} to clipboard`);
+      bindCopyButton(cp, () => r.out!, 'Image copied — paste it anywhere');
+      div.appendChild(cp);
       const b = document.createElement('button');
       b.textContent = '⬇️';
       b.title = 'Download this one';
