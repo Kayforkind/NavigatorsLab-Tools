@@ -514,7 +514,10 @@ def main():
             continue
         slug = SLUGS[t['id']]
         d = os.path.join(OUT, slug)
-        if os.path.isdir(os.path.join(d, '.git')):
+        if os.path.isdir(d):
+            # Re-run into an existing output: clean everything (preserving a
+            # local .git if the operator keeps one there) so engine copytree
+            # cannot hit FileExistsError on the second run.
             for name in os.listdir(d):
                 if name != '.git':
                     p = os.path.join(d, name)
