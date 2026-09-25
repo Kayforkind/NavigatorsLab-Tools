@@ -12,7 +12,7 @@ export const PROTOCOL_VERSION = '2025-06-18';
 
 export const AGENT_INFO = {
   name: 'navigatorslab-tools',
-  version: '1.4.0',
+  version: '1.8.0',
   title: 'NavigatorsLab Tools',
   description: 'Sixteen private, in-browser tools — fifteen file utilities plus Reimagine, the HTML redesign engine. Zero uploads, zero accounts.',
   instructions:

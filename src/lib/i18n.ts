@@ -102,9 +102,9 @@ const DICT: Record<string, Record<Lang, string>> = {
   },
   'vs.title': { en: "Same tools you'd pay for — without the catch", tr: 'Para ödediğiniz araçlar — aynıları, sürprizsiz', de: 'Tools, für die Sie zahlen — ohne den Haken' },
   'vs.sub': {
-    en: "The tools you know, minus the uploads, accounts, watermarks, and monthly fees. And unlike them, this suite is verified — every release runs a 92+ check gate that drops real files in and validates the downloaded bytes.",
-    tr: 'Bildiğiniz araçlar; yükleme, hesap, filigran ve abonelik olmadan. Üstelik doğrulanmış: her sürüm, gerçek dosyalarla 92+ kontrolü olan bir kapıdan geçer.',
-    de: 'Die bekannten Tools ohne Uploads, Konten, Wasserzeichen und Abo-Gebühren. Und verifiziert: Jede Version durchläuft eine Prüfung mit 92+ Checks und echten Dateien.',
+    en: "The tools you know, minus the uploads, accounts, watermarks, and monthly fees. And unlike them, this suite is verified — every release runs a 150+ check gate that drops real files in and validates the downloaded bytes.",
+    tr: 'Bildiğiniz araçlar; yükleme, hesap, filigran ve abonelik olmadan. Üstelik doğrulanmış: her sürüm, gerçek dosyalarla 150+ kontrolü olan bir kapıdan geçer.',
+    de: 'Die bekannten Tools ohne Uploads, Konten, Wasserzeichen und Abo-Gebühren. Und verifiziert: Jede Version durchläuft eine Prüfung mit 150+ Checks und echten Dateien.',
   },
 };
 

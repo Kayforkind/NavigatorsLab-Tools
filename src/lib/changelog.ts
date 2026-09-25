@@ -1,7 +1,7 @@
 /* In-app changelog: versions newest-first. Bump VERSION when shipping user-visible
  * changes; returning users get a "what's new" toast listing entries newer than
  * the last version they saw. localStorage only — no analytics, as always. */
-export const VERSION = '1.7.0';
+export const VERSION = '1.8.0';
 
 interface Entry {
   version: string;
@@ -10,6 +10,18 @@ interface Entry {
 }
 
 export const CHANGELOG: Entry[] = [
+  {
+    version: '1.8.0',
+    date: 'September 2026',
+    items: [
+      '📋 New: Copy sits beside every Download — cleaned photos, QR PNGs, OCR CSVs and Text Stats (as Markdown) go straight to the clipboard',
+      '↩️ New: undo & redo in PDF Pages, on Ctrl+Z / Ctrl+Shift+Z and buttons — deleting a page is reversible now',
+      '💾 New: your work survives a refresh — the invoice draft and next invoice number, the last six signatures, the QR session gallery and your reading goal all stay on your device',
+      '🔍 New: hold-to-compare in Image Shrinker — press and hold to see the original while you judge the shrunk version',
+      '⌨️ New: press ? on any page for a keyboard cheat-sheet (Esc closes it; g then h / a / s jump to hub / agents / status)',
+      '🔊 New: screen readers now hear results — one polite live region per page announces every output and every error',
+    ],
+  },
   {
     version: '1.7.0',
     date: 'September 2026',
