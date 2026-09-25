@@ -701,6 +701,9 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .foot-note { color: #9aa4b8; font-size: .85rem; margin-top: 14px; }
 .foot-note code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 4px; }
 @media (max-width: 640px) {
-  .status-row { grid-template-columns: 1.6rem 1fr; grid-auto-rows: auto; }
+  .status-row { grid-template-columns: 1.6rem minmax(0, 1fr); grid-auto-rows: auto; }
   .status-row .sr-pretty, .status-row .sr-method, .status-row .sr-when { grid-column: 2; }
+  /* The GitHub URL is one unbreakable token — it must be allowed to wrap,
+   * or its min-content width floors the 1fr track and overflows 390px. */
+  .status-row .sr-pretty { overflow-wrap: anywhere; }
 }
