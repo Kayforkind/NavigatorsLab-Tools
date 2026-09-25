@@ -53,5 +53,5 @@ jobs:
             exit 0
           fi
           npm run build
-          mkdir -p deploy && cp -r dist deploy/tools && cp wrangler.tools.jsonc deploy/wrangler.jsonc && cp worker.js deploy/ && cp src/lib/mcp.ts deploy/
+          npm run deploy:stage
           cd deploy && npx wrangler deploy
