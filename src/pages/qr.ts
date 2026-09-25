@@ -2,7 +2,7 @@
  * Generation renders to canvas at the requested pixel size (nearest-neighbor,
  * so modules stay perfectly square); decoding reuses the shared file→canvas
  * helpers and samples pixels for jsQR. Nothing leaves the tab. */
-import { $, onDrop, download, status, canvasBlob, fileToCanvas } from '../lib/dom';
+import { $, onDrop, download, status, canvasBlob, fileToCanvas, onKey } from '../lib/dom';
 import qrcode from 'qrcode-generator';
 import jsQR from 'jsqr';
 
@@ -52,6 +52,10 @@ const qrFg = $('#qrFg') as HTMLInputElement;
 const qrBg = $('#qrBg') as HTMLInputElement;
 const qrQuiet = $('#qrQuiet') as HTMLInputElement;
 const btnMake = $('#qrMake') as HTMLButtonElement;
+
+// Page shortcuts: m = generate, d = decode tab (announced via the shared layer)
+onKey('m', 'Generate a QR from the current text', () => { $('#tabMake').click(); btnMake.click(); });
+onKey('d', 'Switch to decode-an-image', () => $('#tabRead').click());
 const btnPng = $('#qrPng') as HTMLButtonElement;
 const btnSvgDl = $('#qrSvgDl') as HTMLButtonElement;
 const qrOut = $('#qrOut');
@@ -143,7 +147,7 @@ const qrOpen = $('#qrOpen') as HTMLButtonElement;
 const qrReadMeta = $('#qrReadMeta');
 const qrReadStat = $('#qrReadStat');
 
-onDrop(qrDz, (files) => { if (files[0]) void decode(files[0]); });
+onDrop(qrDz, (files) => { if (files[0]) void decode(files[0]); }, { accept: 'image/*', multiple: false });
 qrDz.addEventListener('click', async () => {
   const inp = document.createElement('input');
   inp.type = 'file';

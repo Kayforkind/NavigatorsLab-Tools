@@ -16,7 +16,7 @@ const btnSort = $('#sort') as HTMLButtonElement;
 const btnPdf = $('#pdf') as HTMLButtonElement;
 
 dz.addEventListener('click', () => void pickAndAdd());
-onDrop(dz, (files) => void add(files));
+onDrop(dz, (files) => void add(files), { accept: 'image/*' });
 btnSort.addEventListener('click', () => {
   rows.sort((a, b) => (a.date?.getTime() ?? Infinity) - (b.date?.getTime() ?? Infinity));
   render();

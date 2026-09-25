@@ -21,7 +21,7 @@ for (const [el, ta2] of [[ta, ta], [tb, tb]] as const) {
     const f = files[0];
     if (!f) return;
     try { ta2.value = await f.text(); } catch { /* binary or unreadable */ }
-  });
+  }, { accept: 'text/plain,.txt,.md,.json,.csv,.tsv,.html,.xml,.js,.ts,.css', multiple: false });
 }
 
 btnDiff.addEventListener('click', () => {

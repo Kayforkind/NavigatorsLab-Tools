@@ -20,7 +20,7 @@ const SIZES: Record<string, [number, number]> = {
 };
 
 dz.addEventListener('click', () => void pickAndAdd());
-onDrop(dz, (files) => void add(files));
+onDrop(dz, (files) => void add(files), { accept: 'image/*' });
 btnPdf.addEventListener('click', () => void exportPdf());
 btnPngs.addEventListener('click', () => { for (const r of rows) if (r.canvas) void savePng(r); });
 $('#prep').addEventListener('click', () => void prep());

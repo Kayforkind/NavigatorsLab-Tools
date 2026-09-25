@@ -11,7 +11,7 @@ const btnZip = $('#zip') as HTMLButtonElement;
 const btnEach = $('#each') as HTMLButtonElement;
 
 dz.addEventListener('click', () => void pickAndAdd());
-onDrop(dz, (files) => void add(files));
+onDrop(dz, (files) => void add(files), { accept: 'image/*,.txt,.md,.pdf,.docx,.xlsx' });
 $('#slugSrc').addEventListener('change', () => {
   ($('#slugText') as HTMLInputElement).hidden = ($('#slugSrc') as HTMLSelectElement).value !== 'fixed';
 });

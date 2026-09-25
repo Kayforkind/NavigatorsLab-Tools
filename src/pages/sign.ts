@@ -121,7 +121,7 @@ useSig.addEventListener('click', async () => {
 });
 
 dz.addEventListener('click', () => void pickPdf());
-onDrop(dz, (files) => { const f = files[0]; if (f) void loadPdf(f); });
+onDrop(dz, (files) => { const f = files[0]; if (f) void loadPdf(f); }, { accept: 'application/pdf', multiple: false });
 
 async function pickPdf(): Promise<void> {
   const [f] = await pickFiles('application/pdf,.pdf', { multiple: false });

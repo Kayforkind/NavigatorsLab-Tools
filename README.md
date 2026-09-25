@@ -75,11 +75,14 @@ Prefer a standalone repo? Each tool has its own home — every one links straigh
 
 ---
 
-## What the tools can do — v1.3 highlights
+## What the tools can do — v1.4 highlights
 
-Every claim below is exercised by the automated gate (28 E2E checks, 82 unit tests, 25 security checks — all at the production URL shape). Not marketing — test results.
+Every claim below is exercised by the automated gate (38 E2E checks, 84 unit tests, 28 security checks — all at the production URL shape). Not marketing — test results.
 
 - **Everything accepts paste.** Ctrl/Cmd+V a screenshot or copied file on any tool page and it lands in the drop zone. Snip → paste → done.
+- **Fully keyboard-driven.** Every drop zone is a real tab stop: Enter/Space opens the file picker with the tool's own constraints (PDF-only for Sign, single-file for QR decode, `image/*` batches for Shrink). Press **?** on any page for the live cheat-sheet; **g h** hops to the hub, **g a** to agent docs, **g s** to status. QR Studio adds **m** (make) and **d** (decode tab).
+- **Screen readers hear the results.** Every tool's status line routes through one polite aria-live region (WCAG 2.2 4.1.3), so "12 photos cleaned, 3.1 MB saved" is announced, not just painted.
+- Drop zones carry real semantics now: `role=button`, labels, visible focus — and native controls (the text tools' textareas) keep theirs.
 - **Photo Privacy Kit** strips GPS/camera/timestamps and now shows **SHA-256 fingerprints** of original vs. cleaned files — cryptographic proof that "same picture, minus the metadata" (the E2E suite verifies pixel-identical output). Paste support means screenshots get scrubbed in two keystrokes.
 - **Image Shrinker** targets an exact byte size via binary-searched quality in **JPG, WebP or AVIF**, streams per-file progress, survives unreadable images, and zips multi-file batches.
 - **Scan & Screenshot Cleaner** gained **auto-levels** (content-aware black/white point stretch) and **threshold** (pure photocopy black-on-white), alongside auto-straighten, fit-to-view crop, and 300 DPI PDF export.

@@ -45,7 +45,7 @@ btnHash.addEventListener('click', async () => {
   status(stat, 'Fingerprints shown — attach these when you send the files so the recipient can verify them.', 'ok');
 });
 
-onDrop(dz, (files) => void scan(files));
+onDrop(dz, (files) => void scan(files), { accept: 'image/jpeg,image/png,image/webp' });
 
 async function pickAndScan(): Promise<void> {
   const files = await pickFiles('image/*');

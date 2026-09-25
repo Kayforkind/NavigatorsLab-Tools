@@ -53,7 +53,7 @@ async function getWorker(): Promise<import('tesseract.js').Worker> {
 /* ---------- flow ---------- */
 
 dz.addEventListener('click', () => void pickAndRun());
-onDrop(dz, (files) => void run(files));
+onDrop(dz, (files) => void run(files), { accept: 'image/*' });
 btnCsv.addEventListener('click', exportCsv);
 
 async function pickAndRun(): Promise<void> {

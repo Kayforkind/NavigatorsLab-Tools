@@ -18,7 +18,7 @@ const btnStrip = $('#stripAll') as HTMLButtonElement;
 const btnZip = $('#rezip') as HTMLButtonElement;
 
 dz.addEventListener('click', () => void pickAndScan());
-onDrop(dz, (files) => void scan(files));
+onDrop(dz, (files) => void scan(files), { accept: 'image/*,application/pdf,.docx,.xlsx,.pptx,.odt' });
 btnStrip.addEventListener('click', () => void stripAll(false));
 btnZip.addEventListener('click', () => void stripAll(true));
 

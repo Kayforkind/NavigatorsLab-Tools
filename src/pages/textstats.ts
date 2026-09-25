@@ -82,7 +82,7 @@ onDrop($('#dz'), async (files) => {
     input.value = await f.text();
     render();
   } catch { /* unreadable */ }
-});
+}, { accept: 'text/plain,.txt,.md', multiple: false });
 
 /* ---- agent mode: ?url=<same-origin text URL> analyzes the file ---- */
 import { fetchFileParam, agentBanner } from '../lib/agent';

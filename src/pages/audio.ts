@@ -23,7 +23,7 @@ let sel = { a: 0, b: 0 };
 let dragging: 'a' | 'b' | null = null;
 
 dz.addEventListener('click', () => void pick());
-onDrop(dz, (files) => { const f = files[0]; if (f) void load(f); });
+onDrop(dz, (files) => { const f = files[0]; if (f) void load(f); }, { accept: 'audio/*' });
 fmt.addEventListener('change', () => { brWrap.hidden = fmt.value !== 'mp3'; });
 playBtn.addEventListener('click', () => void playSel());
 stopBtn.addEventListener('click', stop);

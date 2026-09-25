@@ -24,7 +24,7 @@ dz.addEventListener('click', async () => {
   const files = await pickFiles('application/pdf,.pdf', { multiple: true });
   if (files.length) await load(files);
 });
-onDrop(dz, (files) => { if (files.length) void load(files); });
+onDrop(dz, (files) => { if (files.length) void load(files); }, { accept: 'application/pdf' });
 
 async function load(files: File[]): Promise<void> {
   status(stat, 'Rendering pages…', 'info');

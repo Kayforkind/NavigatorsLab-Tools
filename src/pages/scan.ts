@@ -19,7 +19,7 @@ let dragStart: { x: number; y: number } | null = null;
 let cropRect: { x: number; y: number; w: number; h: number } | null = null;
 
 dz.addEventListener('click', () => void pickAndAdd());
-onDrop(dz, (files) => void add(files));
+onDrop(dz, (files) => void add(files), { accept: 'image/*' });
 $('#prev').addEventListener('click', () => { if (pages.length) { idx = (idx - 1 + pages.length) % pages.length; show(); } });
 $('#next').addEventListener('click', () => { if (pages.length) { idx = (idx + 1) % pages.length; show(); } });
 $('#remove').addEventListener('click', () => {

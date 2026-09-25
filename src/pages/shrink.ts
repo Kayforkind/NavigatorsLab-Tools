@@ -18,7 +18,7 @@ const maxW = $('#maxW') as HTMLInputElement;
 const fmt = $('#fmt') as HTMLSelectElement;
 
 dz.addEventListener('click', () => void pickAndAdd());
-onDrop(dz, (files) => void add(files));
+onDrop(dz, (files) => void add(files), { accept: 'image/*' });
 mode.addEventListener('change', () => {
   targetWrap.hidden = mode.value !== 'target';
   qualityWrap.hidden = mode.value !== 'quality';
