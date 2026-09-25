@@ -678,17 +678,25 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 /* ---------- status page ---------- */
 .status-rows { display: flex; flex-direction: column; gap: 8px; margin: 18px 0; }
 .status-row {
-  display: grid; grid-template-columns: 2rem 1fr 1.2fr auto auto; gap: 10px;
+  /* minmax(0, …) lets the text tracks shrink below their min-content on
+   * narrow viewports: plain 1fr floors at the longest unbreakable word,
+   * which overflowed mobile by ~17px under Linux font metrics. */
+  display: grid; grid-template-columns: 2rem minmax(0, 1fr) minmax(0, 1.2fr) auto auto; gap: 10px;
   align-items: center; padding: 10px 14px; border-radius: 10px;
   background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
   font-size: .92rem;
 }
-.status-row .sr-name { font-weight: 600; color: var(--fg, #e8ecf4); text-decoration: none; }
+.status-row .sr-name { font-weight: 600; color: var(--fg, #e8ecf4); text-decoration: none; overflow-wrap: anywhere; }
 .status-row .sr-name:hover { text-decoration: underline; }
 .status-row .sr-pretty { color: #7aa2ff; text-decoration: none; font-family: ui-monospace, monospace; font-size: .85rem; }
 .status-row .sr-pretty:hover { text-decoration: underline; }
-.status-row .sr-method { color: #9aa4b8; font-size: .8rem; }
+.status-row .sr-method { color: #9aa4b8; font-size: .8rem; overflow-wrap: anywhere; }
 .status-row .sr-when { color: #6b7488; font-size: .78rem; white-space: nowrap; }
+@media (max-width: 560px) {
+  .status-row { grid-template-columns: 2rem minmax(0, 1fr) auto; }
+  .status-row .sr-method { grid-column: 2 / 4; }
+  .status-row .sr-when { grid-column: 2 / 4; white-space: normal; }
+}
 .status-row.probe { border-style: dashed; }
 .foot-note { color: #9aa4b8; font-size: .85rem; margin-top: 14px; }
 .foot-note code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 4px; }
