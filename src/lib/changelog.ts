@@ -1,7 +1,7 @@
 /* In-app changelog: versions newest-first. Bump VERSION when shipping user-visible
  * changes; returning users get a "what's new" toast listing entries newer than
  * the last version they saw. localStorage only — no analytics, as always. */
-export const VERSION = '1.8.0';
+export const VERSION = '1.9.0';
 
 interface Entry {
   version: string;
@@ -10,6 +10,13 @@ interface Entry {
 }
 
 export const CHANGELOG: Entry[] = [
+  {
+    version: '1.9.0',
+    date: 'September 2026',
+    items: [
+      '🔐 New: Password Breach Checker — check any password against 800M+ breached credentials. K-anonymous: only 5 SHA-1 characters leave the browser; the password itself never does',
+    ],
+  },
   {
     version: '1.8.0',
     date: 'September 2026',

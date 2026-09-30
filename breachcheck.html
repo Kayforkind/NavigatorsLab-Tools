@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Password Breach Checker — have I been pwned? — NavigatorsLab Tools</title>
+  <meta name="description" content="Check if a password has appeared in a known data breach — the password itself never leaves your browser. Powered by Have I Been Pwned's k-anonymity API." />
+  <meta name="theme-color" content="#0b0f17" />
+  <meta property="og:title" content="Password Breach Checker — NavigatorsLab Tools" />
+  <meta property="og:description" content="Check a password against known data breaches. Your password never leaves this tab." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://navigatorslab.com/tools/og-breachcheck.png" />
+  <meta property="og:url" content="https://navigatorslab.com/tools/breachcheck" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Password Breach Checker — NavigatorsLab Tools" />
+  <meta name="twitter:description" content="Check a password against known data breaches. Your password never leaves this tab." />
+  <meta name="twitter:image" content="https://navigatorslab.com/tools/og-breachcheck.png" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>" />
+</head>
+<body>
+  <header class="nl-top">
+    <a class="brand" href="./index.html">🧭 NavigatorsLab <b>Tools</b></a>
+    <span class="spacer"></span>
+    <a class="plain" href="./index.html">← All tools</a>
+  </header>
+
+  <main class="wrap">
+    <h1>🔐 Password Breach Checker</h1>
+    <p class="sub">
+      Type a password to see whether it has shown up in a known data breach.
+      The password itself <strong>never leaves this tab</strong> — only the first
+      5 characters of its SHA-1 hash are sent, and the full hash never travels the network.
+    </p>
+
+    <div class="panel">
+      <label for="pwInput">Password to check</label>
+      <div style="display:flex; gap:8px; align-items:stretch; flex-wrap:wrap">
+        <input id="pwInput" type="password" autocomplete="new-password" autocapitalize="off"
+               spellcheck="false" placeholder="Type or paste a password…"
+               style="flex:1 1 260px; font-size:17px" />
+        <button id="btnShow" type="button" aria-pressed="false" title="Show / hide the password">👁 Show</button>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap">
+        <button id="btnCheck" type="button" class="btn-hero primary">Check for breaches</button>
+        <button id="btnClear" type="button">Clear</button>
+      </div>
+      <p class="meta" id="hint" style="margin:10px 0 0">Press <kbd>Enter</kbd> to check. Nothing is stored — clearing the field erases it from memory.</p>
+    </div>
+
+    <div class="panel" id="resultPanel" hidden>
+      <h2>Result</h2>
+      <div id="verdict" style="font-size:20px; font-weight:700; margin:6px 0 10px"></div>
+      <p class="meta" id="resultDetail" style="margin:0"></p>
+      <p class="meta" id="resultHash" style="margin:8px 0 0; font-family:ui-monospace,monospace; font-size:12.5px; word-break:break-all"></p>
+    </div>
+
+    <div class="panel">
+      <h2>How your password stays private</h2>
+      <ol style="margin:8px 0 0; padding-left:22px; line-height:1.65; color:var(--mut); font-size:14.5px">
+        <li>Your browser hashes the password with <strong style="color:var(--txt)">SHA-1</strong> — on your device, in milliseconds.</li>
+        <li>Only the <strong style="color:var(--txt)">first 5 characters</strong> of that hash are sent to
+          <code>api.pwnedpasswords.com</code> (the free
+          <a href="https://haveibeenpwned.com/API/v3#PwnedPasswords">Have&nbsp;I&nbsp;Been&nbsp;Pwned</a>
+          range API — no key, no account).</li>
+        <li>The API returns <strong style="color:var(--txt)">every</strong> breached hash suffix starting with those
+          5 characters (typically hundreds to a few thousand candidates). Your browser compares them <strong style="color:var(--txt)">locally</strong>.</li>
+        <li>The full password — and even the full hash — <strong style="color:var(--txt)">never leaves this tab</strong>.
+          The 5-character prefix narrows the field to roughly 1 in 500 breached passwords: far too coarse to
+          identify your password on its own, but it does tell anyone observing the request which 5 characters
+          your hash starts with. That is the deliberate, minimal trade this check makes.</li>
+      </ol>
+      <p class="meta" style="margin:12px 0 0">
+        “Not found” means the password isn't in the public breach corpus — it doesn't guarantee the password is
+        strong. Prefer a password manager and a unique password per site.
+      </p>
+    </div>
+
+    <p id="live" class="meta" aria-hidden="true"></p>
+  </main>
+
+  <footer class="nl-foot">
+    <span>🔒 runs entirely in your browser — nothing is uploaded or stored; the only network call is the 5-character hash prefix when you press Check</span>
+    <span>·</span>
+    <span>Breach data: <a href="https://haveibeenpwned.com/">Have I Been Pwned</a></span>
+    <span>·</span>
+    <a href="https://github.com/Kayforkind/NavigatorsLab-Tools">GitHub</a>
+    <span>·</span>
+    <a href="./index.html">All tools</a>
+  </footer>
+  <script type="module" src="/src/pages/breachcheck.ts"></script>
+</body>
+</html>

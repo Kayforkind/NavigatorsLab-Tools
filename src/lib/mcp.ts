@@ -12,7 +12,7 @@ export const PROTOCOL_VERSION = '2025-06-18';
 
 export const AGENT_INFO = {
   name: 'navigatorslab-tools',
-  version: '1.8.0',
+  version: '1.9.0',
   title: 'NavigatorsLab Tools',
   description: 'Sixteen private, in-browser tools — fifteen file utilities plus Reimagine, the HTML redesign engine. Zero uploads, zero accounts.',
   instructions:
@@ -321,6 +321,7 @@ const CATALOG = [
   { id: 'textdiff', name: 'Text Diff', url: 'https://navigatorslab.com/tools/textdiff.html', agent_params: '?a=<text-url>&b=<text-url>', files: 'any text', what: 'line diff, word-level highlights, similarity %, unified diff', repo: 'https://github.com/Kayforkind/NavigatorsLab-Text-Diff' },
   { id: 'reimagine', name: 'Reimagine', url: 'https://navigatorslab.com/reimagine/', agent_params: '— (paste HTML in the page; CLI: npx reimagine-it)', files: 'html', what: 'redesign an HTML page in 17 directions from its own content — palette, motif, motion derived from the source; nothing invented', repo: 'https://github.com/Kayforkind/reimagine-it' },
   { id: 'textstats', name: 'Text Stats', url: 'https://navigatorslab.com/tools/textstats.html', agent_params: '?url=<text-url>', files: 'any text', what: 'counts, reading time, Flesch, keyword density, rhythm', repo: 'https://github.com/Kayforkind/NavigatorsLab-Text-Stats' },
+  { id: 'breachcheck', name: 'Password Breach Checker', url: 'https://navigatorslab.com/tools/breachcheck.html', agent_params: '— (UI-driven)', files: '—', what: 'check a password against 800M+ breached credentials; k-anonymous — only 5 hash chars leave the browser', repo: 'https://github.com/Kayforkind/NavigatorsLab-Tools' },
   { id: 'pdfstudio', name: 'PDF Studio', url: 'https://navigatorslab.com/pdf-studio/', agent_params: '— (open the app; CLI n/a)', files: 'pdf', what: 'edit text inside PDFs, fill forms, OCR scans, sign, redact, organize pages, diff revisions, on-device AI', repo: 'https://github.com/Kayforkind/NavigatorsLab-PDF-Studio' },
   { id: 'designhealth', name: 'Design Health', url: 'https://github.com/Kayforkind/design-health-action', agent_params: '— (GitHub Action)', files: 'html', what: '18 deterministic design-quality checks for HTML — CI gate, no LLM, no API key', repo: 'https://github.com/Kayforkind/design-health-action' },
   { id: 'skillslice', name: 'Skill Slice', url: 'https://github.com/Kayforkind/skill-slice', agent_params: '— (npx skills add)', files: 'skills', what: 'copy one Read-verified skill folder — a slice, not the pie; 12 verified chairs', repo: 'https://github.com/Kayforkind/skill-slice' },
@@ -355,6 +356,7 @@ const TOOL_ALIASES: Record<string, string> = {
   'pdf-pages': 'pdfpages', 'pdf pages': 'pdfpages',
   'text-diff': 'textdiff', 'text diff': 'textdiff',
   'text-stats': 'textstats', 'text stats': 'textstats',
+  'password-breach-checker': 'breachcheck', 'password breach checker': 'breachcheck',
 };
 
 export function resolveToolAlias(raw: string): string | null {

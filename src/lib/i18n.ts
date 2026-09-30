@@ -151,6 +151,7 @@ const TAGLINES: Record<string, Partial<Record<Lang, string>>> = {
   pdfpages: { tr: 'PDF sayfalarını yeniden sıralayın, döndürün, silin ve ayıklayın', de: 'PDF-Seiten neu anordnen, drehen, löschen und extrahieren' },
   textdiff: { tr: 'İki metni kelime seviyesinde vurgularla karşılaştırın', de: 'Zwei Texte mit Wortebene-Hervorhebung vergleichen' },
   textstats: { tr: 'Kelime, okuma süresi, okunabilirlik, anahtar kelime yoğunluğu', de: 'Wörter, Lesezeit, Lesbarkeit, Keyword-Dichte' },
+  breachcheck: { tr: 'Şifreniz çalınmış mı? — şifre bu sekmeden asla çıkmaz', de: 'Wurde Ihr Passwort geleakt? — es verlässt diesen Tab nie' },
 };
 
 export function toolTagline(id: string, fallback: string, lang: Lang = getLang()): string {

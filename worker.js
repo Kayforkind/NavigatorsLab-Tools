@@ -4,7 +4,7 @@
 import { resolvePrettyTarget } from './mcp.ts';
 const CSP =
   "default-src 'none'; script-src 'self' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; " +
-  "img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' blob: data:; " +
+  "img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' blob: data: https://api.pwnedpasswords.com; " +
   "worker-src 'self' blob:; child-src 'self' blob:; frame-ancestors 'none'; base-uri 'none'; form-action 'none'";
 
 import { handleRpc } from './mcp.ts';

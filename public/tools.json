@@ -31,6 +31,35 @@
     "pretty": "Photo-Privacy-Kit"
   },
   {
+    "id": "breachcheck",
+    "icon": "🔐",
+    "name": "Password Breach Checker",
+    "tagline": "Has this password been breached? — it never leaves your tab",
+    "detail": "Check any password against 800M+ breached credentials via Have I Been Pwned's k-anonymity API — only 5 hash characters leave the browser.",
+    "category": "privacy",
+    "keywords": "password breach pwned haveibeenpwned hibp leak check security k-anonymity",
+    "about": "Type a password; your browser hashes it with SHA-1 and sends only the first 5 characters of the hash to Have I Been Pwned's free Pwned Passwords range API. The API returns every breached hash suffix sharing that prefix — about 800 candidates — and the match happens locally, in your tab. The password itself, and even the full hash, never travel the network. A hit shows exactly how many breaches contained the password; a miss means it isn't in the public corpus (necessary, not sufficient — still prefer long, unique, manager-generated passwords).",
+    "features": [
+      "K-anonymous lookup: only 5 SHA-1 characters leave the browser — the password never does",
+      "Exact breach count per password, from the 800M+ credential Pwned Passwords corpus",
+      "Show/hide toggle, Enter-to-check, one-click clear that wipes the field from memory",
+      "Screen-reader announcements for every result; graceful handling of rate limits and outages",
+      "Zero storage — no cookies, no localStorage, nothing logged"
+    ],
+    "howto": [
+      "Type or paste the password",
+      "Press Check for breaches (or Enter)",
+      "A hit names the breach count — change that password everywhere; a miss means it's not in the public corpus"
+    ],
+    "tech": "crypto.subtle SHA-1 in the tab + Have I Been Pwned Pwned Passwords range API (free, no key, CORS-open). The single network call is a GET on a 5-character hash prefix.",
+    "goodFor": "Auditing your own passwords, checking a new password before adopting it, demonstrating why reused passwords fall first.",
+    "catLabel": "Privacy",
+    "engine": "WebCrypto SHA-1 + HIBP Pwned Passwords range API",
+    "verified": "Known-breached password returns its exact public count; k-anonymity prefix verified on the wire",
+    "page": "https://navigatorslab.com/tools/breachcheck.html",
+    "pretty": "Password-Breach-Checker"
+  },
+  {
     "id": "metadata",
     "icon": "🔍",
     "name": "Metadata & Hidden-Data Checker",

@@ -96,7 +96,7 @@ async function setFiles(page, files) {
     let swReady = true;
     try {
       // First-visit install over a real network can take a while (precache
-      // includes the poster art + all 23 pages); 30s covers production.
+      // includes the poster art + all 24 pages); 30s covers production.
       await page.waitForFunction(() => navigator.serviceWorker?.controller, { timeout: 30000 });
     } catch { swReady = false; }
     if (swReady) {
@@ -707,41 +707,103 @@ async function setFiles(page, files) {
       `format=${fmt}, targetKB=${kb} pre-applied from the URL`);
   });
 
-  /* ---------- hub: Netflix-style rails + billboard ---------- */
+  /* ---------- 25. Password Breach Checker: k-anonymous HIBP lookup ---------- */
+  await withPage(async (page) => {
+    await page.goto(`${BASE}/breachcheck.html`);
+    const apiReqs = [];
+    page.on('request', (r) => { if (r.url().includes('pwnedpasswords')) apiReqs.push(r.url()); });
+    // nothing may leave the browser before the user presses Check
+    await page.waitForTimeout(1500);
+    const silentAtLoad = apiReqs.length === 0;
+    const prefixOnly = () => apiReqs.length > 0 &&
+      apiReqs.every((u) => /^https:\/\/api\.pwnedpasswords\.com\/range\/[0-9A-F]{5}$/.test(u));
+    const readVerdict = async () => page.textContent('#verdict');
+    // known-breached password: 'password' → SHA-1 5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8
+    await page.fill('#pwInput', 'password');
+    await page.click('#btnCheck');
+    let verdict = '';
+    for (let i = 0; i < 50 && !/Found in|Not found|Check failed/i.test(verdict); i++) {
+      await page.waitForTimeout(500); verdict = await readVerdict();
+    }
+    if (verdict.includes('Found in')) {
+      // live API path: the browser itself reached api.pwnedpasswords.com
+      const count = parseInt(verdict.replace(/[^0-9]/g, ''), 10);
+      // a random high-entropy password must NOT be found
+      const rnd = 'nl-' + Math.random().toString(36).slice(2) + Date.now().toString(36) +
+        '!' + Math.random().toString(36).slice(2) + '#9';
+      await page.fill('#pwInput', rnd);
+      await page.click('#btnCheck');
+      let v2 = '';
+      for (let i = 0; i < 50 && !/Found in|Not found|Check failed/i.test(v2); i++) {
+        await page.waitForTimeout(500); v2 = await readVerdict();
+      }
+      await snap(page, 'breachcheck');
+      report('breachcheck', silentAtLoad && count > 50000000 &&
+        v2.includes('Not found') && apiReqs.length === 2 && prefixOnly(),
+        `silent until Check (${silentAtLoad}); 'password' → ${count.toLocaleString()} breaches; random pw → not found; ${apiReqs.length} range calls, all 5-char-prefix`);
+    } else {
+      // offline env (e.g. a dev VM whose test browser can't use the egress
+      // proxy): the attempted request must still be prefix-only, and the UI
+      // must show the honest unreachable message, not crash or misreport.
+      const detail = await page.textContent('#resultDetail');
+      await snap(page, 'breachcheck');
+      report('breachcheck', silentAtLoad && /Could not reach the breach API/.test(detail) && prefixOnly(),
+        `OFFLINE-ENV: silent until Check (${silentAtLoad}); attempted ${apiReqs[0] || 'no URL'} (prefix-only: ${prefixOnly()}); honest unreachable message, no misreport as "not found"`);
+    }
+    await page.screenshot({ path: path.join(SHOTS, '25-breachcheck.png') });
+  });
+
+  /* ---------- hub: redesigned landing page (approved 2026-09-27) ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
-    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 23, { timeout: 15000 });
-    const cards = await page.locator('#grid .cards').count();
+    await page.waitForSelector('.ex-grid .card', { timeout: 15000 });
+    const hero = await page.evaluate(() => ({
+      title: document.title.includes('24'),
+      eyebrow: document.querySelector('.eyebrow')?.textContent || '',
+      cards: document.querySelectorAll('.ex-grid .card').length,
+      breachCta: document.querySelector('.ex-grid .card a[href="./breachcheck.html"]')?.getAttribute('href') || '',
+      statCount: document.querySelector('.stat [data-count]')?.getAttribute('data-count'),
+      faqItems: document.querySelectorAll('.faq-item').length,
+    }));
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', cards === 23, `${cards} project cards on the Netflix-style hub (tools.json-driven; every public Kayforkind project)`);
-    // cards must be VISIBLE after scrolling into view, not just present — the
-    // scroll-reveal observer adds .in (opacity 1); a lost observer leaves every
-    // card at opacity 0 forever (regression)
-    const cardOpacity = await page.evaluate(async () => {
-      const c = document.querySelector('#grid .cards');
-      if (!c) return 'none';
-      c.scrollIntoView({ block: 'center' });
-      await new Promise((r) => setTimeout(r, 700));
-      return getComputedStyle(c).opacity;
+    report('hub', hero.title && hero.eyebrow.includes('24') && hero.cards === 7 &&
+      hero.breachCta === './breachcheck.html' && hero.statCount === '24' && hero.faqItems >= 5,
+      `title/eyebrow say 24, ${hero.cards} example cards incl. breach-checker CTA, stat counts to 24, ${hero.faqItems} FAQ items`);
+    // scroll-reveal: the .rv observer adds .in (opacity 1); a lost observer
+    // leaves every card at opacity 0 forever (regression). The opacity
+    // transition runs 0.8s, so poll until it settles rather than asserting
+    // an exact value mid-flight.
+    const revealed = await page.evaluate(async () => {
+      const el = document.querySelector('#examples .ex-grid .card');
+      el.scrollIntoView({ block: 'center' });
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 150));
+        if (el.classList.contains('in') && getComputedStyle(el).opacity === '1') return true;
+      }
+      return false;
     });
-    report('hub-cards-visible', cardOpacity === '1', `first card computed opacity after scroll is ${cardOpacity} (reveal must add .in)`);
-    const repoLinks = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('#grid .cards a.repo')).map((a) => a.href));
-    const allRepos = repoLinks.length === 23 && repoLinks.every((h) => h.startsWith('https://github.com/Kayforkind/'));
-    report('hub-repo-links', allRepos, `${repoLinks.length}/23 cards carry a GitHub repo link (all public projects)`);
-    const rails = await page.locator('.rail').count();
-    const dots = await page.locator('.bb-dot').count();
-    const art = await page.evaluate(() => document.getElementById('bbArt')?.getAttribute('src') || '');
-    report('hub-rails', rails >= 9 && dots === 23 && /og-.*\.png$/.test(art),
-      `${rails} category rails, ${dots} billboard dots, billboard art ${art}`);
+    report('hub-cards-visible', revealed, 'scroll-reveal adds .in (opacity settles at 1) to example cards on scroll');
+    // FAQ accordion opens on click
+    await page.evaluate(() => document.querySelector('#faq').scrollIntoView());
+    await page.click('.faq-item .faq-q');
+    await page.waitForTimeout(500);
+    const faqOpen = await page.evaluate(() => {
+      const a = document.querySelector('.faq-item.open .faq-a');
+      return !!a && a.style.maxHeight !== '' && parseInt(a.style.maxHeight, 10) > 0;
+    });
+    report('hub-faq', faqOpen, 'FAQ accordion expands on click');
     // card links must resolve inside the hub origin (regression: absolute
     // "page" URLs were prefixed with ./ and 404'd on production)
     const badLinks = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('#grid .cards a.poster-link')).map((a) => a.href)
+      Array.from(document.querySelectorAll('a[href]')).map((a) => a.href)
         .filter((h) => h.includes('https://') && new URL(h).pathname.includes('https://')));
     report('hub-card-links', badLinks.length === 0, badLinks.length
       ? `${badLinks.length} card links resolve to a double-origin 404: ${badLinks[0]}`
       : 'all card links resolve within the hub origin');
+    // privacy copy must name the single deliberate third-party exception
+    const cspCopy = await page.evaluate(() => document.querySelector('.privacy-panel .csp')?.textContent || '');
+    report('hub-privacy-copy', cspCopy.includes('api.pwnedpasswords.com') && !/no third-party origins, ever/i.test(cspCopy),
+      `privacy panel CSP copy names the HIBP exception: "${cspCopy.slice(0, 90)}…"`);
   });
 
   /* ---------- dedicated per-tool detail page (detail.html?id=…) ---------- */
@@ -764,7 +826,7 @@ async function setFiles(page, files) {
     await page.goto(`${BASE}/detail.html?id=nope`);
     await page.waitForSelector('.mini', { timeout: 15000 });
     const nf = await page.evaluate(() => document.querySelectorAll('.mini').length);
-    report('detail-404-catalog', nf >= 23, `unknown ?id= renders the full ${nf}-project catalog`);
+    report('detail-404-catalog', nf >= 24, `unknown ?id= renders the full ${nf}-project catalog`);
   });
 
   /* ---------- library project detail page (repo-backed, og poster art) ---------- */
@@ -782,21 +844,24 @@ async function setFiles(page, files) {
       `detail.html?id=pdfstudio: og poster art, Open→app, repo CTA present`);
   });
 
-  /* ---------- hub: search + chip filter still work on the rails ---------- */
+  /* ---------- hub: nav anchors jump to real sections ---------- */
   await withPage(async (page) => {
     await page.goto(`${BASE}/index.html`);
-    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length >= 23, { timeout: 15000 });
-    await page.fill('#search', 'shrink');
-    await page.waitForFunction(() => document.querySelectorAll('#grid .cards').length === 1, { timeout: 10000 });
-    const one = await page.locator('#grid .cards').count();
-    await page.fill('#search', '');
-    await page.click('button.chip.on'); // back to All
-    await page.click('button.chip:has-text("Privacy")');
-    await page.waitForFunction(() => {
-      const c = document.querySelectorAll('#grid .cards');
-      return c.length === 2 && Array.from(c).every((x) => x.dataset.id === 'exif' || x.dataset.id === 'metadata');
-    }, { timeout: 10000 });
-    report('hub-filter', one === 1, `search "shrink" → ${one} card; Privacy chip → 2 cards (exif + metadata)`);
+    await page.waitForSelector('#nav a[href="#examples"]', { timeout: 15000 });
+    const targets = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('#nav a[href^="#"]'))
+        .map((a) => a.getAttribute('href'))
+        .filter((h, i, arr) => h.length > 1 && arr.indexOf(h) === i)
+        .map((h) => ({ href: h, exists: !!document.querySelector(h) })));
+    const allReal = targets.length >= 3 && targets.every((t) => t.exists);
+    await page.click('#nav a[href="#examples"]');
+    await page.waitForTimeout(800);
+    const scrolled = await page.evaluate(() => {
+      const r = document.querySelector('#examples').getBoundingClientRect();
+      return r.top < innerHeight && r.bottom > 0;
+    });
+    report('hub-nav', allReal && scrolled,
+      `${targets.length} nav anchors all target real sections; #examples scrolls into view`);
   });
 
   /* ---------- hub: Reimagine has its own page + opens the playground ---------- */
