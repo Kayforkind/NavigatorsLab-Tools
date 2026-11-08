@@ -36,7 +36,62 @@
     "exampleOutputDetail": "0 EXIF/GPS/XMP/IPTC segments · Pixel SHA-256: 9f84c2...e10b (100% byte-identical image data)",
     "sampleOutputCode": "GPS: REMOVED | Camera: REMOVED | Thumbnail: REMOVED | Pixels SHA-256: IDENTICAL [OK]",
     "video": "./videos/exif.mp4",
-    "poster": "./shots/exif.jpg"
+    "poster": "./shots/exif.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Load Your Photo (Drag & Drop or Ctrl+V)",
+        "ui": "Dropzone (#dz) or Clipboard Paste",
+        "narration": "To use Photo Privacy Kit, open exif.html and drag any JPEG, PNG, or WebP photo onto the dropzone, or press Control V to paste a screenshot.",
+        "guide": "Open Photo Privacy Kit and drag one or more JPEG, PNG, or WebP images onto the main dropzone (`#dz`), click to browse your device, or press `Ctrl+V` (`Cmd+V` on Mac) to paste directly from your clipboard.",
+        "result": "The file loads immediately into browser memory with zero network activity."
+      },
+      {
+        "title": "Step 2: Inspect the Live Metadata & GPS Leak Report",
+        "ui": "Leak Report Table (#list)",
+        "narration": "Second, review the automatic inspection report. Any embedded GPS coordinates, camera serial numbers, timestamps, and hidden preview thumbnails are flagged in red.",
+        "guide": "Read the per-file inspection row under `#list`. Red warning badges highlight high-risk leaks such as exact GPS latitude/longitude coordinates, device make/model, capture timestamps, and embedded EXIF thumbnails.",
+        "result": "Every detected EXIF, XMP, IPTC, and comment segment is listed byte-by-byte."
+      },
+      {
+        "title": "Step 3: Strip Metadata & Toggle SHA-256 Pixel Proof",
+        "ui": "Strip Button (#strip) & SHA-256 Toggle",
+        "narration": "Third, click Show SHA-256 Fingerprints if you want cryptographic pixel verification, then click Strip Metadata and Download All.",
+        "guide": "Optionally toggle **Show SHA-256 fingerprints** to display the decoded RGBA pixel hash before and after cleaning. Click **Strip metadata & download all (`#strip`)** (or **Download as .zip** for batches).",
+        "result": "The segment parser strips APP1/APP13/XMP/COM markers without re-encoding your pixels."
+      },
+      {
+        "title": "Step 4: Verify GPS CLEAR & Save Cleaned Image",
+        "ui": "Verified Output Row (GPS CLEAR)",
+        "narration": "Finally, confirm the green GPS Clear badge and matching pixel SHA-256 hash. Your cleaned photo downloads directly to your device with zero quality loss.",
+        "guide": "Verify that the status badge turns green (**GPS CLEAR — 0 metadata segments**) and that the before/after decoded pixel SHA-256 hashes match 100%.",
+        "result": "Cleaned `.clean.jpg` / `.png` / `.webp` saved locally with zero generation loss."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Dropzone (`#dz`) / `Ctrl+V`",
+        "desc": "Accepts single or batch `.jpg`, `.jpeg`, `.png`, and `.webp` files via drag-and-drop, file picker, or clipboard paste."
+      },
+      {
+        "name": "Strip metadata & download all (`#strip`)",
+        "desc": "Removes EXIF, GPS, XMP, IPTC, and comment segments from every loaded file and downloads cleaned copies."
+      },
+      {
+        "name": "Download as .zip (`#zip`)",
+        "desc": "Bundles all cleaned images into a single local `.zip` archive when processing multiple photos."
+      },
+      {
+        "name": "Show SHA-256 fingerprints (`#shaToggle`)",
+        "desc": "Computes the SHA-256 digest of the decoded pixel buffer before and after stripping to prove zero pixel alteration."
+      }
+    ],
+    "guideProTips": [
+      "Press `Ctrl+V` right after taking a system screenshot to strip OS color-profile and timestamp chunks before sharing on Slack, Discord, or GitHub issues.",
+      "Because Photo Privacy Kit strips container markers at the byte level without re-compressing JPEG blocks, your photo never suffers JPEG generation loss.",
+      "Drop a cleaned `.clean.jpg` file back into the dropzone at any time to confirm it reports `0 metadata segments`."
+    ],
+    "guideSpecs": "Formats: JPEG, PNG, WebP · Processing: 100% Client-Side Byte Parser · Network: `connect-src 'none'` (0 uploads)",
+    "videoDuration": "43s"
   },
   {
     "id": "breachcheck",
@@ -73,7 +128,62 @@
     "exampleOutputDetail": "⚠️ Found in 10,693,022 public breaches — Full password & hash never left your browser tab",
     "sampleOutputCode": "GET /range/5BAA6 -> Local suffix match: 1E4C9...8FD8:10693022 (Exposed)",
     "video": "./videos/breachcheck.mp4",
-    "poster": "./shots/breachcheck.jpg"
+    "poster": "./shots/breachcheck.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Type a Password to Test (Zero Keystrokes Sent)",
+        "ui": "Password Input (#pwInput)",
+        "narration": "To check if a password has appeared in known data breaches without ever transmitting your password, open breachcheck.html and type the password into the input box.",
+        "guide": "Type or paste the password you want to audit into `#pwInput`. Nothing leaves your browser while you type.",
+        "result": "Local entropy and offline crack-time estimates update in your tab."
+      },
+      {
+        "title": "Step 2: Click Check Breach Database to Hash Locally via WebCrypto",
+        "ui": "Check Button (#btnCheck)",
+        "narration": "Second, click Check Breach Database. Your browser computes the SHA-1 hash locally using WebCrypto and sends only the first five hex characters to Have I Been Pwned.",
+        "guide": "Click **Check (`#btnCheck`)**. The browser computes the 40-character uppercase SHA-1 digest via `crypto.subtle.digest('SHA-1')` and requests `https://api.pwnedpasswords.com/range/<5-CHAR-PREFIX>`.",
+        "result": "The remaining 35 characters of your password hash never leave your device."
+      },
+      {
+        "title": "Step 3: Read the Breach Exposure Count & Crack-Time Verdict",
+        "ui": "Verdict Banner (#verdict)",
+        "narration": "Third, read the verdict banner. The browser compares the returned hash suffixes locally in your tab and reports the exact number of breaches found.",
+        "guide": "Read `#verdict` to see whether your password matched any of the ~500 suffixes in that k-anonymity bucket, along with the total breach occurrence count.",
+        "result": "Immediate red alert if breached, or green confirmation if 0 matches found."
+      },
+      {
+        "title": "Step 4: Verify the 5-Character k-Anonymity Network Proof",
+        "ui": "k-Anonymity Proof Box (#hashProof)",
+        "narration": "Finally, inspect the Hash Proof box below to see the exact five-character prefix that was sent versus the thirty-five-character suffix kept private on your machine.",
+        "guide": "Inspect `#hashProof`, which splits your SHA-1 hash visually into the **5-char prefix sent over HTTPS** and the **35-char suffix checked locally**.",
+        "result": "Mathematical k-anonymity verification you can confirm in Browser DevTools Network tab."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Password Input (`#pwInput`)",
+        "desc": "Local password field (never transmitted; zero network requests until you click Check)."
+      },
+      {
+        "name": "Check Button (`#btnCheck`)",
+        "desc": "Triggers local WebCrypto SHA-1 hashing and the 5-char HIBP range query."
+      },
+      {
+        "name": "Verdict Banner (`#verdict`)",
+        "desc": "Displays exact breach exposure count and local entropy crack-time estimate."
+      },
+      {
+        "name": "Hash Proof (`#hashProof`)",
+        "desc": "Displays the 5-char SHA-1 prefix vs. 35-char private suffix."
+      }
+    ],
+    "guideProTips": [
+      "Open Browser DevTools (`F12` → **Network** tab) while clicking Check: you will see a single `GET https://api.pwnedpasswords.com/range/XXXXX` request containing only 5 hex characters.",
+      "Even if a password reports `Not found in breaches`, check the local entropy readout—short dictionary words with numbers are still vulnerable to offline GPU cracking.",
+      "Use a unique 16+ character passphrase or password-manager-generated string for every critical account."
+    ],
+    "guideSpecs": "Protocol: HIBP k-Anonymity Range API (`5-char SHA-1 prefix`) · Crypto: Native `SubtleCrypto` (`SHA-1`) + Local Entropy Scorer",
+    "videoDuration": "38s"
   },
   {
     "id": "metadata",
@@ -111,7 +221,58 @@
     "exampleOutputDetail": "Author, Company, Revision count, TotalTime & XMP metadata wiped; re-inspected in-browser with 0 leaks",
     "sampleOutputCode": "dc:creator: REMOVED | cp:revision: REMOVED | TotalTime: 0 | Re-check: 0 hidden fields [OK]",
     "video": "./videos/metadata.mp4",
-    "poster": "./shots/metadata.jpg"
+    "poster": "./shots/metadata.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop Documents or Images Into the Inspector",
+        "ui": "Universal Dropzone (#dz)",
+        "narration": "To inspect and clean hidden document data, open metadata.html and drop any PDF, Word DOCX, Excel XLSX, PowerPoint, OpenDocument, or image file onto the dropzone.",
+        "guide": "Drag and drop any `.pdf`, `.docx`, `.xlsx`, `.pptx`, `.odt`, `.ods`, `.odp`, `.jpg`, `.png`, or `.webp` file onto the inspector dropzone (`#dz`).",
+        "result": "The engine parses container dictionaries and ZIP XML streams locally."
+      },
+      {
+        "title": "Step 2: Review Author Names, Company & Revision History",
+        "ui": "Metadata Findings Panel (#list)",
+        "narration": "Second, examine the extracted metadata table. You will see hidden author names, company fields, revision counts, total editing minutes, software versions, and GPS tags.",
+        "guide": "Review each file card in `#list`. The inspector surfaces PDF `/Info` and `/Metadata` XMP keys, Office `docProps/core.xml` and `app.xml` fields (Creator, LastModifiedBy, Company, Revision count, TotalTime), and image EXIF tags.",
+        "result": "All hidden identity and revision fields are highlighted clearly on screen."
+      },
+      {
+        "title": "Step 3: Click Clean & Download All",
+        "ui": "Clean All Button (#stripAll)",
+        "narration": "Third, click Clean and Download All to rewrite the document container in your browser, wiping author identities, company tags, and XMP streams.",
+        "guide": "Click **Clean & download all (`#stripAll`)** (or the per-file **Clean & download** button) to scrub `/Info` dictionaries, XMP packets, and OOXML/ODF `core.xml`/`app.xml` properties.",
+        "result": "A sanitized copy of your PDF, Office document, or image is rebuilt in memory."
+      },
+      {
+        "title": "Step 4: Re-Drop to Verify Zero Hidden Fields",
+        "ui": "Cleaned Output Verification",
+        "narration": "Finally, save the cleaned file and drop it back into the inspector to verify that Author, Company, and editing time are completely gone.",
+        "guide": "Save the exported `.clean.pdf` or `.clean.docx` file and drop it back into `#dz` to confirm all identity and revision fields now read empty.",
+        "result": "Document is safe to send to clients, opposing counsel, or public portals."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "File Dropzone (`#dz`)",
+        "desc": "Accepts PDF, DOCX, XLSX, PPTX, ODT, ODS, ODP, JPEG, PNG, and WebP files."
+      },
+      {
+        "name": "Clean & download all (`#stripAll`)",
+        "desc": "Rewrites metadata dictionaries across all loaded files and triggers local download."
+      },
+      {
+        "name": "Per-File Field Table",
+        "desc": "Displays exact key/value pairs found inside `/Info`, XMP, `docProps/core.xml`, and `docProps/app.xml`."
+      }
+    ],
+    "guideProTips": [
+      "Always run Word (`.docx`) and PDF proposals through Metadata Checker before sending to clients—Word records cumulative editing minutes (`TotalTime`) and previous authors by default.",
+      "After cleaning metadata properties, remember to also check visible document body text for comments or tracked changes.",
+      "Combine with `share-safe` CLI in CI pipelines if you publish PDFs automatically from a repository."
+    ],
+    "guideSpecs": "Formats: PDF, DOCX, XLSX, PPTX, ODT/ODS/ODP, JPEG, PNG, WebP · Engine: pdf-lib + OOXML/ODF ZIP rewriter",
+    "videoDuration": "41s"
   },
   {
     "id": "shrink",
@@ -149,7 +310,62 @@
     "exampleOutputDetail": "98.1% reduction (16.0 MB → 294 KB ≤ 300 KB target) · Crisp legibility preserved · Batch ZIP ready",
     "sampleOutputCode": "Target: <=300 KB | Binary Search: q=0.50 -> q=0.72 -> q=0.68 | Output: 294,112 bytes [OK]",
     "video": "./videos/shrink.mp4",
-    "poster": "./shots/shrink.jpg"
+    "poster": "./shots/shrink.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop One or More Large Images",
+        "ui": "Batch Dropzone (#dz)",
+        "narration": "To compress images to an exact file-size limit, open shrink.html and drop your high-resolution PNG, JPEG, or WebP photos onto the dropzone.",
+        "guide": "Drop one or more large images (for example, a 16 MB camera photo or high-DPI scan) onto `#dz`, or click to select a batch from your computer.",
+        "result": "Each image's original dimensions and byte size are listed."
+      },
+      {
+        "title": "Step 2: Pick Output Format & Enter Target Kilobyte Cap",
+        "ui": "Format (#fmt) & Target Size (#targetKB)",
+        "narration": "Second, choose JPEG, WebP, or AVIF from the format menu and type your strict size ceiling into Target KB—for example, 300 kilobytes for a government portal.",
+        "guide": "Select your output format (`JPEG`, `WebP`, or `AVIF`) in `#fmt` and type your maximum allowed file size in kilobytes into `#targetKB` (e.g., `300` for a 300 KB portal limit, or `1024` for 1 MB).",
+        "result": "Target byte ceiling and encoder format are locked in (also deep-linkable via `?format=webp&targetKB=300`)."
+      },
+      {
+        "title": "Step 3: Click Shrink & Download to Binary-Search Quality",
+        "ui": "Shrink Button (#go)",
+        "narration": "Third, click Shrink and Download. The browser runs an eight-step binary search over encoder quality and resolution to land right under your cap.",
+        "guide": "Click **Shrink & download (`#go`)**. The engine binary-searches Canvas encoder quality (and gently steps down dimensions only if required) until the encoded output lands at or below your target KB.",
+        "result": "Highest possible visual quality that fits strictly beneath your byte cap."
+      },
+      {
+        "title": "Step 4: Save Individual Images or a Batch ZIP",
+        "ui": "Output List (#list) & ZIP Download",
+        "narration": "Finally, review the before and after file sizes in the results list and download your compressed image or batch ZIP.",
+        "guide": "Check the percentage reduction and exact final kilobyte count on each row in `#list`, then save individual files or click **Download all as .zip**.",
+        "result": "Every output file is guaranteed to pass strict upload size limits on the first try."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Target KB (`#targetKB`)",
+        "desc": "Exact maximum file size in kilobytes (e.g., `200`, `300`, `500`, `2000`)."
+      },
+      {
+        "name": "Output Format (`#fmt`)",
+        "desc": "Choose `image/jpeg` (universal compatibility), `image/webp` (smaller at same quality), or `image/avif`."
+      },
+      {
+        "name": "Max Dimension Cap (`#maxDim`)",
+        "desc": "Optional maximum width/height in pixels before quality binary search begins."
+      },
+      {
+        "name": "URL Deep-Link Params",
+        "desc": "Pre-fill settings via `?format=webp&targetKB=300`."
+      }
+    ],
+    "guideProTips": [
+      "For visa, passport, and government portals that require JPEG under 240 KB or 300 KB, select `JPEG` and set Target KB to `235` or `295` for a safety margin.",
+      "For web publishing and blog hero images, choose `WebP` with a `150` KB target to cut page weight by 85–95% without visible blur.",
+      "Batch-drop 20+ product photos at once—Image Shrinker processes them sequentially in your tab and exports one `.zip`."
+    ],
+    "guideSpecs": "Formats: PNG, JPEG, WebP, AVIF · Algorithm: 8-step binary search over encoder quality + scale fallback",
+    "videoDuration": "36s"
   },
   {
     "id": "scan",
@@ -186,7 +402,62 @@
     "exampleOutputDetail": "Straightened to 0.0°, pure white paper background, razor-sharp black text, combined into one 300-DPI PDF",
     "sampleOutputCode": "Deskew: -2.8 deg | Auto-Levels: 18..238 -> 0..255 | Output: 3-page 300-DPI PDF [OK]",
     "video": "./videos/scan.mp4",
-    "poster": "./shots/scan.jpg"
+    "poster": "./shots/scan.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop Phone Photos of Paper Documents",
+        "ui": "Document Dropzone (#dz)",
+        "narration": "To turn phone photos of paper into a clean scanned PDF, open scan.html and drop one or more document photos onto the dropzone.",
+        "guide": "Drop phone camera photos of contracts, forms, book pages, or whiteboards onto `#dz`. Multiple photos become pages of a multi-page document.",
+        "result": "Page thumbnails appear in `#thumbs` and the first page loads into the interactive canvas (`#cv`)."
+      },
+      {
+        "title": "Step 2: Crop Margins & Auto-Deskew Tilted Pages",
+        "ui": "Crop Mode (#cropMode) & Canvas (#cv)",
+        "narration": "Second, click Crop Mode and drag a rectangle over the document page to trim desk clutter, then click Apply Crop and Auto-Deskew.",
+        "guide": "Click **Crop mode (`#cropMode`)**, drag a bounding rectangle across the document on `#cv`, and click **Apply crop (`#applyCropBtn`)**. Use deskew controls to straighten tilted camera angles.",
+        "result": "Background desk surfaces and perspective tilt are removed cleanly."
+      },
+      {
+        "title": "Step 3: Apply Grayscale, Auto-Levels & Contrast Boost",
+        "ui": "Enhancement Controls (#gray, #contrast, #applyEnh)",
+        "narration": "Third, check Grayscale, raise the Contrast slider to remove uneven room shadows, and click Apply Enhancements.",
+        "guide": "Check **Grayscale (`#gray`)**, adjust the **Contrast (`#contrast`)** or photocopy threshold slider to bleach gray paper shadows to pure white while sharpening dark ink, and click **Apply (`#applyEnh`)**.",
+        "result": "Dim, shadowed phone photos transform into crisp, high-contrast black-and-white scans."
+      },
+      {
+        "title": "Step 4: Export as a Multi-Page 300-DPI PDF or PNG",
+        "ui": "Export 300-DPI PDF Button (#pdf)",
+        "narration": "Finally, step through any additional pages with Next Page, then click Export 300-DPI PDF to download a print-ready multi-page PDF.",
+        "guide": "Use **Next page (`#next`)** to review additional pages, then click **Export 300-DPI PDF (`#pdf`)** (or **Export PNG** for single images).",
+        "result": "A clean, properly sized 300-DPI multi-page PDF downloads locally."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Crop Mode (`#cropMode` + `#applyCropBtn`)",
+        "desc": "Interactive drag-rectangle crop directly on the live page preview canvas (`#cv`)."
+      },
+      {
+        "name": "Grayscale (`#gray`) & Contrast (`#contrast`)",
+        "desc": "Converts color phone photos to crisp monochrome document scans and removes lighting shadows."
+      },
+      {
+        "name": "Apply Enhancements (`#applyEnh`)",
+        "desc": "Commits deskew, auto-levels, grayscale, and contrast adjustments to the active page."
+      },
+      {
+        "name": "Export 300-DPI PDF (`#pdf`)",
+        "desc": "Packs all cleaned pages into a single 300-DPI PDF via `pdf-lib`."
+      }
+    ],
+    "guideProTips": [
+      "Shoot paper documents against a darker desk or table surface so the page edges are easy to align and crop.",
+      "Set Contrast between `35` and `50` with Grayscale enabled to replicate a laser-printer photocopy look.",
+      "After exporting your cleaned PDF, you can open it directly in **Local E-Sign Pad (`sign.html`)** to sign and date it."
+    ],
+    "guideSpecs": "Input: JPEG, PNG, WebP · Output: Multi-page 300-DPI PDF or PNG · Processing: HTML5 Canvas + pdf-lib",
+    "videoDuration": "33s"
   },
   {
     "id": "sign",
@@ -223,7 +494,62 @@
     "exampleOutputDetail": "Ink & dated caption ('Signed 2026-11-08') permanently flattened into PDF content stream; 0 editable form fields",
     "sampleOutputCode": "Signature embedded in Page 1 /Resources/XObject | AcroForm fields: 0 (Flattened) [OK]",
     "video": "./videos/sign.mp4",
-    "poster": "./shots/sign.jpg"
+    "poster": "./shots/sign.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Draw or Type Your Signature on the Ink Pad",
+        "ui": "Signature Pad Canvas (#pad)",
+        "narration": "To sign a PDF locally without DocuSign or cloud uploads, open sign.html and draw your signature on the pad using your mouse, trackpad, or stylus.",
+        "guide": "Draw your signature smoothly on the `#pad` canvas using a mouse, finger, or stylus (or switch to the **Type** tab to generate a calligraphic signature from your typed name).",
+        "result": "High-resolution transparent ink strokes are captured locally."
+      },
+      {
+        "title": "Step 2: Lock Signature & Drop Your PDF Document",
+        "ui": "Use Signature (#useSig) & PDF Dropzone (#dz)",
+        "narration": "Second, click Use This Signature to lock your ink, then drag your PDF contract or form onto the PDF dropzone below.",
+        "guide": "Click **Use this signature (`#useSig`)**, then drop the `.pdf` file you need to sign onto `#dz`. Select the target page number from the page dropdown (`#pageSel`).",
+        "result": "The selected PDF page renders live on the preview canvas (`#cv`)."
+      },
+      {
+        "title": "Step 3: Enable Date Stamp & Click Page to Place Signature",
+        "ui": "Stamp Date (#addDate) & Page Canvas (#cv)",
+        "narration": "Third, check Stamp Date if you want today's ISO date printed beneath your signature, then click the exact spot on the PDF page preview where your signature belongs.",
+        "guide": "Check **Stamp today's date (`#addDate`)** and adjust the signature size slider if needed. Click directly on the signature line on the PDF preview canvas (`#cv`) to position your ink.",
+        "result": "Your signature and date stamp appear at the exact coordinates you clicked."
+      },
+      {
+        "title": "Step 4: Flatten & Download Signed PDF",
+        "ui": "Flatten & Download Button (#stamp)",
+        "narration": "Finally, click Flatten and Download Signed PDF. Your signature and date are permanently baked into the PDF page stream with zero editable overlays left behind.",
+        "guide": "Click **Flatten & download signed PDF (`#stamp`)**. `pdf-lib` embeds the signature XObject and date text directly into the page content stream.",
+        "result": "Signed, flattened `.pdf` saved to your machine—nothing ever left your browser."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Signature Pad (`#pad`) & Clear (`#clearPad`)",
+        "desc": "Pressure-aware pointer canvas supporting mouse, touch, and pen/stylus input."
+      },
+      {
+        "name": "Use this signature (`#useSig`)",
+        "desc": "Captures the drawn ink as a transparent PNG ready for placement on any PDF page."
+      },
+      {
+        "name": "Page Selector (`#pageSel`) & Stamp Date (`#addDate`)",
+        "desc": "Switch between pages of a multi-page PDF and optionally append the current date below the signature."
+      },
+      {
+        "name": "Flatten & download (`#stamp`)",
+        "desc": "Bakes the signature and date into the PDF page content stream and downloads the signed PDF."
+      }
+    ],
+    "guideProTips": [
+      "On a laptop trackpad, draw slightly larger across the full width of `#pad`, then use the scale control to size it down neatly onto narrow signature lines.",
+      "Need to sign on multiple pages (e.g., initialing Page 1 and signing Page 4)? Place and stamp Page 1, then drop the resulting PDF to sign Page 4.",
+      "Because the ink is flattened into the page stream rather than added as a floating annotation, recipients cannot accidentally drag or delete your signature."
+    ],
+    "guideSpecs": "Input: Any standard PDF · Output: Flattened signed PDF · Note: Visual ink signature (not PKI/X.509 hardware certificate)",
+    "videoDuration": "38s"
   },
   {
     "id": "receipts",
@@ -260,7 +586,58 @@
     "exampleOutputDetail": "18 pages ordered Sep 03 → Sep 19, every page stamped '2026-09-03 · IMG_3902.jpg' at top margin",
     "sampleOutputCode": "Page 1: 2026-09-03 | Page 2: 2026-09-12 | Page 3: 2026-09-19 | Stamped & Merged [OK]",
     "video": "./videos/receipts.mp4",
-    "poster": "./shots/receipts.jpg"
+    "poster": "./shots/receipts.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop a Batch of Receipt Photos",
+        "ui": "Receipt Dropzone (#dz)",
+        "narration": "To combine a shoebox of receipt photos into one organized expense PDF, open receipts.html and drop all your receipt images onto the dropzone.",
+        "guide": "Select or drag a batch of receipt photos (`.jpg`, `.png`, `.webp`) onto `#dz`.",
+        "result": "All receipts load into the workspace and EXIF timestamps are parsed automatically."
+      },
+      {
+        "title": "Step 2: Automatic Chronological Sorting by Capture Date",
+        "ui": "Sorted Receipt List (#list)",
+        "narration": "Second, notice how the tool automatically sorts every receipt chronologically using its EXIF capture date, falling back to file modification date when needed.",
+        "guide": "Inspect the ordered list in `#list`. Receipts are sorted oldest-to-newest by their EXIF `DateTimeOriginal` tag so your expense packet follows your trip timeline.",
+        "result": "Receipts are ordered chronologically without manual renaming."
+      },
+      {
+        "title": "Step 3: Rotate Sideways Receipts or Reorder Rows",
+        "ui": "Row Controls in #list",
+        "narration": "Third, review each row in the list. You can rotate any sideways phone photo or adjust the order before building the document.",
+        "guide": "Use the per-row controls in `#list` to rotate sideways photos 90° or remove duplicate shots before exporting.",
+        "result": "Every receipt is upright and properly sequenced."
+      },
+      {
+        "title": "Step 4: Build One Stamped Multi-Page Expense PDF",
+        "ui": "Build Stamped PDF Button (#pdf)",
+        "narration": "Finally, click Build Stamped PDF. Every page is generated with a clean header showing the receipt index, capture date, and original filename.",
+        "guide": "Click **Build 1 stamped PDF (`#pdf`)**. `pdf-lib` lays out one receipt per page with a top audit header (`#1 · YYYY-MM-DD · filename.jpg`).",
+        "result": "A single, accountant-ready expense report PDF downloads to your device."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Batch Dropzone (`#dz`)",
+        "desc": "Accepts dozens of JPEG, PNG, or WebP receipt photos in one drop."
+      },
+      {
+        "name": "Chronological List (`#list`)",
+        "desc": "Displays each receipt's detected EXIF date, dimensions, and page order."
+      },
+      {
+        "name": "Build 1 stamped PDF (`#pdf`)",
+        "desc": "Generates a single multi-page PDF with audit headers stamped at the top of every page."
+      }
+    ],
+    "guideProTips": [
+      "Take receipt photos with your phone camera (which embeds `DateTimeOriginal`) so multi-day business trip receipts sort themselves automatically.",
+      "Pair this tool with **Receipt OCR to CSV (`ocr.html`)**: use `receipts.html` for the visual PDF attachment and `ocr.html` for the spreadsheet line items.",
+      "All EXIF GPS coordinates from the original receipt photos are left out of the newly built PDF pages."
+    ],
+    "guideSpecs": "Input: JPEG, PNG, WebP batches · Output: Chronologically sorted, header-stamped multi-page PDF",
+    "videoDuration": "36s"
   },
   {
     "id": "ocr",
@@ -298,7 +675,58 @@
     "exampleOutputDetail": "Structured rows: Date, Vendor ('GREEN GROCER'), Category ('Meals'), Amount ($23.98), Confidence ('94% High')",
     "sampleOutputCode": "date,vendor,category,currency,total,confidence\n2026-09-14,GREEN GROCER,Groceries,USD,23.98,94%",
     "video": "./videos/ocr.mp4",
-    "poster": "./shots/ocr.jpg"
+    "poster": "./shots/ocr.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop Receipt Photos Into the Local OCR Dropzone",
+        "ui": "OCR Dropzone (#dz)",
+        "narration": "To extract receipt dates, vendors, and totals into a spreadsheet without uploading financial data, open ocr.html and drop your receipt images onto the dropzone.",
+        "guide": "Open `ocr.html` and drop one or more receipt images (`.jpg`, `.png`, `.webp`) onto `#dz`.",
+        "result": "The self-hosted Tesseract WebAssembly OCR engine initializes from the same origin."
+      },
+      {
+        "title": "Step 2: Watch On-Device Tesseract WASM Extract Text",
+        "ui": "OCR Status Indicator (#stat)",
+        "narration": "Second, watch the status bar as the self-hosted Tesseract WebAssembly engine recognizes the text on your CPU and parses the merchant name, date, currency, and total.",
+        "guide": "Monitor `#stat` while Tesseract WASM scans each receipt image and runs heuristic parsers for merchant header lines, calendar dates, currency symbols, and `TOTAL` amounts.",
+        "result": "Structured expense rows populate the results table with an OCR confidence score."
+      },
+      {
+        "title": "Step 3: Review & Edit Any Low-Confidence Cells Inline",
+        "ui": "Editable Results Table (#tbl)",
+        "narration": "Third, inspect the extracted expense table. Any cell with low OCR confidence is highlighted so you can click directly inside the table to edit the merchant, category, or amount.",
+        "guide": "Review `#tbl` inside `#resultsPanel`. Click any Date, Merchant, Category, Amount, or Currency cell to make inline corrections if thermal ink was faded.",
+        "result": "100% verified structured expense rows ready for accounting import."
+      },
+      {
+        "title": "Step 4: Export to CSV or TSV for Excel & QuickBooks",
+        "ui": "Export CSV Button (#csv)",
+        "narration": "Finally, click Export CSV or Copy TSV to bring your structured expense table straight into Excel, Google Sheets, or QuickBooks.",
+        "guide": "Click **Export CSV (`#csv`)** to download `expenses.csv` (with columns `date,merchant,category,amount,currency,file,ocr_confidence`) or copy TSV to paste directly into a spreadsheet.",
+        "result": "Clean `expenses.csv` file saved locally with zero cloud OCR API fees."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Receipt Dropzone (`#dz`)",
+        "desc": "Accepts single or batch receipt photos in JPEG, PNG, or WebP format."
+      },
+      {
+        "name": "Editable Expense Table (`#tbl`)",
+        "desc": "Inline-editable cells for Date, Merchant, Category, Amount, and Currency with per-row OCR confidence."
+      },
+      {
+        "name": "Export CSV (`#csv`)",
+        "desc": "Downloads RFC-4180 compliant `expenses.csv` ready for Excel, Numbers, Google Sheets, or QuickBooks."
+      }
+    ],
+    "guideProTips": [
+      "If a receipt photo is skewed or has dark shadows, run it through **Scan & Screenshot Cleaner (`scan.html`)** with Grayscale + Contrast first to boost OCR accuracy above 95%.",
+      "The ~24 MB Tesseract language model is fetched once from `navigatorslab.com` and cached by the PWA Service Worker for full offline use afterward.",
+      "Always glance at rows where `ocr_confidence` is below 80%—crumpled thermal paper often blurs decimal points."
+    ],
+    "guideSpecs": "Engine: Self-hosted Tesseract.js WASM (`tess/` + `tessdata/`) · Output: `expenses.csv` (`date,merchant,category,amount,currency,file,ocr_confidence`)",
+    "videoDuration": "43s"
   },
   {
     "id": "qr",
@@ -336,7 +764,62 @@
     "exampleOutputDetail": "Crisp vector SVG + PNG with custom palette & quiet zone; encode → export → decode round-trip 100% verified",
     "sampleOutputCode": "Payload: WIFI:T:WPA;S:NavLab-Guest;P:ultra-secret\\!2026;; | Round-trip decode: EXACT [OK]",
     "video": "./videos/qr.mp4",
-    "poster": "./shots/qr.jpg"
+    "poster": "./shots/qr.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Type Text/URL or Pick Wi-Fi, vCard, or Email Preset",
+        "ui": "Payload Input (#qrText) & Presets (#preWifi)",
+        "narration": "To generate or decode QR codes offline, open qr.html and type a URL into the payload box, or click one of the preset buttons like Wi-Fi, vCard, or Email.",
+        "guide": "Enter any URL or text into `#qrText`, or click a structured preset button (**Wi-Fi `#preWifi`**, **vCard**, **Email**, **SMS**) to open its dedicated fields.",
+        "result": "Structured payload fields appear (and special characters like `;` and `\\` in Wi-Fi passwords are escaped automatically)."
+      },
+      {
+        "title": "Step 2: Apply Preset & Tune Error Correction (L / M / Q / H)",
+        "ui": "Wi-Fi Builder (#wifiMake) & Error Correction (#ec)",
+        "narration": "Second, fill in your Wi-Fi network name and password, click Apply Wi-Fi Preset, and choose your error correction level and foreground or background colors.",
+        "guide": "Fill the preset fields (e.g., SSID `#wifiS` and Password `#wifiP`), click **Apply (`#wifiMake`)**, select Error Correction (`L`, `M`, `Q`, or `H`), and click **Generate QR (`#qrMake`)**.",
+        "result": "Crisp QR matrix renders immediately with module count and error-correction metadata (`#qrMeta`)."
+      },
+      {
+        "title": "Step 3: Export Crisp Vector SVG or High-DPI PNG",
+        "ui": "Export PNG (#qrPng) & SVG (#qrSvg)",
+        "narration": "Third, click Download PNG for screens or Download SVG for infinite-resolution print signage without any tracking redirect URLs.",
+        "guide": "Click **Download PNG (`#qrPng`)** for digital use or **Download SVG (`#qrSvg`)** for vector print layout in Illustrator, Figma, or InDesign.",
+        "result": "Direct-payload PNG or vector SVG saved locally (never expires, zero bit.ly/redirect middlemen)."
+      },
+      {
+        "title": "Step 4: Switch to Decode Tab to Read Any QR Image Locally",
+        "ui": "Decode Tab (#tabRead) & QR Dropzone (#qrDz)",
+        "narration": "Finally, click the Decode QR tab and drop or paste any screenshot containing a QR code to inspect its exact raw payload before visiting the link.",
+        "guide": "Click **Decode QR (`#tabRead`)** and drop an image or paste a screenshot (`Ctrl+V`) onto `#qrDz`. `jsQR` decodes the raw payload string into `#qrData`.",
+        "result": "Inspect suspicious QR codes safely without opening untrusted URLs on your phone."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Payload Box (`#qrText`) & Generate (`#qrMake`)",
+        "desc": "Encodes any text, URL, or preset string into a QR matrix."
+      },
+      {
+        "name": "Presets (`#preWifi`, vCard, Email)",
+        "desc": "Builds standards-compliant `WIFI:T:WPA;...` and `BEGIN:VCARD` payloads with RFC escaping."
+      },
+      {
+        "name": "Export PNG (`#qrPng`) & SVG (`#qrSvg`)",
+        "desc": "Saves high-resolution raster PNG or true vector SVG files."
+      },
+      {
+        "name": "Decode Tab (`#tabRead` + `#qrDz`)",
+        "desc": "Decodes QR images locally via bundled `jsQR` without a camera or network request."
+      }
+    ],
+    "guideProTips": [
+      "Always choose **SVG** when sending a QR code to a print shop for flyers, business cards, or banners so the module edges stay razor-sharp at any size.",
+      "Use Error Correction level **Q (25%)** or **H (30%)** for printed stickers outdoors so the code still scans even if scratched or smudged.",
+      "You can deep-link directly to a generated QR code via URL parameters: `qr.html?text=https://navigatorslab.com&ec=H`."
+    ],
+    "guideSpecs": "Engines: `qrcode-generator` + `jsQR` (100% bundled) · Exports: PNG, Vector SVG · Deep-Link: `?text=...&ec=M`",
+    "videoDuration": "38s"
   },
   {
     "id": "audio",
@@ -374,7 +857,62 @@
     "exampleOutputDetail": "32.4s clip at -0.1 dBFS peak, 0.5s fade-in/out, valid ID3/MPEG frame sync encoded entirely in-tab",
     "sampleOutputCode": "Slice: 1.00s..2.50s (66,150 samples) | Peak: 0.99 | Export: WAV PCM + LAME MP3 (0xFFFB) [OK]",
     "video": "./videos/audio.mp4",
-    "poster": "./shots/audio.jpg"
+    "poster": "./shots/audio.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop a Voice Note, Podcast Clip, or Song",
+        "ui": "Audio Dropzone (#dz)",
+        "narration": "To trim an audio file or convert it to MP3 in your browser, open audio.html and drop any WAV, MP3, M4A, AAC, or OGG file onto the dropzone.",
+        "guide": "Drag and drop an audio file (`.wav`, `.mp3`, `.m4a`, `.aac`, `.ogg`, `.flac`) onto `#dz`.",
+        "result": "Web Audio API decodes the audio buffer locally and renders the full waveform canvas (`#wave`)."
+      },
+      {
+        "title": "Step 2: Inspect the Waveform & Select Start / End Times",
+        "ui": "Waveform Canvas (#wave) & Time Inputs (#t0, #t1)",
+        "narration": "Second, drag the selection handles directly on the waveform canvas—or type exact start and end seconds into the Start and End boxes—to isolate your clip.",
+        "guide": "Drag the left and right trim handles on `#wave` or type millisecond-accurate timestamps into **Start (`#t0`)** and **End (`#t1`)**. Click **Preview selection** to listen to the cut.",
+        "result": "Exact sample boundaries are locked in with live duration readout."
+      },
+      {
+        "title": "Step 3: Add Smooth Fade-In / Fade-Out & Pick WAV or MP3",
+        "ui": "Fade Controls & Format Selector (#fmt)",
+        "narration": "Third, add an optional fade-in or fade-out envelope so the cut doesn't click, and choose lossless WAV or compressed MP3 from the format selector.",
+        "guide": "Configure fade-in/fade-out durations and select `wav` (uncompressed 16-bit PCM) or `mp3` (encoded via self-hosted `lamejs`) in `#fmt`.",
+        "result": "Envelope and encoder settings are ready for local rendering."
+      },
+      {
+        "title": "Step 4: Click Export Trimmed Audio",
+        "ui": "Export Button (#exp)",
+        "narration": "Finally, click Export Trimmed Audio. Your browser slices the sample buffer and downloads the finished WAV or MP3 file immediately.",
+        "guide": "Click **Export (`#exp`)**. The browser slices the PCM buffer, applies fade envelopes, encodes to WAV or MP3 via `lamejs`, and downloads the file.",
+        "result": "Sample-accurate `.wav` or `.mp3` clip saved locally in under a second."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Waveform Canvas (`#wave`)",
+        "desc": "Interactive peak visualization for dragging trim start and end handles."
+      },
+      {
+        "name": "Start (`#t0`) & End (`#t1`) Inputs",
+        "desc": "Numeric inputs (in seconds) for exact sample-accurate trimming."
+      },
+      {
+        "name": "Output Format (`#fmt`)",
+        "desc": "Switch between 16-bit PCM `.wav` and self-hosted LAME `.mp3` encoding."
+      },
+      {
+        "name": "Export Button (`#exp`)",
+        "desc": "Renders and downloads the trimmed audio clip."
+      }
+    ],
+    "guideProTips": [
+      "Apply a `0.05s` to `0.15s` fade-in and fade-out when cutting spoken voice notes to eliminate zero-crossing pops at the start and end of the clip.",
+      "Choose `WAV` when exporting clips for video editors (Premiere, DaVinci Resolve, CapCut) and `MP3` when sharing voice notes over email or chat.",
+      "Because decoding and LAME MP3 encoding happen entirely in your tab, confidential interview recordings never touch a cloud transcription server."
+    ],
+    "guideSpecs": "Input: WAV, MP3, M4A, OGG, FLAC · Output: 16-bit PCM WAV or LAME MP3 (`lamejs/` self-hosted)",
+    "videoDuration": "40s"
   },
   {
     "id": "invoice",
@@ -411,7 +949,62 @@
     "exampleOutputDetail": "Print-ready vector PDF invoice with itemized table, tax math, payment notes, and zero SaaS watermarks",
     "sampleOutputCode": "Subtotal: $400.00 | Discount (10%): -$40.00 | Tax: +$48.00 | PDF Total: $408.00 [OK]",
     "video": "./videos/invoice.mp4",
-    "poster": "./shots/invoice.jpg"
+    "poster": "./shots/invoice.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Enter Business Info, Client Details & Currency",
+        "ui": "Header Fields (#biz, #client, #docNo)",
+        "narration": "To create a clean vector PDF invoice or quote without signing up for billing software, open invoice.html and fill in your business name, client name, and invoice number.",
+        "guide": "Enter your company/freelancer details in `#biz`, client billing address in `#client`, document number in `#docNo` (e.g., `INV-2026-042`), and pick your currency symbol.",
+        "result": "Header details populate the live invoice workspace."
+      },
+      {
+        "title": "Step 2: Add Line Items, Quantities & Hourly/Unit Rates",
+        "ui": "Line Items Table (#items)",
+        "narration": "Second, fill in your line items table with descriptions, hours or quantities, and unit rates. Click Add Row for additional deliverables.",
+        "guide": "In `#items`, type each deliverable description (`.d`), quantity/hours (`.q`), and rate (`.r`). Click **+ Add line item** to append more rows.",
+        "result": "Each row subtotal calculates automatically as you type."
+      },
+      {
+        "title": "Step 3: Configure Tax Percentage, Discounts & Payment Notes",
+        "ui": "Tax (#tax) & Live Total (#total)",
+        "narration": "Third, enter your tax percentage or discount and add payment instructions or bank details. The grand total updates live on screen.",
+        "guide": "Set your tax percentage in `#tax` (and any discount or payment terms/notes). Verify the calculated subtotal, tax amount, and grand total in `#total`.",
+        "result": "Exact subtotal, tax, and grand total verified before export."
+      },
+      {
+        "title": "Step 4: Download Vector PDF Invoice",
+        "ui": "Download PDF Button (#pdf)",
+        "narration": "Finally, click Download PDF. pdf-lib generates a crisp, print-ready vector PDF invoice directly in your browser tab.",
+        "guide": "Click **Download PDF (`#pdf`)** to generate a crisp vector PDF via `pdf-lib` (typically ~4 KB, searchable text, razor-sharp at any zoom).",
+        "result": "Professional `INV-xxxx.pdf` downloaded locally with zero watermarks or platform fees."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Sender (`#biz`) & Client (`#client`)",
+        "desc": "Multi-line business contact, tax ID, and client billing details."
+      },
+      {
+        "name": "Document Number (`#docNo`) & Currency",
+        "desc": "Invoice or quote identifier and currency formatting."
+      },
+      {
+        "name": "Line Items Table (`#items`) & Tax (`#tax`)",
+        "desc": "Dynamic rows for description, quantity, and unit price with automatic tax/discount math."
+      },
+      {
+        "name": "Download PDF (`#pdf`)",
+        "desc": "Generates a clean vector PDF document via `pdf-lib`."
+      }
+    ],
+    "guideProTips": [
+      "Unlike screenshot-based HTML-to-PDF tools, Invoice Generator draws real vector text streams with `pdf-lib`, so your client's accounting software can copy/paste the invoice number and total cleanly.",
+      "Include your wire/ACH or payment link in the Notes box at the bottom so clients have everything on one page.",
+      "Need to sign the quote before sending? Drop the exported invoice PDF straight into **Local E-Sign Pad (`sign.html`)**."
+    ],
+    "guideSpecs": "Output: True vector PDF (`pdf-lib`) · Math: Automatic line-item subtotal, discount, and tax calculation",
+    "videoDuration": "36s"
   },
   {
     "id": "rename",
@@ -448,7 +1041,62 @@
     "exampleOutputDetail": "2026-09-05-receipt-001.jpg, 2026-09-06-receipt-002.jpg ... cleanly sorted and zipped in-browser",
     "sampleOutputCode": "IMG_5847.jpg -> 2026-09-05-receipt-001.jpg | IMG_5848.jpg -> 2026-09-06-receipt-002.jpg [OK]",
     "video": "./videos/rename.mp4",
-    "poster": "./shots/rename.jpg"
+    "poster": "./shots/rename.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop a Batch of Photos or Files to Rename",
+        "ui": "Batch Dropzone (#dz)",
+        "narration": "To batch-rename messy camera photos or project files by capture date, open rename.html and drop your files onto the dropzone.",
+        "guide": "Drag and drop a batch of photos or documents (`IMG_4821.JPG`, `DSC0092.JPG`, etc.) onto `#dz`.",
+        "result": "Files load and EXIF `DateTimeOriginal` timestamps (or file modified dates) are extracted."
+      },
+      {
+        "title": "Step 2: Choose Naming Pattern & Custom Slug",
+        "ui": "Slug Source (#slugSrc) & Custom Slug (#slugText)",
+        "narration": "Second, select Fixed Slug or Original Name from the pattern menu and type your descriptive project slug—such as site-inspection or home-depot.",
+        "guide": "Select the naming rule in `#slugSrc` (e.g., `fixed` custom slug or cleaned original filename), type your label into `#slugText` (e.g., `site-inspection`), and configure sequence padding.",
+        "result": "Pattern rule (`YYYY-MM-DD-<slug>-01.ext`) is configured."
+      },
+      {
+        "title": "Step 3: Click Preview New Names to Inspect Mapping",
+        "ui": "Apply Preview (#apply) & Mapping List (#list)",
+        "narration": "Third, click Apply and Preview. Every row shows the original filename alongside the new ISO-dated filename so you can catch any collisions before saving.",
+        "guide": "Click **Apply (`#apply`)** and inspect the `Old Name → New Name` preview table in `#list`.",
+        "result": "Deterministic, collision-free filenames previewed side-by-side."
+      },
+      {
+        "title": "Step 4: Download All Renamed Files as One ZIP",
+        "ui": "Download ZIP Button (#zip)",
+        "narration": "Finally, click Download ZIP to save all your renamed files in a single archive without touching your originals.",
+        "guide": "Click **Download ZIP (`#zip`)** to package all renamed files into a single local `.zip` archive via `JSZip`.",
+        "result": "Cleanly named archive downloaded while original files remain untouched."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Batch Dropzone (`#dz`)",
+        "desc": "Accepts any number of images or documents for batch renaming."
+      },
+      {
+        "name": "Slug Mode (`#slugSrc`) & Text (`#slugText`)",
+        "desc": "Combines EXIF/file dates (`YYYY-MM-DD`) with a custom project slug and sequence numbers."
+      },
+      {
+        "name": "Apply Preview (`#apply`)",
+        "desc": "Updates the live `Old → New` filename table (`#list`)."
+      },
+      {
+        "name": "Download ZIP (`#zip`)",
+        "desc": "Bundles all renamed files into one `.zip` archive."
+      }
+    ],
+    "guideProTips": [
+      "Combining photos from two different cameras (e.g., an iPhone and a Sony mirrorless)? Batch Rename sorts and names them by EXIF capture date so both cameras' shots interleave in true chronological order.",
+      "Use lowercase hyphenated slugs (`2026-11-08-client-workshop-01.jpg`) for web assets and S3/Cloudflare R2 uploads so URLs never contain `%20` spaces.",
+      "Your original files on disk are never overwritten—the renamed copies are delivered cleanly inside the downloaded `.zip`."
+    ],
+    "guideSpecs": "Date Parsing: EXIF `DateTimeOriginal` + Last-Modified fallback · Output: Client-side `.zip` bundle (`JSZip`)",
+    "videoDuration": "33s"
   },
   {
     "id": "printprep",
@@ -485,7 +1133,62 @@
     "exampleOutputDetail": "True 300 DPI PDF with exact 306×450 pt (4.25×6.25 in) MediaBox including 0.125 in print-shop bleed",
     "sampleOutputCode": "Size: 4x6 in + 0.125 in bleed | Effective DPI: 384 DPI (Sharp [OK]) | MediaBox: 306x450 pt",
     "video": "./videos/printprep.mp4",
-    "poster": "./shots/printprep.jpg"
+    "poster": "./shots/printprep.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop Your Image, Flyer, or Artwork",
+        "ui": "Print Dropzone (#dz)",
+        "narration": "To prepare an image or flyer for a commercial print shop with exact bleed and crop marks, open printprep.html and drop your artwork onto the dropzone.",
+        "guide": "Drop your high-resolution image or design (`.jpg`, `.png`, `.webp`) onto `#dz`.",
+        "result": "Source pixel dimensions and aspect ratio are inspected."
+      },
+      {
+        "title": "Step 2: Pick Physical Trim Size & Bleed Margin",
+        "ui": "Trim Size (#size) & Bleed Input (#bleed)",
+        "narration": "Second, choose your physical print size—such as 4 by 6 inches, 5 by 7, Letter, or A4—and enter your print shop's bleed margin, typically 0.125 inches.",
+        "guide": "Select the target physical sheet size in `#size` (`4x6`, `5x7`, `8x10`, `Letter`, `A4`) and set the bleed margin in inches in `#bleed` (standard commercial bleed is `0.125` in / 3 mm).",
+        "result": "Target physical dimensions (`4.25 × 6.25 in` with bleed) and 300-DPI pixel targets (`1275 × 1875 px`) are calculated."
+      },
+      {
+        "title": "Step 3: Click Prepare Print Sheet & Check DPI Verdict",
+        "ui": "Prepare Button (#prep) & Preview (#list)",
+        "narration": "Third, click Prepare Print Sheet. The tool computes your effective DPI at that physical size, warns you if resolution is below 300 DPI, and renders trim marks.",
+        "guide": "Click **Prepare (`#prep`)**. Inspect the generated proof in `#list` showing the effective DPI calculation, bleed extension area, and corner crop/trim marks.",
+        "result": "Visual print proof and DPI quality verdict displayed on screen."
+      },
+      {
+        "title": "Step 4: Export Print-Ready PDF at Exact Physical MediaBox",
+        "ui": "Export PDF Button (#pdf)",
+        "narration": "Finally, click Export Print-Ready PDF to save a PDF whose MediaBox matches the exact physical inch dimensions required by your printer.",
+        "guide": "Click **Export PDF (`#pdf`)** to generate a PDF with exact PostScript point dimensions (`72 pt = 1 inch`, e.g., `306 × 450 pt` for `4.25 × 6.25 in`) and corner trim marks.",
+        "result": "Print-shop-ready PDF saved locally."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Physical Size (`#size`)",
+        "desc": "Presets for `4x6`, `5x7`, `8x10`, `Letter` (`8.5×11 in`), and `A4`."
+      },
+      {
+        "name": "Bleed Margin (`#bleed`)",
+        "desc": "Bleed margin in inches added to all four edges (default `0.125` in)."
+      },
+      {
+        "name": "Prepare (`#prep`) & DPI Readout",
+        "desc": "Renders the sheet preview with corner crop marks and reports effective DPI."
+      },
+      {
+        "name": "Export PDF (`#pdf`)",
+        "desc": "Builds a PDF with exact physical `MediaBox` dimensions via `pdf-lib`."
+      }
+    ],
+    "guideProTips": [
+      "Most commercial print shops (FedEx Office, VistaPrint, local offset printers) require a `0.125 inch` (`3 mm`) bleed so white slivers don't appear when the guillotine blade trims the stack.",
+      "Check the **DPI effective** readout before printing: `300+ DPI` is sharp for handheld postcards/photos; `150–200 DPI` is acceptable for wall posters viewed from 3+ feet away.",
+      "Open the exported PDF in Adobe Acrobat or PDF Studio to verify the page size in inches matches `Trim Size + (2 × Bleed)`."
+    ],
+    "guideSpecs": "Sizes: 4×6, 5×7, 8×10, Letter, A4 · Bleed: Configurable (default 0.125 in) · Output: 300-DPI PDF with trim marks",
+    "videoDuration": "40s"
   },
   {
     "id": "pdfpages",
@@ -522,7 +1225,62 @@
     "exampleOutputDetail": "Rebuilt PDF with exact new page order, rotations applied in page dictionary, deleted pages purged",
     "sampleOutputCode": "Input: [p1, p2, p3] -> Drag & Rotate 90° -> Output: [p2(90°), p1, p3] (Valid PDF-1.7) [OK]",
     "video": "./videos/pdfpages.mp4",
-    "poster": "./shots/pdfpages.jpg"
+    "poster": "./shots/pdfpages.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Drop One or More PDFs to Load Page Thumbnails",
+        "ui": "PDF Dropzone (#dz)",
+        "narration": "To reorder, rotate, delete, or merge PDF pages in your browser, open pdfpages.html and drop one or more PDF files onto the dropzone.",
+        "guide": "Drag one or more `.pdf` files onto `#dz`. Dropping multiple PDFs appends all of their pages into one unified thumbnail grid.",
+        "result": "`pdf.js` renders a live visual thumbnail card (`.pp-cell`) for every page."
+      },
+      {
+        "title": "Step 2: Drag Thumbnails to Reorder, Rotate 90°, or Delete",
+        "ui": "Thumbnail Grid (#pages)",
+        "narration": "Second, drag any page thumbnail to change its order, click the rotate icon to fix a sideways scan, or click the X button on a card to delete an unwanted page.",
+        "guide": "In `#pages`, drag and drop `.pp-cell` cards to reorder them, click **↻** on a card to rotate that page 90°, or click **× (`.pp-x`)** to remove a page.",
+        "result": "Page sequence and orientations update visually in real time."
+      },
+      {
+        "title": "Step 3: Select Specific Pages or Insert Blank Separator Pages",
+        "ui": "Page Checkboxes & Insert Blank (#blank)",
+        "narration": "Third, use the checkboxes on each thumbnail to select a subset of pages, or click Insert Blank Page to add a separator sheet.",
+        "guide": "Toggle the checkbox on individual `.pp-cell` cards to pick specific pages for extraction, or click **Insert blank (`#blank`)** to add a clean separator page.",
+        "result": "Custom page selection or blank separator pages added to the layout."
+      },
+      {
+        "title": "Step 4: Rebuild Full PDF or Extract Selected Pages",
+        "ui": "Rebuild (#rebuild) & Extract (#extract)",
+        "narration": "Finally, click Rebuild PDF to export the complete rearranged document, or click Extract Selected to save only your checked pages as a new PDF.",
+        "guide": "Click **Rebuild PDF (`#rebuild`)** to download the full reordered/merged document, or **Extract selected (`#extract`)** to export only the checked pages.",
+        "result": "Lossless vector page copy built via `pdf-lib` and downloaded locally."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Thumbnail Grid (`#pages` / `.pp-cell`)",
+        "desc": "Drag-and-drop visual cards for every page across one or more loaded PDFs."
+      },
+      {
+        "name": "Per-Page Rotate (`↻`) & Delete (`.pp-x`)",
+        "desc": "Rotate individual pages in 90° increments or delete unwanted cover/blank pages."
+      },
+      {
+        "name": "Insert Blank (`#blank`)",
+        "desc": "Inserts a blank separator page into the document sequence."
+      },
+      {
+        "name": "Rebuild (`#rebuild`) & Extract (`#extract`)",
+        "desc": "Exports either the entire modified deck or only the checked pages as a new PDF."
+      }
+    ],
+    "guideProTips": [
+      "To merge two or three separate PDFs into one packet, simply drop all of them onto `#dz` one after another, drag the thumbnails into order, and click **Rebuild PDF**.",
+      "Because `pdf-lib` copies page dictionary nodes directly without rasterizing, vector text and embedded fonts stay 100% sharp and searchable.",
+      "Need deeper in-place text editing, redaction, or OCR on those pages? Open **PDF Studio (`/pdf-studio/`)**."
+    ],
+    "guideSpecs": "Engine: `pdf.js` (thumbnails) + `pdf-lib` (lossless page-tree rebuild) · Operations: Merge, Split, Extract, Rotate, Reorder, Delete",
+    "videoDuration": "38s"
   },
   {
     "id": "textdiff",
@@ -559,7 +1317,62 @@
     "exampleOutputDetail": "91.4% similarity badge · '-30 +90 +business' highlighted inside line 14 · Exportable unified diff patch",
     "sampleOutputCode": "@@ -14,1 +14,1 @@\n-terminate with [-30-] {+90 business+} days written notice | Similarity: 91.4%",
     "video": "./videos/textdiff.mp4",
-    "poster": "./shots/textdiff.jpg"
+    "poster": "./shots/textdiff.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Paste Original Text (Version A) Into the Left Pane",
+        "ui": "Original Text Editor (#textA)",
+        "narration": "To compare two versions of a contract, config file, or article locally, open textdiff.html and paste the original text into the Version A box on the left.",
+        "guide": "Paste or type the baseline version of your contract clause, code snippet, or prose into `#textA`.",
+        "result": "Original text is loaded in local browser memory."
+      },
+      {
+        "title": "Step 2: Paste Revised Text (Version B) Into the Right Pane",
+        "ui": "Revised Text Editor (#textB)",
+        "narration": "Second, paste the revised text into the Version B box on the right.",
+        "guide": "Paste the updated or redlined text into `#textB`.",
+        "result": "Both versions are ready for Longest Common Subsequence (LCS) comparison."
+      },
+      {
+        "title": "Step 3: Click Compare Texts to Inspect Word-Level Highlights",
+        "ui": "Compare Button (#btnDiff) & Diff Output (#diffOut)",
+        "narration": "Third, click Compare Texts. The diff viewer highlights exact word-level additions in green and deletions in red, so you immediately spot changed numbers or dates.",
+        "guide": "Click **Compare (`#btnDiff`)**. Inspect `#diffSummary` (added/removed line counts and similarity percentage) and `#diffOut`, where intra-line word changes are highlighted in green (`.w-add`) and red (`.w-del`).",
+        "result": "Subtle single-word edits (like `30 days` → `45 days`) stand out immediately."
+      },
+      {
+        "title": "Step 4: Export Standard Unified .diff Patch File",
+        "ui": "Download .diff Button (#btnDl)",
+        "narration": "Finally, click Download .diff to save a standard unified diff file that you can attach to a pull request, audit log, or email.",
+        "guide": "Click **Download .diff (`#btnDl`)** to save a standard unified diff file with `-` and `+` hunks.",
+        "result": "Standard `.diff` patch file downloaded locally."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Version A (`#textA`) & Version B (`#textB`)",
+        "desc": "Side-by-side text areas for original and revised text."
+      },
+      {
+        "name": "Compare (`#btnDiff`)",
+        "desc": "Runs the deterministic LCS diff algorithm with intra-line word highlighting."
+      },
+      {
+        "name": "Diff Summary (`#diffSummary`) & Output (`#diffOut`)",
+        "desc": "Shows similarity score, added/removed counts, and color-coded word diffs."
+      },
+      {
+        "name": "Download .diff (`#btnDl`)",
+        "desc": "Exports a standard unified `.diff` text file."
+      }
+    ],
+    "guideProTips": [
+      "Use Text Diff before signing a counter-party's 'clean final PDF' of an NDA or MSA: copy the text from your draft into `#textA` and the text from their PDF into `#textB` to catch silent edits.",
+      "AI agents can also call this exact diff engine deterministically via `POST https://navigatorslab.com/tools/mcp` (`text_diff` tool).",
+      "You can pre-populate inputs via URL parameters (`textdiff.html?a=...&b=...`)."
+    ],
+    "guideSpecs": "Algorithm: Longest Common Subsequence (LCS) + Intra-line Word Token Diff · Export: Unified `.diff` · MCP: `text_diff`",
+    "videoDuration": "32s"
   },
   {
     "id": "reimagine",
@@ -596,7 +1409,62 @@
     "exampleOutputDetail": "Zero hallucinated copy — every number, date & heading comes from your HTML, restyled into 17 exportable layouts",
     "sampleOutputCode": "Extracted: 14 metrics, 6 dates, 4 sections -> Rebuilt into 17 directions (Infographic, 3D, Editorial)",
     "video": "./videos/reimagine.mp4",
-    "poster": "./shots/reimagine.jpg"
+    "poster": "./shots/reimagine.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Open Reimagine Playground & Paste HTML or Pick a Preset",
+        "ui": "Reimagine Workspace (navigatorslab.com/reimagine/)",
+        "narration": "To redesign any web page from its own content without hallucinating a single fact, open navigatorslab.com/reimagine/ and paste your HTML or pick a built-in preset.",
+        "guide": "Open `https://navigatorslab.com/reimagine/` and paste raw HTML markup, drop an `.html` file, or click one of the built-in presets (SaaS, Documentation, Report, Portfolio).",
+        "result": "Source HTML is parsed into a structured content AST in your browser."
+      },
+      {
+        "title": "Step 2: Deterministic Extraction of Headings, Metrics & Dates",
+        "ui": "Content Extraction Inspector",
+        "narration": "Second, inspect the extracted facts panel. Reimagine deterministically pulls out every heading, metric, date, table, link, and brand color with zero LLM guesswork.",
+        "guide": "Review the extracted content inventory: headings, numeric KPIs/metrics, calendar dates, lists, tables, and source palette tokens are preserved verbatim.",
+        "result": "100% factual fidelity guaranteed—no numbers or dates are ever invented or altered."
+      },
+      {
+        "title": "Step 3: Switch Across 17 Visual Layout Directions",
+        "ui": "17 Direction Switcher (Editorial, Infographic, 3D, Dashboard...)",
+        "narration": "Third, click through the seventeen deterministic design directions—including Editorial, Infographic, Three.js 3D, Swiss Grid, Brutalist, and Executive Dashboard.",
+        "guide": "Click any of the **17 layout direction pills** (Editorial, Infographic, 3D Interactive, Swiss Grid, Terminal, Magazine, Dashboard, etc.) to rebuild the page live.",
+        "result": "Instant full-page visual transformation using your exact source content."
+      },
+      {
+        "title": "Step 4: Export Self-Contained HTML or Run the CLI / MCP Server",
+        "ui": "Export HTML Button & CLI (`npx reimagine-it`)",
+        "narration": "Finally, click Export HTML to download a single self-contained file, or run npx reimagine-it audit and generate directly in your terminal or coding agent.",
+        "guide": "Click **Export HTML** to save the redesigned page, or use the CLI (`npx reimagine-it page.html --direction infographic`) and MCP server in your repo.",
+        "result": "Production-ready, self-contained HTML audited across 18 design-health checks."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "HTML Input / Preset Selector",
+        "desc": "Paste raw HTML markup or load sample presets in the browser playground."
+      },
+      {
+        "name": "17 Deterministic Layout Directions",
+        "desc": "Switch instantly between Editorial, Infographic, 3D (Three.js), Dashboard, Swiss Grid, and 12 more."
+      },
+      {
+        "name": "Fact-Preserving AST Extractor",
+        "desc": "Locks all source numbers, dates, quotes, and links so nothing is hallucinated."
+      },
+      {
+        "name": "CLI & MCP Server (`Kayforkind/reimagine-it`)",
+        "desc": "Run `reimagine-it audit` or `reimagine-it build` from Node.js or any MCP agent."
+      }
+    ],
+    "guideProTips": [
+      "Use `reimagine-it audit index.html` in CI to score any web page across typography, contrast, layout rhythm, and content preservation.",
+      "Try the **Infographic** direction on dense quarterly reports or READMEs that contain lots of statistics and milestone dates.",
+      "All exported HTML pages are self-contained with zero external runtime dependencies."
+    ],
+    "guideSpecs": "Live App: `navigatorslab.com/reimagine/` · Repo: `Kayforkind/reimagine-it` (213★) · Directions: 17 deterministic layouts",
+    "videoDuration": "44s"
   },
   {
     "id": "textstats",
@@ -633,7 +1501,62 @@
     "exampleOutputDetail": "620/650 words (95% goal) · 2.5 min read · Flesch 64.2 (8th–9th grade) · Sentence rhythm histogram + Markdown copy",
     "sampleOutputCode": "Words: 620/650 (95%) | Read: 2.5m | Flesch: 64.2 | Avg Sentence: 14.8 words | Top: privacy (3.2%)",
     "video": "./videos/textstats.mp4",
-    "poster": "./shots/textstats.jpg"
+    "poster": "./shots/textstats.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Paste Your Draft, Article, or Script Into the Editor",
+        "ui": "Full-Width Text Editor (#textInput)",
+        "narration": "To analyze readability, speaking time, and sentence rhythm locally, open textstats.html and paste your draft into the full-width editor box.",
+        "guide": "Paste or type your essay, documentation page, video script, or speech into `#textInput` (or pass `?text=...` / `?url=data:...` in the URL).",
+        "result": "All metrics compute instantaneously on every keystroke."
+      },
+      {
+        "title": "Step 2: Read Live Word Count, Reading Time & Flesch Grade",
+        "ui": "Metric Cards Grid (#cards)",
+        "narration": "Second, check the eleven live metric cards showing exact word count, character count, reading time at 225 words per minute, speaking time, and Flesch Reading Ease.",
+        "guide": "Review `#cards` for Words, Characters (with/without spaces), Sentences, Paragraphs, Reading Time (`225 wpm`), Speaking Time (`140 wpm`), Average Sentence Length, and Flesch Reading Ease (`0–100` + US Grade Level).",
+        "result": "Instant readability and length verification."
+      },
+      {
+        "title": "Step 3: Audit Top Keyword Density & Overused Terms",
+        "ui": "Keyword Frequency Panel (#keywords)",
+        "narration": "Third, inspect the Keyword Density table on the left, which filters out common stop-words to reveal your most repeated terms and their exact percentage.",
+        "guide": "Examine `#keywords` to see the top content words ranked by count and density percentage (with common English stop-words excluded).",
+        "result": "Spot repetitive phrasing or verify SEO topic coverage immediately."
+      },
+      {
+        "title": "Step 4: Balance Your Pacing with the Sentence-Rhythm Histogram",
+        "ui": "Sentence-Rhythm Histogram (#rhythm)",
+        "narration": "Finally, use the Sentence-Rhythm Histogram on the right to see the word-length bar chart of every sentence and break up walls of long clauses.",
+        "guide": "Inspect `#rhythm`, which plots a bar for each sentence's word count so you can spot monotonous runs or overly dense 40-word sentences.",
+        "result": "Polished, well-paced prose with verified readability."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Text Editor (`#textInput`)",
+        "desc": "Full-width live textarea that recalculates metrics on every keystroke."
+      },
+      {
+        "name": "11 Stat Cards (`#cards`)",
+        "desc": "Words, characters, sentences, paragraphs, reading/speaking time, and Flesch score."
+      },
+      {
+        "name": "Keyword Density (`#keywords`)",
+        "desc": "Stop-word-filtered top terms with occurrence counts and percentages."
+      },
+      {
+        "name": "Sentence Rhythm (`#rhythm`)",
+        "desc": "Visual bar chart of sentence lengths across your document."
+      }
+    ],
+    "guideProTips": [
+      "Aim for a **Flesch Reading Ease between 60 and 75** (8th–9th grade level) for technical blog posts and product landing pages so readers scan effortlessly.",
+      "Recording a YouTube Short or presentation? Check the **Speaking Time (`140 wpm`)** card to verify your script fits inside 60 seconds before recording.",
+      "AI agents can invoke this analyzer over MCP (`POST /tools/mcp` -> `text_stats`) or via URL deep-link (`textstats.html?text=...`)."
+    ],
+    "guideSpecs": "Metrics: 11 Readability & Count Cards + Stop-Word Keyword Density + Sentence Histogram · MCP: `text_stats`",
+    "videoDuration": "36s"
   },
   {
     "id": "pdfstudio",
@@ -675,7 +1598,62 @@
     "exampleOutputDetail": "True in-place text edits, filled forms, permanently scrubbed redactions, and side-by-side revision diff — 0 uploads",
     "sampleOutputCode": "In-Place Text Stream Edit [OK] | Vector Redact (Bytes Purged) [OK] | OCR Layer [OK] | 213★ Flagship",
     "video": "./videos/pdfstudio.mp4",
-    "poster": "./shots/pdfstudio.jpg"
+    "poster": "./shots/pdfstudio.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Open PDF Studio & Load Any PDF Document",
+        "ui": "PDF Studio Workspace (navigatorslab.com/pdf-studio/)",
+        "narration": "To edit, redact, sign, or OCR a PDF in your browser, open navigatorslab.com/pdf-studio/ and drop your PDF file—or click Open Sample PDF to test immediately.",
+        "guide": "Navigate to `https://navigatorslab.com/pdf-studio/` and drop a `.pdf` file into the workspace, or load the built-in sample PDF.",
+        "result": "Multi-page canvas, thumbnail sidebar, and tool ribbons initialize 100% client-side."
+      },
+      {
+        "title": "Step 2: Select In-Place Text Edit, AcroForm, Sign, or Redact",
+        "ui": "Top Mode Toolbar (Edit Text / Redact / Sign / OCR)",
+        "narration": "Second, pick your tool from the top workspace bar: click Edit Text to rewrite existing PDF content streams in place, fill AcroForm fields, or select Vector Redaction.",
+        "guide": "Choose a mode from the top toolbar: **Edit Text** (modifies PDF `/Contents` text operators in-place), **Forms** (fills AcroForms), **Redact** (purges underlying text/vector bytes), **Sign**, or **OCR**.",
+        "result": "Interactive editing handles appear directly over the PDF page elements."
+      },
+      {
+        "title": "Step 3: Run Tesseract WASM OCR or Compare Document Revisions",
+        "ui": "OCR & Diff Panels",
+        "narration": "Third, for scanned documents, run on-device Tesseract OCR to add a searchable text layer, or use Revision Diff to compare two versions of a contract side by side.",
+        "guide": "Click **OCR** to run self-hosted Tesseract WASM across scanned pages, or open **Compare / Diff** to highlight text and visual differences between two PDF revisions.",
+        "result": "Searchable text layers and revision diffs are computed locally in your browser tab."
+      },
+      {
+        "title": "Step 4: Export Your Edited, Redacted, or Signed PDF",
+        "ui": "Export / Save PDF Button",
+        "narration": "Finally, click Export PDF to save your modified document locally—backed by 184 automated unit tests and zero cloud uploads.",
+        "guide": "Click **Export / Download PDF** in the top-right corner to serialize the updated PDF structure tree and download the finished file.",
+        "result": "Production-grade edited PDF saved locally with 0 bytes sent to any server."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "In-Place Content-Stream Text Editor",
+        "desc": "Edits existing text runs directly inside PDF `/Contents` streams instead of pasting white boxes over text."
+      },
+      {
+        "name": "True Byte-Purging Vector Redaction",
+        "desc": "Removes redacted text operators and vector paths from the underlying PDF stream so they cannot be copy-pasted."
+      },
+      {
+        "name": "On-Device Tesseract WASM OCR",
+        "desc": "Converts raster page scans into selectable, searchable PDF text layers locally."
+      },
+      {
+        "name": "AcroForm Filler, Signer & Revision Diff",
+        "desc": "Fills interactive PDF forms, places ink signatures, and compares two PDF files side-by-side."
+      }
+    ],
+    "guideProTips": [
+      "Unlike basic PDF annotators that merely draw a black rectangle over sensitive text, PDF Studio's Redact mode purges the underlying characters from the PDF content stream.",
+      "Pair PDF Studio with the **`redact-lint`** CLI in CI to verify that no PDF in your organization ships with fake painted-over redactions.",
+      "Always keep a backup of your original unredacted PDF before exporting a permanently redacted copy."
+    ],
+    "guideSpecs": "Live App: `navigatorslab.com/pdf-studio/` · Repo: `Kayforkind/NavigatorsLab-PDF-Studio` · Tests: 184/184 Vitest",
+    "videoDuration": "44s"
   },
   {
     "id": "designhealth",
@@ -717,7 +1695,58 @@
     "exampleOutputDetail": "18/18 rules scored in <2s in GitHub Actions — same HTML always produces the exact same pass/fail verdict",
     "sampleOutputCode": "uses: Kayforkind/design-health-action@v1 -> 18/18 checks PASSED (Typography 3/3, Motion 3/3) [OK]",
     "video": "./videos/designhealth.mp4",
-    "poster": "./shots/designhealth.jpg"
+    "poster": "./shots/designhealth.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Add Design Health Action to Your GitHub Workflow",
+        "ui": "GitHub Actions YAML (uses: Kayforkind/design-health-action@main)",
+        "narration": "To enforce deterministic design quality in pull requests, open the Design Health Action guide and add uses Kayforkind/design-health-action@main to your GitHub workflow.",
+        "guide": "Add `uses: Kayforkind/design-health-action@main` to `.github/workflows/design-health.yml` and point `path:` at your built HTML directory (e.g., `dist/**/*.html`).",
+        "result": "Runs in ~1 second in CI with zero LLM calls and zero API keys."
+      },
+      {
+        "title": "Step 2: Configure Target HTML Glob & Minimum Score Threshold",
+        "ui": "Workflow Inputs (path, min-score)",
+        "narration": "Second, set your target HTML path pattern and minimum passing threshold across the six design pillars: typography, palette, motion, content, structure, and performance.",
+        "guide": "Configure `path: 'dist/**/*.html'` and optional threshold gates so regressions in contrast, heading hierarchy, or layout stability fail the PR check.",
+        "result": "Deterministic 18-rule rubric locked for every pull request."
+      },
+      {
+        "title": "Step 3: Evaluate 18 Deterministic DOM & CSS Rules",
+        "ui": "18-Rule Static Analyzer",
+        "narration": "Third, on every push, the action checks eighteen rules including focus-visible states, prefers-reduced-motion media queries, image aspect ratios, and line lengths.",
+        "guide": "The analyzer parses HTML/CSS statically to verify 18 checks: heading scale, 45–75ch measure, `:focus-visible`, `prefers-reduced-motion`, explicit media dimensions (CLS), and semantic landmarks.",
+        "result": "Per-rule pass/warn/fail table generated automatically."
+      },
+      {
+        "title": "Step 4: Review PR Check Summary & Fix Flagged Selectors",
+        "ui": "GitHub Actions Step Summary & Exit Code",
+        "narration": "Finally, read the markdown report posted directly to your GitHub Actions summary and fix any flagged elements before merging.",
+        "guide": "Inspect the GitHub Step Summary table showing exact file names and failing rule IDs (`T1..T3`, `P1..P3`, `M1..M3`, `C1..C3`, `S1..S3`, `F1..F3`).",
+        "result": "Every shipped web page meets baseline accessibility, motion, and typographic quality."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "`uses: Kayforkind/design-health-action@main`",
+        "desc": "Drop-in GitHub Action step requiring zero secrets or external API tokens."
+      },
+      {
+        "name": "6 Quality Pillars (18 Rules)",
+        "desc": "Typography (3), Palette (3), Motion (3), Content (3), Structure (3), Performance (3)."
+      },
+      {
+        "name": "Local Node CLI Runner",
+        "desc": "Can also be executed locally with Node.js before committing."
+      }
+    ],
+    "guideProTips": [
+      "Pair `design-health-action` with `design-gate` CLI to enforce structural HTML checks both locally in pre-commit hooks and in GitHub Actions.",
+      "Always include a `@media (prefers-reduced-motion: reduce)` rule in your CSS—Rule M2 checks for this explicitly.",
+      "Set explicit `width` and `height` (or CSS `aspect-ratio`) on all `<img>` and `<video>` elements to pass the Cumulative Layout Shift (CLS) check."
+    ],
+    "guideSpecs": "Repo: `Kayforkind/design-health-action` · Runtime: Node 20+ / GitHub Actions · Rules: 18 deterministic checks",
+    "videoDuration": "39s"
   },
   {
     "id": "skillslice",
@@ -757,7 +1786,58 @@
     "exampleOutputDetail": "`npx skills add kazimrmerchant/skill-slice --skill <name>` copies exactly one verified slice into `.claude/skills/`",
     "sampleOutputCode": "$ npx skills add kazimrmerchant/skill-slice --skill systematic-debugging -> 1 slice installed [OK]",
     "video": "./videos/skillslice.mp4",
-    "poster": "./shots/skillslice.jpg"
+    "poster": "./shots/skillslice.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Browse the Skill Slice Catalog for Your Task",
+        "ui": "Skill Slice Catalog & WORKS_VERIFIED.md",
+        "narration": "To add a single verified workflow skill to your coding agent without bloating its context window, open the Skill Slice catalog and pick the exact skill you need.",
+        "guide": "Browse `https://kayforkind.github.io/skill-slice/` or check `docs/WORKS_VERIFIED.md` in `Kayforkind/skill-slice` to pick the single `SKILL.md` that matches your task.",
+        "result": "Avoids dumping 50+ unrelated skills into your agent's system prompt."
+      },
+      {
+        "title": "Step 2: Copy One SKILL.md Folder or Run npx skills add --skill",
+        "ui": "Single-Skill Installer Command",
+        "narration": "Second, run npx skills add with the dash-dash-skill flag—or copy just that one folder into your workspace's dot-claude/skills directory.",
+        "guide": "Run `npx skills add kazimrmerchant/skill-slice --skill <skill-name>` or copy `skills/<skill-name>/SKILL.md` into `.claude/skills/<skill-name>/`.",
+        "result": "Only the single targeted skill is mounted in your workspace."
+      },
+      {
+        "title": "Step 3: Progressive Disclosure (Index First, Full Skill on Demand)",
+        "ui": "SKILL.md Frontmatter & Trigger Rules",
+        "narration": "Third, your coding agent reads only the compact YAML frontmatter until your prompt matches that skill's domain, keeping token usage lean and focused.",
+        "guide": "The agent indexes the 2-line YAML description at startup and loads the full `SKILL.md` body and `references/` only when triggered by your task.",
+        "result": "90%+ reduction in idle context-window token overhead."
+      },
+      {
+        "title": "Step 4: Audit Installed Skills with skills-registry",
+        "ui": "SHA-256 Digest & Heuristic Verification",
+        "narration": "Finally, verify your installed skill folders against WORKS_VERIFIED.md or build a local SHA-256 index using skills-registry.",
+        "guide": "Check `docs/WORKS_VERIFIED.md` for Read-verified chairs or run `npx skills-registry` to generate SHA-256 digests of every skill in your repo.",
+        "result": "Clean, auditable agent skill setup."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "`npx skills add ... --skill <name>`",
+        "desc": "Installs a single named skill folder rather than the entire repository."
+      },
+      {
+        "name": "`docs/WORKS_VERIFIED.md`",
+        "desc": "Lists the 12 core skills that have passed full Read-verification."
+      },
+      {
+        "name": "`skills/<name>/SKILL.md`",
+        "desc": "Self-contained procedural workflow instructions with YAML frontmatter."
+      }
+    ],
+    "guideProTips": [
+      "Install 1 to 3 skills per project workspace at most—fewer active skills produce sharper tool selection and lower token costs.",
+      "Keep heavy reference tables in `skills/<name>/references/` so they are only read when specifically needed.",
+      "Use `Kayforkind/skills-registry` to scan third-party `SKILL.md` files for prompt-injection or risky shell patterns before adopting them."
+    ],
+    "guideSpecs": "Repo: `Kayforkind/skill-slice` · Catalog: `kayforkind.github.io/skill-slice/` · Verified Core: 12 Read-verified chairs",
+    "videoDuration": "37s"
   },
   {
     "id": "liecatchers",
@@ -797,7 +1877,58 @@
     "exampleOutputDetail": "Exits 0 with cryptographic receipt if all 10 sensors pass, or exits 1 with exact failure evidence to paste back",
     "sampleOutputCode": "$ uvx --from . liecatcher run -> 10/10 sensors green -> Wrote signed RECEIPT.json [OK]",
     "video": "./videos/liecatchers.mp4",
-    "poster": "./shots/liecatchers.jpg"
+    "poster": "./shots/liecatchers.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Install or Run liecatchers via uvx After an Agent Turn",
+        "ui": "CLI Command (uvx --from . liecatcher run)",
+        "narration": "To verify whether a coding agent actually ran the tests and file edits it claimed, clone Kayforkind/liecatchers and run uvx liecatcher run inside your repo.",
+        "guide": "Clone `https://github.com/Kayforkind/liecatchers` and run `uvx --from . liecatcher run` against the target project directory after an AI coding session.",
+        "result": "Ten independent workspace sensors initialize across git, lockfiles, and artifacts."
+      },
+      {
+        "title": "Step 2: Run All 10 Workspace Sensors Against Git & File Contracts",
+        "ui": "10 Sensor Checks (Git Diff, Lockfiles, Binaries, Commands)",
+        "narration": "Second, liecatchers executes ten sensors—checking git diff paths, lockfile consistency, declared command exit codes, truncation markers, and native binary tampering.",
+        "guide": "The 10 sensors inspect: (1) declared command evidence, (2) git status/diff alignment, (3) lockfile drift, (4) placeholder/TODO truncation, (5) empty/zero-byte files, and (6–10) artifact & contract invariants.",
+        "result": "Every discrepancy between the agent's claim and disk state is flagged."
+      },
+      {
+        "title": "Step 3: Inspect the Emitted RECEIPT.json Evidence File",
+        "ui": "RECEIPT.json Output",
+        "narration": "Third, inspect the generated RECEIPT.json file, which records the exact SHA-256 hashes, sensor verdicts, and timestamps for every check.",
+        "guide": "Open `RECEIPT.json` to review the per-sensor pass/fail breakdown, artifact SHA-256 digests, and execution metadata.",
+        "result": "Machine-readable audit trail of what actually happened in the workspace."
+      },
+      {
+        "title": "Step 4: Gate CI / PR Merges on Exit Code 0",
+        "ui": "CI Gate & Signature Verification",
+        "narration": "Finally, enforce exit code zero in your CI pipeline or pre-merge hook so unverified agent completion claims are caught automatically.",
+        "guide": "Use `liecatcher run`'s exit code (`0` = all sensors pass, `1` = sensor failure) in CI or pair with `agent-receipts` for offline Ed25519 signature verification.",
+        "result": "Zero 'trust me, tests passed' hallucinations slip into `main`."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "`uvx --from . liecatcher run`",
+        "desc": "Executes the 10-sensor post-run verification suite on Windows or POSIX."
+      },
+      {
+        "name": "10 Workspace Sensors",
+        "desc": "Checks git diffs, lockfiles, truncation markers, command logs, and file contracts."
+      },
+      {
+        "name": "`RECEIPT.json`",
+        "desc": "Structured JSON receipt containing sensor verdicts and artifact hashes."
+      }
+    ],
+    "guideProTips": [
+      "Run `liecatcher run` right before creating a pull request from an autonomous coding agent branch.",
+      "Combine `liecatchers` with `Kayforkind/agent-receipts` when you need Ed25519 cryptographic signing of build/test receipts.",
+      "Works on both Windows PowerShell and Linux/macOS shells."
+    ],
+    "guideSpecs": "Repo: `Kayforkind/liecatchers` · Runtime: Python 3.11+ / `uvx` · Output: `RECEIPT.json` + Exit Code Gate",
+    "videoDuration": "37s"
   },
   {
     "id": "bookguide",
@@ -837,7 +1968,58 @@
     "exampleOutputDetail": "Plugs into Cursor, Claude Code, VS Code & Antigravity; returns chapter/page locators and structured frameworks",
     "sampleOutputCode": "mcp: book-guide -> cite_locator('Designing Data-Intensive Apps', ch=5) + run_playbook() [OK]",
     "video": "./videos/bookguide.mp4",
-    "poster": "./shots/bookguide.jpg"
+    "poster": "./shots/bookguide.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Install Book Guide MCP & Point at Your Local Books Folder",
+        "ui": "MCP Server Config (book-guide-mcp)",
+        "narration": "To turn your own technical books into cited agent playbooks, install Kayforkind/book-guide-mcp with uv and register the stdio server in your MCP client.",
+        "guide": "Clone `https://github.com/Kayforkind/book-guide-mcp`, install via `uv sync`, and add the `book-guide-mcp` stdio command to your Claude Desktop, Cursor, or Antigravity MCP config.",
+        "result": "Your coding agent gains local-first book indexing and citation tools."
+      },
+      {
+        "title": "Step 2: Index Your User-Supplied PDF / EPUB / Markdown Books (L0–L1)",
+        "ui": "L0 Library Indexer & Passage Locator",
+        "narration": "Second, point the indexer at your local folder of textbooks or architecture guides. It builds chapter and section locators locally without uploading copyrighted text.",
+        "guide": "Call the L0 library indexing tool on your local directory of books. The server builds a local searchable index with chapter, section, and page locators.",
+        "result": "Fast local passage retrieval with exact source citations."
+      },
+      {
+        "title": "Step 3: Generate Cited Engineering Playbooks & Checklists (L2–L3)",
+        "ui": "Playbook & Checklist Generator",
+        "narration": "Third, ask your agent to synthesize a step-by-step engineering playbook or review checklist from a specific chapter, complete with exact page citations.",
+        "guide": "Invoke the L2/L3 playbook tools to turn a book chapter (e.g., distributed consensus or API design) into an actionable checklist where every rule cites its exact chapter/page locator.",
+        "result": "Grounded engineering playbooks backed by real textbook citations."
+      },
+      {
+        "title": "Step 4: Run Interactive Socratic or Avicenna Study Tutors (L4)",
+        "ui": "L4 Socratic & Avicenna Tutor Modes",
+        "narration": "Finally, use the L4 Socratic or Avicenna tutor modes to test your understanding through guided questions anchored to the text.",
+        "guide": "Start an L4 tutor session (`01-socratic-tutor` or `02-avicenna-framework`) to walk through complex chapters interactively with cited feedback.",
+        "result": "Deep technical mastery grounded in your own local library."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "L0–L1 Library Index & Search",
+        "desc": "Indexes local user-provided books and retrieves passages with exact chapter/page locators."
+      },
+      {
+        "name": "L2–L3 Playbook & Checklist Builder",
+        "desc": "Transforms chapters into cited engineering checklists and decision trees."
+      },
+      {
+        "name": "L4 Socratic & Avicenna Tutors",
+        "desc": "Interactive guided study modes over MCP stdio."
+      }
+    ],
+    "guideProTips": [
+      "Use Book Guide MCP during code reviews by indexing your team's architecture books and asking the agent to audit a PR against specific cited chapters.",
+      "All indexing runs locally on your machine—no copyrighted book files are bundled in the repo or uploaded to third-party servers.",
+      "See `docs/examples/01-socratic-tutor.md` and `02-avicenna-framework.md` in the repository for ready-to-run prompts."
+    ],
+    "guideSpecs": "Repo: `Kayforkind/book-guide-mcp` · Protocol: Model Context Protocol (MCP stdio) · Runtime: Python / `uv`",
+    "videoDuration": "37s"
   },
   {
     "id": "datainsights",
@@ -878,7 +2060,58 @@
     "exampleOutputDetail": "Searchable command center, source availability history, agent JSON endpoints, and print-ready weekly PDF briefs",
     "sampleOutputCode": "GET /api/briefs/daily -> 5W1H synthesis, top 5 momentum signals, 3 experiments [OK]",
     "video": "./videos/datainsights.mp4",
-    "poster": "./shots/datainsights.jpg"
+    "poster": "./shots/datainsights.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Clone Data Insights & Start the Local Node Server",
+        "ui": "Terminal (npm install && npm run dev)",
+        "narration": "To run your own technology and security intelligence portal, clone Kayforkind/data-insights, run npm install and npm run dev, and open localhost port 3000.",
+        "guide": "Clone `https://github.com/Kayforkind/data-insights`, run `npm install && npm run dev`, and open the local web portal (or visit the live edge deployment).",
+        "result": "The signal aggregation engine and web portal start locally."
+      },
+      {
+        "title": "Step 2: Ingest & Normalize Public Tech, Security & Research Feeds",
+        "ui": "Feed Normalizer & Momentum Scorer",
+        "narration": "Second, the collector fetches public RSS and API feeds across technology, security advisories, and research preprints, deduplicating stories and scoring topic momentum.",
+        "guide": "Trigger feed ingestion or let the scheduled collector normalize headlines across tech news, CVE advisories, arXiv papers, and startup launches.",
+        "result": "Deduplicated signal river with source-health telemetry."
+      },
+      {
+        "title": "Step 3: Read the Daily 5W1H Brief & Topic Momentum Charts",
+        "ui": "Daily 5W1H Brief View",
+        "narration": "Third, open the Daily 5W1H Brief view to read structured Who, What, When, Where, Why, and How syntheses for the top stories of the day.",
+        "guide": "Switch to the **Daily 5W1H Brief** tab to review structured executive summaries (`Who / What / When / Where / Why / How`) and rising keyword velocity.",
+        "result": "High-signal daily briefing without algorithmic social feed noise."
+      },
+      {
+        "title": "Step 4: Export Print-Ready Weekly PDF Briefs or Query the JSON API",
+        "ui": "Weekly PDF Export & /api/briefs JSON Endpoints",
+        "narration": "Finally, export the Weekly Synthesis report as a print-ready PDF, or query the local JSON endpoints directly from your AI agents.",
+        "guide": "Click **Export Weekly PDF** for a clean executive briefing document, or query `/api/briefs/daily` from your scripts and agents.",
+        "result": "Self-hosted intelligence pipeline with PDF and JSON outputs."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Signal River Portal",
+        "desc": "Real-time categorized stream of tech, security, and research items."
+      },
+      {
+        "name": "Daily 5W1H Synthesizer",
+        "desc": "Structures complex news events into Who, What, When, Where, Why, and How."
+      },
+      {
+        "name": "Weekly Executive Report & JSON API",
+        "desc": "Print-formatted weekly synthesis and machine-readable REST endpoints."
+      }
+    ],
+    "guideProTips": [
+      "Customize the feed list in the configuration to track your specific industry vertical, competitor changelogs, or security advisories.",
+      "Use the built-in source availability monitor to spot broken or rate-limited RSS feeds automatically.",
+      "Agents can poll the JSON endpoints to include daily industry context in morning briefings."
+    ],
+    "guideSpecs": "Repo: `Kayforkind/data-insights` · Runtime: Node.js · Outputs: Web Portal, 5W1H Daily Brief, Weekly PDF, JSON API",
+    "videoDuration": "38s"
   },
   {
     "id": "ironaxe",
@@ -919,6 +2152,57 @@
     "exampleOutputDetail": "Multiple playable fighters, combo chains, throw mechanics, elevation stages, and MIT-licensed open-source scenes",
     "sampleOutputCode": "FighterStateMachine -> AttackCombo(3) -> Hitstop(0.06s) + ScreenShake + TeamMagic [OK]",
     "video": "./videos/ironaxe.mp4",
-    "poster": "./shots/ironaxe.jpg"
+    "poster": "./shots/ironaxe.jpg",
+    "guideSteps": [
+      {
+        "title": "Step 1: Clone Iron Axe: Legacy & Open in Godot Engine 4.3+",
+        "ui": "Godot 4 Project Manager (project.godot)",
+        "narration": "To play or modify Iron Axe Legacy, clone Kayforkind/iron-axe-legacy, open project.godot in Godot Engine 4.3 or newer, and press F5 to launch the game.",
+        "guide": "Clone `https://github.com/Kayforkind/iron-axe-legacy`, open `project.godot` in **Godot Engine 4.3+**, and press `F5` (Run Project).",
+        "result": "The 60 FPS 2.5D side-scrolling beat-'em-up prototype launches immediately."
+      },
+      {
+        "title": "Step 2: Pick Your Fighter & Master Elevation-Lane Movement",
+        "ui": "Character Select & 2.5D Depth Lanes",
+        "narration": "Second, choose from the four original heroes—such as Kaelen Ironhand or Seraphina Vance—and move across the 2.5D depth lanes using WASD or a gamepad.",
+        "guide": "Select one of the 4 original characters (Kaelen, Seraphina, Brann, Nyx) and navigate the 2.5D combat arena with keyboard (`WASD` / Arrow keys) or gamepad.",
+        "result": "Responsive 2.5D lane positioning and elevation jumping."
+      },
+      {
+        "title": "Step 3: Execute Light/Heavy Combo Chains, Grabs & Throws",
+        "ui": "Combat State Machine (Attack, Grab, Throw, Magic)",
+        "narration": "Third, chain light and heavy attacks into multi-hit combos, grab stunned enemies to throw them across the stage, and trigger screen-clearing team magic.",
+        "guide": "Use Attack, Jump-Attack, Dash-Attack, Grab/Throw, and Special Magic inputs. Notice the crisp hitstop frames, damage popups, and camera shake on heavy hits.",
+        "result": "Arcade-authentic Golden Axe / Streets of Rage style combat feel."
+      },
+      {
+        "title": "Step 4: Customize GDScript Combat Tunables & Export Builds",
+        "ui": "GDScript State Machine & Godot Export",
+        "narration": "Finally, inspect the modular GDScript state machines and hitbox resources in the editor to add new enemies, stages, or export a desktop or WebGL build.",
+        "guide": "Open the `scripts/` and `scenes/` folders in Godot to tune hitboxes, knockback curves, enemy AI waves, or export to Windows, Linux, macOS, or Web.",
+        "result": "100% original, MIT-licensed Godot 4 beat-'em-up codebase."
+      }
+    ],
+    "guideControls": [
+      {
+        "name": "Movement (`WASD` / D-Pad / Left Stick)",
+        "desc": "8-way movement across 2.5D depth lanes and elevation platforms."
+      },
+      {
+        "name": "Combat Actions (Attack, Jump, Dash, Grab, Magic)",
+        "desc": "Full state-machine combo trees, grapple throws, and elemental magic."
+      },
+      {
+        "name": "Godot 4.3+ Editor (`project.godot`)",
+        "desc": "Clean GDScript architecture with zero proprietary asset dependencies."
+      }
+    ],
+    "guideProTips": [
+      "Use vertical lane movement (`Up`/`Down`) to avoid linear enemy charges before counter-attacking with a dash-strike.",
+      "All sprites, lore, and GDScript combat controllers are 100% original and MIT-licensed—ideal as a starter template for your own 2.5D action game.",
+      "Adjust hitstop duration and screen-shake intensity in the combat controller script to tune game-feel."
+    ],
+    "guideSpecs": "Repo: `Kayforkind/iron-axe-legacy` · Engine: Godot 4.3+ (GDScript) · License: MIT (100% original IP)",
+    "videoDuration": "41s"
   }
 ]

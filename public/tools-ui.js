@@ -106,7 +106,7 @@ document.querySelectorAll(".tide-card").forEach(function(card){
   var vid = card.querySelector("video");
   if(!vid) return;
   card.addEventListener("mouseenter", function(){ vid.play().catch(function(){}); });
-  card.addEventListener("mouseleave", function(){ vid.pause(); });
+  card.addEventListener("mouseleave", function(){ if(vid.muted) vid.pause(); });
 });
 var nlmVid = document.getElementById("nlmHubVideo");
 document.querySelectorAll(".nlm-jump").forEach(function(btn){
@@ -137,4 +137,43 @@ tideTabs.forEach(function(tab){
   });
 });
 if(tideSearch) tideSearch.addEventListener("input", filterTide);
+
+document.querySelectorAll(".tide-sound-btn").forEach(function(btn){
+  btn.addEventListener("click", function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var card = btn.closest(".tide-card");
+    if(!card) return;
+    var vid = card.querySelector("video");
+    if(!vid) return;
+    if(!vid.muted && !vid.paused){
+      vid.muted = true;
+      btn.classList.remove("playing");
+      btn.textContent = "🔊 Play with Voiceover";
+      return;
+    }
+    document.querySelectorAll(".tide-card video").forEach(function(other){
+      if(other !== vid){ other.pause(); other.muted = true; }
+    });
+    document.querySelectorAll(".tide-sound-btn").forEach(function(b){
+      b.classList.remove("playing");
+      b.textContent = "🔊 Play with Voiceover";
+    });
+    vid.muted = false;
+    vid.controls = true;
+    if(vid.currentTime < 0.5 || vid.ended) vid.currentTime = 0;
+    vid.play().catch(function(){});
+    btn.classList.add("playing");
+    btn.textContent = "🔇 Mute Voiceover";
+  });
+});
+
+document.querySelectorAll('#nav a[href^="#"]').forEach(function(a){
+  a.addEventListener("click", function(e){
+    var id = a.getAttribute("href");
+    var el = id && id.length > 1 ? document.querySelector(id) : null;
+    if(el){ e.preventDefault(); history.replaceState(null, "", id); el.scrollIntoView({behavior: "instant"}); }
+  });
+});
+
 })();

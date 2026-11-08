@@ -309,6 +309,19 @@ def landing(t, all_tools):
     ex_out = t.get('exampleOutput', 'Verified output downloaded directly to your device')
     ex_out_d = t.get('exampleOutputDetail', 'Zero bytes uploaded to any server.')
     ex_code = t.get('sampleOutputCode', 'CSP: default-src \'none\' | 0 bytes uploaded')
+    g_steps = t.get('guideSteps', [])
+    g_ctrls = t.get('guideControls', [])
+    g_tips = t.get('guideProTips', [])
+    g_steps_html = '\n'.join(
+        f'    <div class="io-card"><small>{gs["title"]} · [{gs["ui"]}]</small>'
+        f'<b>{gs["guide"]}</b><span>✓ Result: {gs["result"]}</span></div>'
+        for gs in g_steps
+    )
+    g_ctrls_html = '\n'.join(
+        f'      <li><code>{c["name"]}</code> — {c["desc"]}</li>'
+        for c in g_ctrls
+    )
+    g_tips_html = '\n'.join(f'      <li>{tip}</li>' for tip in g_tips)
     others = []
     for x in all_tools:
         if x['id'] == t['id']:
@@ -339,15 +352,32 @@ def landing(t, all_tools):
   <div class="cta">
     <a class="btn primary" href="./demo.html">Run it right here &rarr;</a>
     <a class="btn ghost" href="{pretty}">navigatorslab.com/{PRETTY[t['id']]}</a>
-    <a class="btn ghost" href="{HUB}/videos/notebooklm-overview.mp4">🎙️ Watch Suite Video Overview</a>
+    <a class="btn ghost" href="{HUB}/videos/notebooklm-overview.mp4">🎬 Watch Full Suite Usage Guide</a>
   </div>
 
-  <h2>🎬 Step-by-Step Workflow Video &amp; Concrete Example</h2>
+  <h2>🔊 Narrated Step-by-Step Usage Tutorial Video ({t.get('videoDuration', '30s')})</h2>
   <div class="vid-wrap">
-    <video controls autoplay muted loop playsinline preload="metadata" poster="./poster.jpg" data-aspect="horizontal">
+    <video controls playsinline preload="metadata" poster="./poster.jpg" data-aspect="horizontal">
       <source src="./demo.mp4" type="video/mp4">
     </video>
   </div>
+
+  <h2>📖 Detailed Step-by-Step User Guide</h2>
+  <div class="io-grid">
+{g_steps_html}
+  </div>
+
+  <h2>🎛️ UI Controls &amp; Shortcuts Reference</h2>
+  <ul class="feats">
+{g_ctrls_html}
+  </ul>
+
+  <h2>💡 Pro Tips &amp; Real-World Workflows</h2>
+  <ul class="feats">
+{g_tips_html}
+  </ul>
+
+  <h2>⚡ Concrete Example: Input → Engine → Output</h2>
   <div class="io-grid">
     <div class="io-card">
       <small>1 · Raw Input</small>
@@ -430,6 +460,12 @@ def readme(t, all_tools):
     ex_out = t.get('exampleOutput', 'Verified local output')
     ex_out_d = t.get('exampleOutputDetail', '')
     ex_code = t.get('sampleOutputCode', '')
+    g_steps_md = '\n\n'.join(
+        f"### {gs['title']} (`{gs['ui']}`)\n- **How to do it:** {gs['guide']}\n- **Expected result:** {gs['result']}"
+        for gs in t.get('guideSteps', [])
+    )
+    g_ctrls_md = '\n'.join(f"| `{c['name']}` | {c['desc']} |" for c in t.get('guideControls', []))
+    g_tips_md = '\n'.join(f"- 💡 {tip}" for tip in t.get('guideProTips', []))
     rows = []
     for x in all_tools:
         xi = x['icon'].replace('\ufe0f', '')
@@ -444,13 +480,27 @@ def readme(t, all_tools):
 
 <h4 align="center">
   &#9654; <a href="{tool_url}">Open it on navigatorslab.com</a> &mdash; free, no sign-up, nothing uploaded<br>
-  <a href="https://navigatorslab.com/{PRETTY[t['id']]}">navigatorslab.com/{PRETTY[t['id']]}</a> &middot; <a href="{HUB}/videos/{t['id']}.mp4">Watch 16:9 Workflow Video</a> &middot; <a href="{HUB}/videos/notebooklm-overview.mp4">Watch NotebookLM Deep Dive</a><br>
+  <a href="https://navigatorslab.com/{PRETTY[t['id']]}">navigatorslab.com/{PRETTY[t['id']]}</a> &middot; <a href="{HUB}/videos/{t['id']}.mp4">🔊 Watch Narrated Step-by-Step Tutorial Video</a> &middot; <a href="{HUB}/videos/notebooklm-overview.mp4">Watch Full Suite Hands-On Video</a><br>
   This repo's Pages site runs the <em>actual tool</em>: <code>demo.html</code>
 </h4>
 
-![{t['name']} Input to Output Breakdown](poster.jpg)
+![{t['name']} Annotated Live Usage Frame](poster.jpg)
 
 {t['detail']}
+
+## 📖 Complete Step-by-Step User Guide
+
+{g_steps_md}
+
+## 🎛️ UI Controls, Shortcuts & Parameters Reference
+
+| Control / Shortcut | What It Does |
+|---|---|
+{g_ctrls_md}
+
+## 💡 Pro Tips & Real-World Workflows
+
+{g_tips_md}
 
 ## 🧪 Concrete Example: Input → Engine → Output
 
@@ -464,8 +514,8 @@ def readme(t, all_tools):
 {ex_code}
 ```
 
-- 🎬 **16:9 Tool Demo Video:** [`demo.mp4`](./demo.mp4) (also live at [`{HUB}/videos/{t['id']}.mp4`]({HUB}/videos/{t['id']}.mp4))
-- 🎙️ **NotebookLM Dual-Host Suite Video Overview:** [`{HUB}/videos/notebooklm-overview.mp4`]({HUB}/videos/notebooklm-overview.mp4)
+- 🔊 **Narrated Step-by-Step Usage Tutorial Video (`{t.get('videoDuration', '30s')}`):** [`demo.mp4`](./demo.mp4) (also live at [`{HUB}/videos/{t['id']}.mp4`]({HUB}/videos/{t['id']}.mp4))
+- 🎬 **Full Suite Hands-On Video Guide:** [`{HUB}/videos/notebooklm-overview.mp4`]({HUB}/videos/notebooklm-overview.mp4)
 
 ## ✅ What it does
 

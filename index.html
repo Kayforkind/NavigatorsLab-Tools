@@ -147,6 +147,30 @@ h2{font-size:clamp(30px,4vw,48px);line-height:1.08;letter-spacing:-.025em;font-w
 .tide-btn:hover{border-color:#2dd4bf;color:#2dd4bf}
 .tide-btn.primary{background:linear-gradient(135deg,#2dd4bf,#38bdf8);color:#041017;border-color:transparent;font-weight:700}
 .tide-btn.primary:hover{filter:brightness(1.08);color:#041017}
+
+.tide-sound-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 14px;background:rgba(8,13,24,.95);border-bottom:1px solid var(--line);font-size:12px}
+.tide-sound-btn{background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.45);color:#5eead4;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s}
+.tide-sound-btn:hover,.tide-sound-btn.playing{background:#2dd4bf;color:#041017;border-color:#2dd4bf}
+.tide-dur-tag{font-family:var(--font-m);font-size:11px;color:#94a3b8}
+.guide-drawer{margin:0 0 14px;background:rgba(6,10,18,.92);border:1px solid rgba(94,234,212,.26);border-radius:11px;overflow:hidden}
+.guide-drawer summary{padding:9px 12px;font-size:12.5px;font-weight:700;color:#5eead4;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.guide-drawer summary::-webkit-details-marker{display:none}
+.guide-drawer summary::after{content:"＋ Expand 4-Step Guide";font-family:var(--font-m);font-size:10.5px;color:#94a3b8;font-weight:500}
+.guide-drawer[open] summary{border-bottom:1px solid rgba(148,163,184,.16);background:rgba(45,212,191,.08)}
+.guide-drawer[open] summary::after{content:"－ Collapse"}
+.guide-drawer-body{padding:11px 12px;font-size:12px;display:flex;flex-direction:column;gap:9px}
+.g-step{background:rgba(13,19,33,.9);border:1px solid rgba(148,163,184,.14);border-radius:8px;padding:8px 10px}
+.g-step-top{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.g-step-top b{color:#eef2fa;font-size:12px}
+.g-step-ui{font-family:var(--font-m);font-size:10px;color:#5eead4;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);padding:1px 6px;border-radius:4px}
+.g-step p{color:#cbd5e1;font-size:11.5px;line-height:1.45;margin:0 0 4px}
+.g-step-res{font-family:var(--font-m);font-size:10.5px;color:#6ee7b7}
+.g-subhead{font-family:var(--font-m);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#a78bfa;margin-top:4px}
+.g-ctrl-list{display:flex;flex-direction:column;gap:4px}
+.g-ctrl-item{font-size:11.5px;color:#cbd5e1;line-height:1.4}
+.g-ctrl-item code{font-family:var(--font-m);color:#5eead4;background:rgba(45,212,191,.08);padding:1px 5px;border-radius:4px;margin-right:5px}
+.g-tip-list{margin:0;padding-left:16px;color:#94a3b8;font-size:11.5px;line-height:1.45}
+
 @media(max-width:920px){.nlm-studio-grid{grid-template-columns:1fr}.tide-search{min-width:100%}}
 
 </style>
@@ -324,11 +348,11 @@ td.ver{color:var(--mut);font-size:14px}
     <div class="nlm-studio-box">
       <div class="nlm-studio-head">
         <div>
-          <span class="sec-tag" style="margin-bottom:6px;display:inline-block">🎙️ NotebookLM Audio &amp; Video Deep Dive</span>
-          <h2 class="sec-h" style="font-size:clamp(1.6rem,3vw,2.3rem);margin:4px 0 6px">Watch how all 24 local-first tools work — Input to Output.</h2>
-          <p class="sec-p" style="margin:0">Dual-host NotebookLM walkthrough of our zero-upload CSP architecture, PDF Studio, Reimagine, concrete browser tool outputs, and the MCP agent suite.</p>
+          <span class="sec-tag" style="margin-bottom:6px;display:inline-block">🎬 Narrated Step-by-Step Usage Guide (With Spoken Commentary)</span>
+          <h2 class="sec-h" style="font-size:clamp(1.6rem,3vw,2.3rem);margin:4px 0 6px">Watch how to actually use the apps — step by step, in the live UI.</h2>
+          <p class="sec-p" style="margin:0">Full 4-minute narrated screen-walkthrough showing real files dropped into the browser, exact UI controls &amp; sliders configured, and verified outputs downloaded across 9 flagship &amp; core tools. Click any chapter on the right to jump directly to that tool's live tutorial.</p>
         </div>
-        <a class="btn-ghost" href="./videos/notebooklm-overview.mp4" download>⬇ Download MP4 Overview</a>
+        <a class="btn-ghost" href="./videos/notebooklm-overview.mp4" download>⬇ Download Full Usage Guide MP4</a>
       </div>
       <div class="nlm-studio-grid">
         <div class="nlm-video-stage">
@@ -336,26 +360,51 @@ td.ver{color:var(--mut);font-size:14px}
             <source src="./videos/notebooklm-overview.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="nlm-chap-list">
+        <div class="nlm-chap-list" style="max-height:430px;overflow-y:auto;padding-right:4px">
           <button type="button" class="nlm-jump" data-seek="0">
-            <small>CHAPTER 01 · 00:00</small>
-            <b>Why Local-First &amp; CSP default-src 'none'</b>
-            <span>How browser network locks &amp; 5-char HIBP k-anonymity protect your files.</span>
+            <small>TOOL 01 · 00:00</small>
+            <b>Photo Privacy Kit — 4-Step Live Usage</b>
+            <span>Strip GPS, camera model and timestamps before posting</span>
           </button>
-          <button type="button" class="nlm-jump" data-seek="31">
-            <small>CHAPTER 02 · 00:31</small>
-            <span><b>Flagships: PDF Studio (213★) &amp; Reimagine</b></span>
-            <span>In-place PDF stream editing, Tesseract OCR, and 17-direction HTML redesign.</span>
+          <button type="button" class="nlm-jump" data-seek="43">
+            <small>TOOL 02 · 00:43</small>
+            <b>Image Shrinker — 4-Step Live Usage</b>
+            <span>Hit “max 2 MB” portal limits without TinyPNG</span>
           </button>
-          <button type="button" class="nlm-jump" data-seek="64">
-            <small>CHAPTER 03 · 01:04</small>
-            <b>Concrete Input → Output Walkthroughs</b>
-            <span>SHA-256 EXIF strip, 16 MB → 294 KB binary search, Receipt OCR to CSV &amp; E-Sign.</span>
+          <button type="button" class="nlm-jump" data-seek="79">
+            <small>TOOL 03 · 01:19</small>
+            <b>Scan &amp; Screenshot Cleaner — 4-Step Live Usage</b>
+            <span>Phone photos of documents → clean, straight PDFs</span>
           </button>
-          <button type="button" class="nlm-jump" data-seek="98">
-            <small>CHAPTER 04 · 01:38</small>
-            <b>AI Agents, MCP Endpoint &amp; liecatchers</b>
-            <span>Stateless /tools/mcp server, Skill Slice verified folders &amp; 10-sensor RECEIPT.json.</span>
+          <button type="button" class="nlm-jump" data-seek="112">
+            <small>TOOL 04 · 01:52</small>
+            <b>Local E-Sign Pad — 4-Step Live Usage</b>
+            <span>Sign this lease tonight — not DocuSign</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="150">
+            <small>TOOL 05 · 02:30</small>
+            <b>Receipt OCR → CSV — 4-Step Live Usage</b>
+            <span>Read totals off receipt photos, export for expenses</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="193">
+            <small>TOOL 06 · 03:13</small>
+            <b>QR Studio — 4-Step Live Usage</b>
+            <span>Generate QR codes and decode QR images — no site sees them</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="231">
+            <small>TOOL 07 · 03:51</small>
+            <b>Invoice / Quote Generator — 4-Step Live Usage</b>
+            <span>One-person shops: hours in, clean PDF out</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="267">
+            <small>TOOL 08 · 04:27</small>
+            <b>PDF Studio — 4-Step Live Usage</b>
+            <span>Edit the text inside your PDF — private, free, open source</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="311">
+            <small>TOOL 09 · 05:11</small>
+            <b>Reimagine — 4-Step Live Usage</b>
+            <span>Redesign any HTML page from its own content</span>
           </button>
         </div>
       </div>
@@ -367,10 +416,10 @@ td.ver{color:var(--mut);font-size:14px}
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <div class="sec-tag">// Complete 24-Project Visual Library</div>
-        <h2 class="sec-h">Every tool, its live 16:9 demo video &amp; real output.</h2>
+        <div class="sec-tag">// Complete 24-Project Visual Library &amp; User Manuals</div>
+        <h2 class="sec-h">Every tool, its narrated live-UI usage video &amp; step-by-step guide.</h2>
       </div>
-      <p class="sec-p">Hover any card to play its 3-step workflow video (<b>1. Raw Input → 2. On-Device Engine → 3. Verified Output</b>), inspect real sample output proof, or click right into the tool.</p>
+      <p class="sec-p">Hover any card to preview the live 4-step workflow, click <b>🔊 Play with Voiceover</b> to hear the spoken step-by-step commentary, or expand <b>📖 How to Use</b> to read the complete control manual and pro tips.</p>
     </div>
 
     <div class="tide-controls">
@@ -385,537 +434,1534 @@ td.ver{color:var(--mut);font-size:14px}
         <button type="button" class="tide-tab" data-cat="design">Design &amp; Flagships</button>
         <button type="button" class="tide-tab" data-cat="agents">Agents &amp; MCP</button>
       </div>
-      <input type="search" id="tideSearch" class="tide-search" placeholder="Search 24 tools, inputs, outputs (e.g. GPS, 300 KB, CSV, PDF, MCP)…" aria-label="Search all 24 tools" />
+      <input type="search" id="tideSearch" class="tide-search" placeholder="Search 24 tools, guides, controls (e.g. GPS, 300 KB, CSV, PDF, MCP)…" aria-label="Search all 24 tools" />
     </div>
 
     <div class="tide-grid">
-      <article class="tide-card" data-cat="privacy" data-search="exif photo privacy kit strip gps, camera model and timestamps before posting exif gps metadata photo privacy strip location camera vacation vacation-photo.jpg (3.4 mb) vacation-photo.clean.jpg (3.34 mb)">
-        <a class="tide-media" href="./detail.html?id=exif" aria-label="Watch Photo Privacy Kit demo and view output examples">
+      <article class="tide-card" data-cat="privacy" data-search="exif photo privacy kit strip gps, camera model and timestamps before posting e x i f   g p s   m e t a d a t a   p h o t o   p r i v a c y   s t r i p   l o c a t i o n   c a m e r a   v a c a t i o n  ">
+        <a class="tide-media" href="./detail.html?id=exif" aria-label="Watch Photo Privacy Kit narrated tutorial and read full user guide">
           <video src="./videos/exif.mp4" poster="./shots/exif.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🛡️ Privacy</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 43s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 43s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./exif.html">Photo Privacy Kit</a></h3>
           </div>
           <p class="tide-tag">Strip GPS, camera model and timestamps before posting</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>vacation-photo.jpg (3.4 MB)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>vacation-photo.clean.jpg (3.34 MB)</span></div>
-            <div class="tide-io-code">GPS: REMOVED | Camera: REMOVED | Thumbnail: REMOVED | Pixels SHA-256: IDENTICAL [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Load Your Photo (Drag &amp; Drop or Ctrl+V)</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The file loads immediately into browser memory with zero network activity.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Inspect the Live Metadata &amp; GPS Leak Report</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Every detected EXIF, XMP, IPTC, and comment segment is listed byte-by-byte.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Strip Metadata &amp; Toggle SHA-256 Pixel Proof</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The segment parser strips APP1/APP13/XMP/COM markers without re-encoding your pixels.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Verify GPS CLEAR &amp; Save Cleaned Image</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Cleaned `.clean.jpg` / `.png` / `.webp` saved locally with zero generation loss.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Press `Ctrl+V` right after taking a system screenshot to strip OS color-profile and timestamp chunks before sharing on Slack, Discord, or GitHub issues.</li>
+              <li>Because Photo Privacy Kit strips container markers at the byte level without re-compressing JPEG blocks, your photo never suffers JPEG generation loss.</li>
+              <li>Drop a cleaned `.clean.jpg` file back into the dropzone at any time to confirm it reports `0 metadata segments`.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./exif.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=exif">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=exif">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="privacy" data-search="breachcheck password breach checker has this password been breached? — it never leaves your tab password breach pwned haveibeenpwned hibp leak check security k-anonymity candidate password typed in tab breach exposure verdict">
-        <a class="tide-media" href="./detail.html?id=breachcheck" aria-label="Watch Password Breach Checker demo and view output examples">
+      <article class="tide-card" data-cat="privacy" data-search="breachcheck password breach checker has this password been breached? — it never leaves your tab p a s s w o r d   b r e a c h   p w n e d   h a v e i b e e n p w n e d   h i b p   l e a k   c h e c k   s e c u r i t y   k - a n o n y m i t y  ">
+        <a class="tide-media" href="./detail.html?id=breachcheck" aria-label="Watch Password Breach Checker narrated tutorial and read full user guide">
           <video src="./videos/breachcheck.mp4" poster="./shots/breachcheck.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🔐 Privacy</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 38s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 38s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./breachcheck.html">Password Breach Checker</a></h3>
           </div>
           <p class="tide-tag">Has this password been breached? — it never leaves your tab</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Candidate password typed in tab</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Breach Exposure Verdict</span></div>
-            <div class="tide-io-code">GET /range/5BAA6 -&gt; Local suffix match: 1E4C9...8FD8:10693022 (Exposed)</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Type a Password to Test (Zero Keystrokes Sent)</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Local entropy and offline crack-time estimates update in your tab.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Click Check Breach Database to Hash Locally via WebCrypto</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The remaining 35 characters of your password hash never leave your device.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Read the Breach Exposure Count &amp; Crack-Time Verdict</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Immediate red alert if breached, or green confirmation if 0 matches found.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Verify the 5-Character k-Anonymity Network Proof</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Mathematical k-anonymity verification you can confirm in Browser DevTools Network tab.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Open Browser DevTools (`F12` → **Network** tab) while clicking Check: you will see a single `GET https://api.pwnedpasswords.com/range/XXXXX` request containing only 5 hex characters.</li>
+              <li>Even if a password reports `Not found in breaches`, check the local entropy readout—short dictionary words with numbers are still vulnerable to offline GPU cracking.</li>
+              <li>Use a unique 16+ character passphrase or password-manager-generated string for every critical account.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./breachcheck.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=breachcheck">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=breachcheck">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="privacy" data-search="metadata metadata &amp; hidden-data checker see what&#x27;s really inside a file — then strip it metadata hidden data docx xlsx pdf author company inspect ooxml board-proposal-v4.docx &amp;amp; q3-model.pdf board-proposal-v4.clean.docx">
-        <a class="tide-media" href="./detail.html?id=metadata" aria-label="Watch Metadata &amp; Hidden-Data Checker demo and view output examples">
+      <article class="tide-card" data-cat="privacy" data-search="metadata metadata &amp; hidden-data checker see what&#x27;s really inside a file — then strip it m e t a d a t a   h i d d e n   d a t a   d o c x   x l s x   p d f   a u t h o r   c o m p a n y   i n s p e c t   o o x m l  ">
+        <a class="tide-media" href="./detail.html?id=metadata" aria-label="Watch Metadata &amp; Hidden-Data Checker narrated tutorial and read full user guide">
           <video src="./videos/metadata.mp4" poster="./shots/metadata.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🔍 Privacy</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 41s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 41s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./metadata.html">Metadata &amp; Hidden-Data Checker</a></h3>
           </div>
           <p class="tide-tag">See what&#x27;s really inside a file — then strip it</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Board-Proposal-v4.docx &amp; Q3-Model.pdf</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Board-Proposal-v4.clean.docx</span></div>
-            <div class="tide-io-code">dc:creator: REMOVED | cp:revision: REMOVED | TotalTime: 0 | Re-check: 0 hidden fields [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop Documents or Images Into the Inspector</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The engine parses container dictionaries and ZIP XML streams locally.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Review Author Names, Company &amp; Revision History</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ All hidden identity and revision fields are highlighted clearly on screen.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Click Clean &amp; Download All</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ A sanitized copy of your PDF, Office document, or image is rebuilt in memory.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Re-Drop to Verify Zero Hidden Fields</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Document is safe to send to clients, opposing counsel, or public portals.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Always run Word (`.docx`) and PDF proposals through Metadata Checker before sending to clients—Word records cumulative editing minutes (`TotalTime`) and previous authors by default.</li>
+              <li>After cleaning metadata properties, remember to also check visible document body text for comments or tracked changes.</li>
+              <li>Combine with `share-safe` CLI in CI pipelines if you publish PDFs automatically from a repository.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./metadata.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=metadata">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=metadata">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="images" data-search="shrink image shrinker hit “max 2 mb” portal limits without tinypng compress shrink resize convert jpeg png webp target size email passport-scan.png (16.0 mb, 4000×3000) passport-scan.shrunk.jpg (294 kb)">
-        <a class="tide-media" href="./detail.html?id=shrink" aria-label="Watch Image Shrinker demo and view output examples">
+      <article class="tide-card" data-cat="images" data-search="shrink image shrinker hit “max 2 mb” portal limits without tinypng c o m p r e s s   s h r i n k   r e s i z e   c o n v e r t   j p e g   p n g   w e b p   t a r g e t   s i z e   e m a i l  ">
+        <a class="tide-media" href="./detail.html?id=shrink" aria-label="Watch Image Shrinker narrated tutorial and read full user guide">
           <video src="./videos/shrink.mp4" poster="./shots/shrink.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🗜️ Images</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 36s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 36s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./shrink.html">Image Shrinker</a></h3>
           </div>
           <p class="tide-tag">Hit “max 2 MB” portal limits without TinyPNG</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>passport-scan.png (16.0 MB, 4000×3000)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>passport-scan.shrunk.jpg (294 KB)</span></div>
-            <div class="tide-io-code">Target: &lt;=300 KB | Binary Search: q=0.50 -&gt; q=0.72 -&gt; q=0.68 | Output: 294,112 bytes [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop One or More Large Images</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Each image&#x27;s original dimensions and byte size are listed.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Pick Output Format &amp; Enter Target Kilobyte Cap</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Target byte ceiling and encoder format are locked in (also deep-linkable via `?format=webp&amp;targetKB=300`).</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Click Shrink &amp; Download to Binary-Search Quality</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Highest possible visual quality that fits strictly beneath your byte cap.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Save Individual Images or a Batch ZIP</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Every output file is guaranteed to pass strict upload size limits on the first try.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>For visa, passport, and government portals that require JPEG under 240 KB or 300 KB, select `JPEG` and set Target KB to `235` or `295` for a safety margin.</li>
+              <li>For web publishing and blog hero images, choose `WebP` with a `150` KB target to cut page weight by 85–95% without visible blur.</li>
+              <li>Batch-drop 20+ product photos at once—Image Shrinker processes them sequentially in your tab and exports one `.zip`.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./shrink.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=shrink">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=shrink">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="documents" data-search="scan scan &amp; screenshot cleaner phone photos of documents → clean, straight pdfs scan document straighten deskew crop grayscale pdf screenshot 3 phone photos of a lease on a gray desk lease-cleaned-300dpi.pdf (3 pages)">
-        <a class="tide-media" href="./detail.html?id=scan" aria-label="Watch Scan &amp; Screenshot Cleaner demo and view output examples">
+      <article class="tide-card" data-cat="documents" data-search="scan scan &amp; screenshot cleaner phone photos of documents → clean, straight pdfs s c a n   d o c u m e n t   s t r a i g h t e n   d e s k e w   c r o p   g r a y s c a l e   p d f   s c r e e n s h o t  ">
+        <a class="tide-media" href="./detail.html?id=scan" aria-label="Watch Scan &amp; Screenshot Cleaner narrated tutorial and read full user guide">
           <video src="./videos/scan.mp4" poster="./shots/scan.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">📄 Documents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 33s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 33s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./scan.html">Scan &amp; Screenshot Cleaner</a></h3>
           </div>
           <p class="tide-tag">Phone photos of documents → clean, straight PDFs</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>3 Phone Photos of a Lease on a Gray Desk</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>lease-cleaned-300dpi.pdf (3 Pages)</span></div>
-            <div class="tide-io-code">Deskew: -2.8 deg | Auto-Levels: 18..238 -&gt; 0..255 | Output: 3-page 300-DPI PDF [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop Phone Photos of Paper Documents</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Page thumbnails appear in `#thumbs` and the first page loads into the interactive canvas (`#cv`).</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Crop Margins &amp; Auto-Deskew Tilted Pages</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Background desk surfaces and perspective tilt are removed cleanly.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Apply Grayscale, Auto-Levels &amp; Contrast Boost</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Dim, shadowed phone photos transform into crisp, high-contrast black-and-white scans.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Export as a Multi-Page 300-DPI PDF or PNG</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ A clean, properly sized 300-DPI multi-page PDF downloads locally.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Shoot paper documents against a darker desk or table surface so the page edges are easy to align and crop.</li>
+              <li>Set Contrast between `35` and `50` with Grayscale enabled to replicate a laser-printer photocopy look.</li>
+              <li>After exporting your cleaned PDF, you can open it directly in **Local E-Sign Pad (`sign.html`)** to sign and date it.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./scan.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=scan">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=scan">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="documents" data-search="sign local e-sign pad sign this lease tonight — not docusign signature sign pdf sign flatten lease contract draw mutual-nda-2026.pdf (unsigned) mutual-nda-2026-signed.pdf">
-        <a class="tide-media" href="./detail.html?id=sign" aria-label="Watch Local E-Sign Pad demo and view output examples">
+      <article class="tide-card" data-cat="documents" data-search="sign local e-sign pad sign this lease tonight — not docusign s i g n a t u r e   s i g n   p d f   s i g n   f l a t t e n   l e a s e   c o n t r a c t   d r a w  ">
+        <a class="tide-media" href="./detail.html?id=sign" aria-label="Watch Local E-Sign Pad narrated tutorial and read full user guide">
           <video src="./videos/sign.mp4" poster="./shots/sign.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">✍️ Documents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 38s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 38s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./sign.html">Local E-Sign Pad</a></h3>
           </div>
           <p class="tide-tag">Sign this lease tonight — not DocuSign</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Mutual-NDA-2026.pdf (Unsigned)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Mutual-NDA-2026-signed.pdf</span></div>
-            <div class="tide-io-code">Signature embedded in Page 1 /Resources/XObject | AcroForm fields: 0 (Flattened) [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Draw or Type Your Signature on the Ink Pad</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ High-resolution transparent ink strokes are captured locally.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Lock Signature &amp; Drop Your PDF Document</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The selected PDF page renders live on the preview canvas (`#cv`).</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Enable Date Stamp &amp; Click Page to Place Signature</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Your signature and date stamp appear at the exact coordinates you clicked.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Flatten &amp; Download Signed PDF</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Signed, flattened `.pdf` saved to your machine—nothing ever left your browser.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>On a laptop trackpad, draw slightly larger across the full width of `#pad`, then use the scale control to size it down neatly onto narrow signature lines.</li>
+              <li>Need to sign on multiple pages (e.g., initialing Page 1 and signing Page 4)? Place and stamp Page 1, then drop the resulting PDF to sign Page 4.</li>
+              <li>Because the ink is flattened into the page stream rather than added as a floating annotation, recipients cannot accidentally drag or delete your signature.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./sign.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=sign">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=sign">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="money" data-search="receipts receipts → one pdf shoebox of receipt photos → one date-sorted pdf receipts pdf expenses sort dates bookkeeping landlord freelancer 18 unsorted receipt photos from camera roll 2026-q3-receipts-sorted.pdf">
-        <a class="tide-media" href="./detail.html?id=receipts" aria-label="Watch Receipts → One PDF demo and view output examples">
+      <article class="tide-card" data-cat="money" data-search="receipts receipts → one pdf shoebox of receipt photos → one date-sorted pdf r e c e i p t s   p d f   e x p e n s e s   s o r t   d a t e s   b o o k k e e p i n g   l a n d l o r d   f r e e l a n c e r  ">
+        <a class="tide-media" href="./detail.html?id=receipts" aria-label="Watch Receipts → One PDF narrated tutorial and read full user guide">
           <video src="./videos/receipts.mp4" poster="./shots/receipts.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🧾 Money</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 36s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 36s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./receipts.html">Receipts → One PDF</a></h3>
           </div>
           <p class="tide-tag">Shoebox of receipt photos → one date-sorted PDF</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>18 Unsorted Receipt Photos from Camera Roll</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>2026-Q3-Receipts-Sorted.pdf</span></div>
-            <div class="tide-io-code">Page 1: 2026-09-03 | Page 2: 2026-09-12 | Page 3: 2026-09-19 | Stamped &amp; Merged [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop a Batch of Receipt Photos</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ All receipts load into the workspace and EXIF timestamps are parsed automatically.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Automatic Chronological Sorting by Capture Date</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Receipts are ordered chronologically without manual renaming.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Rotate Sideways Receipts or Reorder Rows</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Every receipt is upright and properly sequenced.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Build One Stamped Multi-Page Expense PDF</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ A single, accountant-ready expense report PDF downloads to your device.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Take receipt photos with your phone camera (which embeds `DateTimeOriginal`) so multi-day business trip receipts sort themselves automatically.</li>
+              <li>Pair this tool with **Receipt OCR to CSV (`ocr.html`)**: use `receipts.html` for the visual PDF attachment and `ocr.html` for the spreadsheet line items.</li>
+              <li>All EXIF GPS coordinates from the original receipt photos are left out of the newly built PDF pages.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./receipts.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=receipts">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=receipts">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="money" data-search="ocr receipt ocr → csv read totals off receipt photos, export for expenses ocr receipt totals csv expenses tracking tesseract scan amounts photos of coffee, hardware &amp;amp; grocery receipts expenses-2026.csv (excel / sheets ready)">
-        <a class="tide-media" href="./detail.html?id=ocr" aria-label="Watch Receipt OCR → CSV demo and view output examples">
+      <article class="tide-card" data-cat="money" data-search="ocr receipt ocr → csv read totals off receipt photos, export for expenses o c r   r e c e i p t   t o t a l s   c s v   e x p e n s e s   t r a c k i n g   t e s s e r a c t   s c a n   a m o u n t s  ">
+        <a class="tide-media" href="./detail.html?id=ocr" aria-label="Watch Receipt OCR → CSV narrated tutorial and read full user guide">
           <video src="./videos/ocr.mp4" poster="./shots/ocr.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🔢 Money</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 43s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 43s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./ocr.html">Receipt OCR → CSV</a></h3>
           </div>
           <p class="tide-tag">Read totals off receipt photos, export for expenses</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Photos of Coffee, Hardware &amp; Grocery Receipts</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>expenses-2026.csv (Excel / Sheets Ready)</span></div>
-            <div class="tide-io-code">date,vendor,category,currency,total,confidence
-2026-09-14,GREEN GROCER,Groceries,USD,23.98,94%</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop Receipt Photos Into the Local OCR Dropzone</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The self-hosted Tesseract WebAssembly OCR engine initializes from the same origin.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Watch On-Device Tesseract WASM Extract Text</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Structured expense rows populate the results table with an OCR confidence score.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Review &amp; Edit Any Low-Confidence Cells Inline</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ 100% verified structured expense rows ready for accounting import.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Export to CSV or TSV for Excel &amp; QuickBooks</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Clean `expenses.csv` file saved locally with zero cloud OCR API fees.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>If a receipt photo is skewed or has dark shadows, run it through **Scan &amp; Screenshot Cleaner (`scan.html`)** with Grayscale + Contrast first to boost OCR accuracy above 95%.</li>
+              <li>The ~24 MB Tesseract language model is fetched once from `navigatorslab.com` and cached by the PWA Service Worker for full offline use afterward.</li>
+              <li>Always glance at rows where `ocr_confidence` is below 80%—crumpled thermal paper often blurs decimal points.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./ocr.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=ocr">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=ocr">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="files" data-search="qr qr studio generate qr codes and decode qr images — no site sees them qr code generate decode scan wifi url png svg barcode office wi-fi credentials / vcard / url wifi-qr.svg (vector) &amp;amp; wifi-qr.png">
-        <a class="tide-media" href="./detail.html?id=qr" aria-label="Watch QR Studio demo and view output examples">
+      <article class="tide-card" data-cat="files" data-search="qr qr studio generate qr codes and decode qr images — no site sees them q r   c o d e   g e n e r a t e   d e c o d e   s c a n   w i f i   u r l   p n g   s v g   b a r c o d e  ">
+        <a class="tide-media" href="./detail.html?id=qr" aria-label="Watch QR Studio narrated tutorial and read full user guide">
           <video src="./videos/qr.mp4" poster="./shots/qr.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🔳 Files</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 38s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 38s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./qr.html">QR Studio</a></h3>
           </div>
           <p class="tide-tag">Generate QR codes and decode QR images — no site sees them</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Office Wi-Fi Credentials / vCard / URL</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>wifi-qr.svg (Vector) &amp; wifi-qr.png</span></div>
-            <div class="tide-io-code">Payload: WIFI:T:WPA;S:NavLab-Guest;P:ultra-secret\!2026;; | Round-trip decode: EXACT [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Type Text/URL or Pick Wi-Fi, vCard, or Email Preset</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Structured payload fields appear (and special characters like `;` and `\` in Wi-Fi passwords are escaped automatically).</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Apply Preset &amp; Tune Error Correction (L / M / Q / H)</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Crisp QR matrix renders immediately with module count and error-correction metadata (`#qrMeta`).</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Export Crisp Vector SVG or High-DPI PNG</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Direct-payload PNG or vector SVG saved locally (never expires, zero bit.ly/redirect middlemen).</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Switch to Decode Tab to Read Any QR Image Locally</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Inspect suspicious QR codes safely without opening untrusted URLs on your phone.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Always choose **SVG** when sending a QR code to a print shop for flyers, business cards, or banners so the module edges stay razor-sharp at any size.</li>
+              <li>Use Error Correction level **Q (25%)** or **H (30%)** for printed stickers outdoors so the code still scans even if scratched or smudged.</li>
+              <li>You can deep-link directly to a generated QR code via URL parameters: `qr.html?text=https://navigatorslab.com&amp;ec=H`.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./qr.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=qr">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=qr">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="media" data-search="audio audio trimmer cut voice notes and clips on a waveform audio trim cut waveform voice podcast mp3 wav clip 40-minute interview voice note (voice-memo.wav) interview-clip-normalized.mp3 (or .wav)">
-        <a class="tide-media" href="./detail.html?id=audio" aria-label="Watch Audio Trimmer demo and view output examples">
+      <article class="tide-card" data-cat="media" data-search="audio audio trimmer cut voice notes and clips on a waveform a u d i o   t r i m   c u t   w a v e f o r m   v o i c e   p o d c a s t   m p 3   w a v   c l i p  ">
+        <a class="tide-media" href="./detail.html?id=audio" aria-label="Watch Audio Trimmer narrated tutorial and read full user guide">
           <video src="./videos/audio.mp4" poster="./shots/audio.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🎧 Media</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 40s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 40s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./audio.html">Audio Trimmer</a></h3>
           </div>
           <p class="tide-tag">Cut voice notes and clips on a waveform</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>40-Minute Interview Voice Note (voice-memo.wav)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>interview-clip-normalized.mp3 (or .wav)</span></div>
-            <div class="tide-io-code">Slice: 1.00s..2.50s (66,150 samples) | Peak: 0.99 | Export: WAV PCM + LAME MP3 (0xFFFB) [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop a Voice Note, Podcast Clip, or Song</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Web Audio API decodes the audio buffer locally and renders the full waveform canvas (`#wave`).</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Inspect the Waveform &amp; Select Start / End Times</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Exact sample boundaries are locked in with live duration readout.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Add Smooth Fade-In / Fade-Out &amp; Pick WAV or MP3</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Envelope and encoder settings are ready for local rendering.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Click Export Trimmed Audio</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Sample-accurate `.wav` or `.mp3` clip saved locally in under a second.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Apply a `0.05s` to `0.15s` fade-in and fade-out when cutting spoken voice notes to eliminate zero-crossing pops at the start and end of the clip.</li>
+              <li>Choose `WAV` when exporting clips for video editors (Premiere, DaVinci Resolve, CapCut) and `MP3` when sharing voice notes over email or chat.</li>
+              <li>Because decoding and LAME MP3 encoding happen entirely in your tab, confidential interview recordings never touch a cloud transcription server.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./audio.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=audio">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=audio">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="money" data-search="invoice invoice / quote generator one-person shops: hours in, clean pdf out invoice quote billing pdf freelance tax hours template freelance consulting hours &amp;amp; line items inv-2026-042.pdf ($408.00 total)">
-        <a class="tide-media" href="./detail.html?id=invoice" aria-label="Watch Invoice / Quote Generator demo and view output examples">
+      <article class="tide-card" data-cat="money" data-search="invoice invoice / quote generator one-person shops: hours in, clean pdf out i n v o i c e   q u o t e   b i l l i n g   p d f   f r e e l a n c e   t a x   h o u r s   t e m p l a t e  ">
+        <a class="tide-media" href="./detail.html?id=invoice" aria-label="Watch Invoice / Quote Generator narrated tutorial and read full user guide">
           <video src="./videos/invoice.mp4" poster="./shots/invoice.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🧮 Money</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 36s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 36s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./invoice.html">Invoice / Quote Generator</a></h3>
           </div>
           <p class="tide-tag">One-person shops: hours in, clean PDF out</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Freelance Consulting Hours &amp; Line Items</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>INV-2026-042.pdf ($408.00 Total)</span></div>
-            <div class="tide-io-code">Subtotal: $400.00 | Discount (10%): -$40.00 | Tax: +$48.00 | PDF Total: $408.00 [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Enter Business Info, Client Details &amp; Currency</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Header details populate the live invoice workspace.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Add Line Items, Quantities &amp; Hourly/Unit Rates</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Each row subtotal calculates automatically as you type.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Configure Tax Percentage, Discounts &amp; Payment Notes</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Exact subtotal, tax, and grand total verified before export.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Download Vector PDF Invoice</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Professional `INV-xxxx.pdf` downloaded locally with zero watermarks or platform fees.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Unlike screenshot-based HTML-to-PDF tools, Invoice Generator draws real vector text streams with `pdf-lib`, so your client&#x27;s accounting software can copy/paste the invoice number and total cleanly.</li>
+              <li>Include your wire/ACH or payment link in the Notes box at the bottom so clients have everything on one page.</li>
+              <li>Need to sign the quote before sending? Drop the exported invoice PDF straight into **Local E-Sign Pad (`sign.html`)**.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./invoice.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=invoice">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=invoice">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="files" data-search="rename batch rename &amp; sort img_5847.jpg → 2026-09-05-receipt-home-depot.jpg rename batch exif date organize files photos sort zip camera roll dump: img_5847.jpg, dsc_0019.jpg... renamed-photos.zip">
-        <a class="tide-media" href="./detail.html?id=rename" aria-label="Watch Batch Rename &amp; Sort demo and view output examples">
+      <article class="tide-card" data-cat="files" data-search="rename batch rename &amp; sort img_5847.jpg → 2026-09-05-receipt-home-depot.jpg r e n a m e   b a t c h   e x i f   d a t e   o r g a n i z e   f i l e s   p h o t o s   s o r t   z i p  ">
+        <a class="tide-media" href="./detail.html?id=rename" aria-label="Watch Batch Rename &amp; Sort narrated tutorial and read full user guide">
           <video src="./videos/rename.mp4" poster="./shots/rename.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🗂️ Files</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 33s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 33s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./rename.html">Batch Rename &amp; Sort</a></h3>
           </div>
           <p class="tide-tag">IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Camera Roll Dump: IMG_5847.jpg, DSC_0019.jpg...</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>renamed-photos.zip</span></div>
-            <div class="tide-io-code">IMG_5847.jpg -&gt; 2026-09-05-receipt-001.jpg | IMG_5848.jpg -&gt; 2026-09-06-receipt-002.jpg [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop a Batch of Photos or Files to Rename</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Files load and EXIF `DateTimeOriginal` timestamps (or file modified dates) are extracted.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Choose Naming Pattern &amp; Custom Slug</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Pattern rule (`YYYY-MM-DD-&lt;slug&gt;-01.ext`) is configured.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Click Preview New Names to Inspect Mapping</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Deterministic, collision-free filenames previewed side-by-side.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Download All Renamed Files as One ZIP</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Cleanly named archive downloaded while original files remain untouched.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Combining photos from two different cameras (e.g., an iPhone and a Sony mirrorless)? Batch Rename sorts and names them by EXIF capture date so both cameras&#x27; shots interleave in true chronological order.</li>
+              <li>Use lowercase hyphenated slugs (`2026-11-08-client-workshop-01.jpg`) for web assets and S3/Cloudflare R2 uploads so URLs never contain `%20` spaces.</li>
+              <li>Your original files on disk are never overwritten—the renamed copies are delivered cleanly inside the downloaded `.zip`.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./rename.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=rename">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=rename">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="images" data-search="printprep print-shop prep exact sizes, bleed, dpi checks, print-ready pdf print bleed dpi 4x6 a4 letter resize photo shop 300dpi family-portrait.jpg (2400×1800 px) portrait-4x6-with-bleed-300dpi.pdf">
-        <a class="tide-media" href="./detail.html?id=printprep" aria-label="Watch Print-Shop Prep demo and view output examples">
+      <article class="tide-card" data-cat="images" data-search="printprep print-shop prep exact sizes, bleed, dpi checks, print-ready pdf p r i n t   b l e e d   d p i   4 x 6   a 4   l e t t e r   r e s i z e   p h o t o   s h o p   3 0 0 d p i  ">
+        <a class="tide-media" href="./detail.html?id=printprep" aria-label="Watch Print-Shop Prep narrated tutorial and read full user guide">
           <video src="./videos/printprep.mp4" poster="./shots/printprep.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🖨️ Images</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 40s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 40s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./printprep.html">Print-Shop Prep</a></h3>
           </div>
           <p class="tide-tag">Exact sizes, bleed, DPI checks, print-ready PDF</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Family-Portrait.jpg (2400×1800 px)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Portrait-4x6-with-bleed-300dpi.pdf</span></div>
-            <div class="tide-io-code">Size: 4x6 in + 0.125 in bleed | Effective DPI: 384 DPI (Sharp [OK]) | MediaBox: 306x450 pt</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop Your Image, Flyer, or Artwork</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Source pixel dimensions and aspect ratio are inspected.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Pick Physical Trim Size &amp; Bleed Margin</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Target physical dimensions (`4.25 × 6.25 in` with bleed) and 300-DPI pixel targets (`1275 × 1875 px`) are calculated.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Click Prepare Print Sheet &amp; Check DPI Verdict</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Visual print proof and DPI quality verdict displayed on screen.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Export Print-Ready PDF at Exact Physical MediaBox</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Print-shop-ready PDF saved locally.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Most commercial print shops (FedEx Office, VistaPrint, local offset printers) require a `0.125 inch` (`3 mm`) bleed so white slivers don&#x27;t appear when the guillotine blade trims the stack.</li>
+              <li>Check the **DPI effective** readout before printing: `300+ DPI` is sharp for handheld postcards/photos; `150–200 DPI` is acceptable for wall posters viewed from 3+ feet away.</li>
+              <li>Open the exported PDF in Adobe Acrobat or PDF Studio to verify the page size in inches matches `Trim Size + (2 × Bleed)`.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./printprep.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=printprep">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=printprep">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="documents" data-search="pdfpages pdf pages reorder, rotate, delete and extract pdf pages pdf pages reorder rotate delete extract merge organize split 40-page scanned packet (pages 2–3 upside down) packet-reordered-merged.pdf">
-        <a class="tide-media" href="./detail.html?id=pdfpages" aria-label="Watch PDF Pages demo and view output examples">
+      <article class="tide-card" data-cat="documents" data-search="pdfpages pdf pages reorder, rotate, delete and extract pdf pages p d f   p a g e s   r e o r d e r   r o t a t e   d e l e t e   e x t r a c t   m e r g e   o r g a n i z e   s p l i t  ">
+        <a class="tide-media" href="./detail.html?id=pdfpages" aria-label="Watch PDF Pages narrated tutorial and read full user guide">
           <video src="./videos/pdfpages.mp4" poster="./shots/pdfpages.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">📑 Documents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 38s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 38s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./pdfpages.html">PDF Pages</a></h3>
           </div>
           <p class="tide-tag">Reorder, rotate, delete and extract PDF pages</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>40-Page Scanned Packet (Pages 2–3 Upside Down)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Packet-Reordered-Merged.pdf</span></div>
-            <div class="tide-io-code">Input: [p1, p2, p3] -&gt; Drag &amp; Rotate 90° -&gt; Output: [p2(90°), p1, p3] (Valid PDF-1.7) [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Drop One or More PDFs to Load Page Thumbnails</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ `pdf.js` renders a live visual thumbnail card (`.pp-cell`) for every page.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Drag Thumbnails to Reorder, Rotate 90°, or Delete</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Page sequence and orientations update visually in real time.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Select Specific Pages or Insert Blank Separator Pages</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Custom page selection or blank separator pages added to the layout.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Rebuild Full PDF or Extract Selected Pages</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Lossless vector page copy built via `pdf-lib` and downloaded locally.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>To merge two or three separate PDFs into one packet, simply drop all of them onto `#dz` one after another, drag the thumbnails into order, and click **Rebuild PDF**.</li>
+              <li>Because `pdf-lib` copies page dictionary nodes directly without rasterizing, vector text and embedded fonts stay 100% sharp and searchable.</li>
+              <li>Need deeper in-place text editing, redaction, or OCR on those pages? Open **PDF Studio (`/pdf-studio/`)**.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./pdfpages.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=pdfpages">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=pdfpages">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="documents" data-search="textdiff text diff compare two texts with word-level highlights diff compare texts changes contract nda merge lines words contract-v1.txt vs counterparty-redline-v2.txt inline word-diff + unified patch (.diff)">
-        <a class="tide-media" href="./detail.html?id=textdiff" aria-label="Watch Text Diff demo and view output examples">
+      <article class="tide-card" data-cat="documents" data-search="textdiff text diff compare two texts with word-level highlights d i f f   c o m p a r e   t e x t s   c h a n g e s   c o n t r a c t   n d a   m e r g e   l i n e s   w o r d s  ">
+        <a class="tide-media" href="./detail.html?id=textdiff" aria-label="Watch Text Diff narrated tutorial and read full user guide">
           <video src="./videos/textdiff.mp4" poster="./shots/textdiff.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🔬 Documents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 32s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 32s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./textdiff.html">Text Diff</a></h3>
           </div>
           <p class="tide-tag">Compare two texts with word-level highlights</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Contract-v1.txt vs Counterparty-Redline-v2.txt</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Inline Word-Diff + Unified Patch (.diff)</span></div>
-            <div class="tide-io-code">@@ -14,1 +14,1 @@
--terminate with [-30-] {+90 business+} days written notice | Similarity: 91.4%</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Paste Original Text (Version A) Into the Left Pane</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Original text is loaded in local browser memory.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Paste Revised Text (Version B) Into the Right Pane</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Both versions are ready for Longest Common Subsequence (LCS) comparison.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Click Compare Texts to Inspect Word-Level Highlights</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Subtle single-word edits (like `30 days` → `45 days`) stand out immediately.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Export Standard Unified .diff Patch File</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Standard `.diff` patch file downloaded locally.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Use Text Diff before signing a counter-party&#x27;s &#x27;clean final PDF&#x27; of an NDA or MSA: copy the text from your draft into `#textA` and the text from their PDF into `#textB` to catch silent edits.</li>
+              <li>AI agents can also call this exact diff engine deterministically via `POST https://navigatorslab.com/tools/mcp` (`text_diff` tool).</li>
+              <li>You can pre-populate inputs via URL parameters (`textdiff.html?a=...&amp;b=...`).</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./textdiff.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=textdiff">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=textdiff">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="design" data-search="reimagine reimagine redesign any html page from its own content reimagine redesign html infographic 3d threejs cinematic dashboard photography landing page generator content-derived design ai agent palette any raw html page, documentation or report 17 redesigned html pages (infographic, 3d, cinematic...)">
-        <a class="tide-media" href="./detail.html?id=reimagine" aria-label="Watch Reimagine demo and view output examples">
+      <article class="tide-card" data-cat="design" data-search="reimagine reimagine redesign any html page from its own content r e i m a g i n e   r e d e s i g n   h t m l   i n f o g r a p h i c   3 d   t h r e e j s   c i n e m a t i c   d a s h b o a r d   p h o t o g r a p h y   l a n d i n g   p a g e   g e n e r a t o r   c o n t e n t - d e r i v e d   d e s i g n   a i   a g e n t   p a l e t t e  ">
+        <a class="tide-media" href="./detail.html?id=reimagine" aria-label="Watch Reimagine narrated tutorial and read full user guide">
           <video src="./videos/reimagine.mp4" poster="./shots/reimagine.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🎨 Design</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 44s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 44s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://navigatorslab.com/reimagine/">Reimagine</a></h3>
+            <h3><a href="./reimagine.html">Reimagine</a></h3>
           </div>
           <p class="tide-tag">Redesign any HTML page from its own content</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Any Raw HTML Page, Documentation or Report</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>17 Redesigned HTML Pages (Infographic, 3D, Cinematic...)</span></div>
-            <div class="tide-io-code">Extracted: 14 metrics, 6 dates, 4 sections -&gt; Rebuilt into 17 directions (Infographic, 3D, Editorial)</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Open Reimagine Playground &amp; Paste HTML or Pick a Preset</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Source HTML is parsed into a structured content AST in your browser.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Deterministic Extraction of Headings, Metrics &amp; Dates</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ 100% factual fidelity guaranteed—no numbers or dates are ever invented or altered.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Switch Across 17 Visual Layout Directions</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Instant full-page visual transformation using your exact source content.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Export Self-Contained HTML or Run the CLI / MCP Server</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Production-ready, self-contained HTML audited across 18 design-health checks.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Use `reimagine-it audit index.html` in CI to score any web page across typography, contrast, layout rhythm, and content preservation.</li>
+              <li>Try the **Infographic** direction on dense quarterly reports or READMEs that contain lots of statistics and milestone dates.</li>
+              <li>All exported HTML pages are self-contained with zero external runtime dependencies.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://navigatorslab.com/reimagine/">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=reimagine">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./reimagine.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=reimagine">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="documents" data-search="textstats text stats words, reading time, readability, keyword density word count characters reading time flesch readability keywords essay density keynote draft / fellowship essay (620 words) readability &amp;amp; rhythm report + markdown table">
-        <a class="tide-media" href="./detail.html?id=textstats" aria-label="Watch Text Stats demo and view output examples">
+      <article class="tide-card" data-cat="documents" data-search="textstats text stats words, reading time, readability, keyword density w o r d   c o u n t   c h a r a c t e r s   r e a d i n g   t i m e   f l e s c h   r e a d a b i l i t y   k e y w o r d s   e s s a y   d e n s i t y  ">
+        <a class="tide-media" href="./detail.html?id=textstats" aria-label="Watch Text Stats narrated tutorial and read full user guide">
           <video src="./videos/textstats.mp4" poster="./shots/textstats.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">📊 Documents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 36s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 36s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
             <h3><a href="./textstats.html">Text Stats</a></h3>
           </div>
           <p class="tide-tag">Words, reading time, readability, keyword density</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Keynote Draft / Fellowship Essay (620 Words)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Readability &amp; Rhythm Report + Markdown Table</span></div>
-            <div class="tide-io-code">Words: 620/650 (95%) | Read: 2.5m | Flesch: 64.2 | Avg Sentence: 14.8 words | Top: privacy (3.2%)</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Paste Your Draft, Article, or Script Into the Editor</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ All metrics compute instantaneously on every keystroke.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Read Live Word Count, Reading Time &amp; Flesch Grade</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Instant readability and length verification.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Audit Top Keyword Density &amp; Overused Terms</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Spot repetitive phrasing or verify SEO topic coverage immediately.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Balance Your Pacing with the Sentence-Rhythm Histogram</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Polished, well-paced prose with verified readability.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Aim for a **Flesch Reading Ease between 60 and 75** (8th–9th grade level) for technical blog posts and product landing pages so readers scan effortlessly.</li>
+              <li>Recording a YouTube Short or presentation? Check the **Speaking Time (`140 wpm`)** card to verify your script fits inside 60 seconds before recording.</li>
+              <li>AI agents can invoke this analyzer over MCP (`POST /tools/mcp` -&gt; `text_stats`) or via URL deep-link (`textstats.html?text=...`).</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
             <a class="tide-btn primary" href="./textstats.html">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=textstats">Video &amp; Examples</a>
+            <a class="tide-btn" href="./detail.html?id=textstats">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="documents" data-search="pdfstudio pdf studio edit the text inside your pdf — private, free, open source pdf editor text edit ocr sign redact forms merge split organize diff on-device ai documents any multi-page pdf, scanned contract or tax form edited, signed, redacted &amp;amp; searchable pdf">
-        <a class="tide-media" href="./detail.html?id=pdfstudio" aria-label="Watch PDF Studio demo and view output examples">
+      <article class="tide-card" data-cat="documents" data-search="pdfstudio pdf studio edit the text inside your pdf — private, free, open source p d f   e d i t o r   t e x t   e d i t   o c r   s i g n   r e d a c t   f o r m s   m e r g e   s p l i t   o r g a n i z e   d i f f   o n - d e v i c e   a i   d o c u m e n t s  ">
+        <a class="tide-media" href="./detail.html?id=pdfstudio" aria-label="Watch PDF Studio narrated tutorial and read full user guide">
           <video src="./videos/pdfstudio.mp4" poster="./shots/pdfstudio.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">📜 Documents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 44s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 44s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://navigatorslab.com/pdf-studio/">PDF Studio</a></h3>
+            <h3><a href="./pdfstudio.html">PDF Studio</a></h3>
           </div>
           <p class="tide-tag">Edit the text inside your PDF — private, free, open source</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Any Multi-Page PDF, Scanned Contract or Tax Form</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Edited, Signed, Redacted &amp; Searchable PDF</span></div>
-            <div class="tide-io-code">In-Place Text Stream Edit [OK] | Vector Redact (Bytes Purged) [OK] | OCR Layer [OK] | 213★ Flagship</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Open PDF Studio &amp; Load Any PDF Document</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Multi-page canvas, thumbnail sidebar, and tool ribbons initialize 100% client-side.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Select In-Place Text Edit, AcroForm, Sign, or Redact</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Interactive editing handles appear directly over the PDF page elements.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Run Tesseract WASM OCR or Compare Document Revisions</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Searchable text layers and revision diffs are computed locally in your browser tab.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Export Your Edited, Redacted, or Signed PDF</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Production-grade edited PDF saved locally with 0 bytes sent to any server.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Unlike basic PDF annotators that merely draw a black rectangle over sensitive text, PDF Studio&#x27;s Redact mode purges the underlying characters from the PDF content stream.</li>
+              <li>Pair PDF Studio with the **`redact-lint`** CLI in CI to verify that no PDF in your organization ships with fake painted-over redactions.</li>
+              <li>Always keep a backup of your original unredacted PDF before exporting a permanently redacted copy.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://navigatorslab.com/pdf-studio/">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=pdfstudio">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./pdfstudio.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=pdfstudio">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="design" data-search="designhealth design health 18 deterministic design-quality checks for html — no llm, no api key design quality audit html checks ci accessibility typography palette motion linter deterministic built html pages in pull request (`**/*.html`) deterministic ci gate verdict (pass / fail report)">
-        <a class="tide-media" href="./detail.html?id=designhealth" aria-label="Watch Design Health demo and view output examples">
+      <article class="tide-card" data-cat="design" data-search="designhealth design health 18 deterministic design-quality checks for html — no llm, no api key d e s i g n   q u a l i t y   a u d i t   h t m l   c h e c k s   c i   a c c e s s i b i l i t y   t y p o g r a p h y   p a l e t t e   m o t i o n   l i n t e r   d e t e r m i n i s t i c  ">
+        <a class="tide-media" href="./detail.html?id=designhealth" aria-label="Watch Design Health narrated tutorial and read full user guide">
           <video src="./videos/designhealth.mp4" poster="./shots/designhealth.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🩺 Design</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 39s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 39s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://github.com/Kayforkind/design-health-action">Design Health</a></h3>
+            <h3><a href="./designhealth.html">Design Health</a></h3>
           </div>
           <p class="tide-tag">18 deterministic design-quality checks for HTML — no LLM, no API key</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Built HTML Pages in Pull Request (`**/*.html`)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Deterministic CI Gate Verdict (Pass / Fail Report)</span></div>
-            <div class="tide-io-code">uses: Kayforkind/design-health-action@v1 -&gt; 18/18 checks PASSED (Typography 3/3, Motion 3/3) [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Add Design Health Action to Your GitHub Workflow</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Runs in ~1 second in CI with zero LLM calls and zero API keys.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Configure Target HTML Glob &amp; Minimum Score Threshold</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Deterministic 18-rule rubric locked for every pull request.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Evaluate 18 Deterministic DOM &amp; CSS Rules</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Per-rule pass/warn/fail table generated automatically.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Review PR Check Summary &amp; Fix Flagged Selectors</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Every shipped web page meets baseline accessibility, motion, and typographic quality.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Pair `design-health-action` with `design-gate` CLI to enforce structural HTML checks both locally in pre-commit hooks and in GitHub Actions.</li>
+              <li>Always include a `@media (prefers-reduced-motion: reduce)` rule in your CSS—Rule M2 checks for this explicitly.</li>
+              <li>Set explicit `width` and `height` (or CSS `aspect-ratio`) on all `&lt;img&gt;` and `&lt;video&gt;` elements to pass the Cumulative Layout Shift (CLS) check.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://github.com/Kayforkind/design-health-action">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=designhealth">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./designhealth.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=designhealth">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="agents" data-search="skillslice skill slice copy one read-verified skill folder — a slice, not the pie skills agents claude cursor codex skills.md verified slice copy install agent task requiring one specific verified skill single verified skill folder installed">
-        <a class="tide-media" href="./detail.html?id=skillslice" aria-label="Watch Skill Slice demo and view output examples">
+      <article class="tide-card" data-cat="agents" data-search="skillslice skill slice copy one read-verified skill folder — a slice, not the pie s k i l l s   a g e n t s   c l a u d e   c u r s o r   c o d e x   s k i l l s . m d   v e r i f i e d   s l i c e   c o p y   i n s t a l l  ">
+        <a class="tide-media" href="./detail.html?id=skillslice" aria-label="Watch Skill Slice narrated tutorial and read full user guide">
           <video src="./videos/skillslice.mp4" poster="./shots/skillslice.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🔪 Agents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 37s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 37s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://github.com/Kayforkind/skill-slice">Skill Slice</a></h3>
+            <h3><a href="./skillslice.html">Skill Slice</a></h3>
           </div>
           <p class="tide-tag">Copy one Read-verified skill folder — a slice, not the pie</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Agent Task Requiring One Specific Verified Skill</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Single Verified Skill Folder Installed</span></div>
-            <div class="tide-io-code">$ npx skills add kazimrmerchant/skill-slice --skill systematic-debugging -&gt; 1 slice installed [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Browse the Skill Slice Catalog for Your Task</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Avoids dumping 50+ unrelated skills into your agent&#x27;s system prompt.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Copy One SKILL.md Folder or Run npx skills add --skill</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Only the single targeted skill is mounted in your workspace.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Progressive Disclosure (Index First, Full Skill on Demand)</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ 90%+ reduction in idle context-window token overhead.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Audit Installed Skills with skills-registry</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Clean, auditable agent skill setup.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Install 1 to 3 skills per project workspace at most—fewer active skills produce sharper tool selection and lower token costs.</li>
+              <li>Keep heavy reference tables in `skills/&lt;name&gt;/references/` so they are only read when specifically needed.</li>
+              <li>Use `Kayforkind/skills-registry` to scan third-party `SKILL.md` files for prompt-injection or risky shell patterns before adopting them.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://github.com/Kayforkind/skill-slice">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=skillslice">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./skillslice.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=skillslice">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="agents" data-search="liecatchers liecatchers your agent said done. prove it — ten sensors, one receipt.json agent verification receipt proof completion git diff lockfiles handoff sensors cli coding agent claims &amp;#x27;all done &amp;amp; tested!&amp;#x27; signed `receipt.json` verification proof">
-        <a class="tide-media" href="./detail.html?id=liecatchers" aria-label="Watch liecatchers demo and view output examples">
+      <article class="tide-card" data-cat="agents" data-search="liecatchers liecatchers your agent said done. prove it — ten sensors, one receipt.json a g e n t   v e r i f i c a t i o n   r e c e i p t   p r o o f   c o m p l e t i o n   g i t   d i f f   l o c k f i l e s   h a n d o f f   s e n s o r s   c l i  ">
+        <a class="tide-media" href="./detail.html?id=liecatchers" aria-label="Watch liecatchers narrated tutorial and read full user guide">
           <video src="./videos/liecatchers.mp4" poster="./shots/liecatchers.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🕵️ Agents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 37s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 37s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://github.com/Kayforkind/liecatchers">liecatchers</a></h3>
+            <h3><a href="./liecatchers.html">liecatchers</a></h3>
           </div>
           <p class="tide-tag">Your agent said Done. Prove it — ten sensors, one RECEIPT.json</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Coding Agent Claims &#x27;All Done &amp; Tested!&#x27;</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Signed `RECEIPT.json` Verification Proof</span></div>
-            <div class="tide-io-code">$ uvx --from . liecatcher run -&gt; 10/10 sensors green -&gt; Wrote signed RECEIPT.json [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Install or Run liecatchers via uvx After an Agent Turn</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Ten independent workspace sensors initialize across git, lockfiles, and artifacts.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Run All 10 Workspace Sensors Against Git &amp; File Contracts</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Every discrepancy between the agent&#x27;s claim and disk state is flagged.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Inspect the Emitted RECEIPT.json Evidence File</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Machine-readable audit trail of what actually happened in the workspace.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Gate CI / PR Merges on Exit Code 0</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Zero &#x27;trust me, tests passed&#x27; hallucinations slip into `main`.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Run `liecatcher run` right before creating a pull request from an autonomous coding agent branch.</li>
+              <li>Combine `liecatchers` with `Kayforkind/agent-receipts` when you need Ed25519 cryptographic signing of build/test receipts.</li>
+              <li>Works on both Windows PowerShell and Linux/macOS shells.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://github.com/Kayforkind/liecatchers">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=liecatchers">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./liecatchers.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=liecatchers">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="agents" data-search="bookguide book guide mcp ship improvements with your books — agents cite, run playbooks, learn mcp books playbooks citations socratic avicenna tutors agents claude cursor local-first your local technical library (epub / pdf / markdown) grounded agent citations &amp;amp; executable playbooks">
-        <a class="tide-media" href="./detail.html?id=bookguide" aria-label="Watch Book Guide MCP demo and view output examples">
+      <article class="tide-card" data-cat="agents" data-search="bookguide book guide mcp ship improvements with your books — agents cite, run playbooks, learn m c p   b o o k s   p l a y b o o k s   c i t a t i o n s   s o c r a t i c   a v i c e n n a   t u t o r s   a g e n t s   c l a u d e   c u r s o r   l o c a l - f i r s t  ">
+        <a class="tide-media" href="./detail.html?id=bookguide" aria-label="Watch Book Guide MCP narrated tutorial and read full user guide">
           <video src="./videos/bookguide.mp4" poster="./shots/bookguide.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">📚 Agents</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 37s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 37s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://github.com/Kayforkind/book-guide-mcp">Book Guide MCP</a></h3>
+            <h3><a href="./bookguide.html">Book Guide MCP</a></h3>
           </div>
           <p class="tide-tag">Ship improvements with your books — agents cite, run playbooks, learn</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Your Local Technical Library (EPUB / PDF / Markdown)</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Grounded Agent Citations &amp; Executable Playbooks</span></div>
-            <div class="tide-io-code">mcp: book-guide -&gt; cite_locator(&#x27;Designing Data-Intensive Apps&#x27;, ch=5) + run_playbook() [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Install Book Guide MCP &amp; Point at Your Local Books Folder</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Your coding agent gains local-first book indexing and citation tools.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Index Your User-Supplied PDF / EPUB / Markdown Books (L0–L1)</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Fast local passage retrieval with exact source citations.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Generate Cited Engineering Playbooks &amp; Checklists (L2–L3)</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Grounded engineering playbooks backed by real textbook citations.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Run Interactive Socratic or Avicenna Study Tutors (L4)</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Deep technical mastery grounded in your own local library.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Use Book Guide MCP during code reviews by indexing your team&#x27;s architecture books and asking the agent to audit a PR against specific cited chapters.</li>
+              <li>All indexing runs locally on your machine—no copyrighted book files are bundled in the repo or uploaded to third-party servers.</li>
+              <li>See `docs/examples/01-socratic-tutor.md` and `02-avicenna-framework.md` in the repository for ready-to-run prompts.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://github.com/Kayforkind/book-guide-mcp">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=bookguide">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./bookguide.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=bookguide">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="intelligence" data-search="datainsights data insights founder intelligence — daily &amp; weekly tech signal briefs intelligence signals startups research security weekly report daily briefs founders analytics public tech, startup, security &amp;amp; research feeds daily 5w1h brief + weekly executive synthesis + json api">
-        <a class="tide-media" href="./detail.html?id=datainsights" aria-label="Watch Data Insights demo and view output examples">
+      <article class="tide-card" data-cat="intelligence" data-search="datainsights data insights founder intelligence — daily &amp; weekly tech signal briefs i n t e l l i g e n c e   s i g n a l s   s t a r t u p s   r e s e a r c h   s e c u r i t y   w e e k l y   r e p o r t   d a i l y   b r i e f s   f o u n d e r s   a n a l y t i c s  ">
+        <a class="tide-media" href="./detail.html?id=datainsights" aria-label="Watch Data Insights narrated tutorial and read full user guide">
           <video src="./videos/datainsights.mp4" poster="./shots/datainsights.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">📡 Intelligence</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 38s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 38s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://github.com/Kayforkind/data-insights">Data Insights</a></h3>
+            <h3><a href="./datainsights.html">Data Insights</a></h3>
           </div>
           <p class="tide-tag">Founder intelligence — daily &amp; weekly tech signal briefs</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Public Tech, Startup, Security &amp; Research Feeds</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Daily 5W1H Brief + Weekly Executive Synthesis + JSON API</span></div>
-            <div class="tide-io-code">GET /api/briefs/daily -&gt; 5W1H synthesis, top 5 momentum signals, 3 experiments [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Clone Data Insights &amp; Start the Local Node Server</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The signal aggregation engine and web portal start locally.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Ingest &amp; Normalize Public Tech, Security &amp; Research Feeds</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Deduplicated signal river with source-health telemetry.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Read the Daily 5W1H Brief &amp; Topic Momentum Charts</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ High-signal daily briefing without algorithmic social feed noise.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Export Print-Ready Weekly PDF Briefs or Query the JSON API</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Self-hosted intelligence pipeline with PDF and JSON outputs.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Customize the feed list in the configuration to track your specific industry vertical, competitor changelogs, or security advisories.</li>
+              <li>Use the built-in source availability monitor to spot broken or rate-limited RSS feeds automatically.</li>
+              <li>Agents can poll the JSON endpoints to include daily industry context in morning briefings.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://github.com/Kayforkind/data-insights">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=datainsights">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./datainsights.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=datainsights">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
-      <article class="tide-card" data-cat="games" data-search="ironaxe iron axe: legacy an original side-scrolling beat &#x27;em up — godot 4 game godot beat em up side-scrolling golden axe fighters combos magic open source player input (keyboard / gamepad) in godot 4.3+ 60 fps side-scrolling arcade action">
-        <a class="tide-media" href="./detail.html?id=ironaxe" aria-label="Watch Iron Axe: Legacy demo and view output examples">
+      <article class="tide-card" data-cat="games" data-search="ironaxe iron axe: legacy an original side-scrolling beat &#x27;em up — godot 4 g a m e   g o d o t   b e a t   e m   u p   s i d e - s c r o l l i n g   g o l d e n   a x e   f i g h t e r s   c o m b o s   m a g i c   o p e n   s o u r c e  ">
+        <a class="tide-media" href="./detail.html?id=ironaxe" aria-label="Watch Iron Axe: Legacy narrated tutorial and read full user guide">
           <video src="./videos/ironaxe.mp4" poster="./shots/ironaxe.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
           <span class="tide-cat-pill">🪓 Games</span>
-          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+          <span class="tide-play-pill">▶ 41s Live UI Tutorial</span>
         </a>
+        <div class="tide-sound-bar">
+          <span class="tide-dur-tag">🎙️ 41s step-by-step voiceover</span>
+          <button type="button" class="tide-sound-btn" data-sound-toggle="1">🔊 Play with Voiceover</button>
+        </div>
         <div class="tide-body">
           <div class="tide-title-row">
-            <h3><a href="https://github.com/Kayforkind/iron-axe-legacy">Iron Axe: Legacy</a></h3>
+            <h3><a href="./ironaxe.html">Iron Axe: Legacy</a></h3>
           </div>
           <p class="tide-tag">An original side-scrolling beat &#x27;em up — Godot 4</p>
           <div class="tide-io">
-            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Player Input (Keyboard / Gamepad) in Godot 4.3+</span></div>
-            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>60 FPS Side-Scrolling Arcade Action</span></div>
-            <div class="tide-io-code">FighterStateMachine -&gt; AttackCombo(3) -&gt; Hitstop(0.06s) + ScreenShake + TeamMagic [OK]</div>
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Input file</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Verified output</span></div>
+            <div class="tide-io-code"></div>
           </div>
+          <details class="guide-drawer">
+            <summary>📖 How to Use (4 Steps &amp; Controls)</summary>
+            <div class="guide-drawer-body">
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 1: Step 1: Clone Iron Axe: Legacy &amp; Open in Godot Engine 4.3+</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ The 60 FPS 2.5D side-scrolling beat-&#x27;em-up prototype launches immediately.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 2: Step 2: Pick Your Fighter &amp; Master Elevation-Lane Movement</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Responsive 2.5D lane positioning and elevation jumping.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 3: Step 3: Execute Light/Heavy Combo Chains, Grabs &amp; Throws</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ Arcade-authentic Golden Axe / Streets of Rage style combat feel.</div>
+              </div>
+              <div class="g-step">
+                <div class="g-step-top"><b>Step 4: Step 4: Customize GDScript Combat Tunables &amp; Export Builds</b><span class="g-step-ui">Browser UI</span></div>
+                <p></p>
+                <div class="g-step-res">✓ 100% original, MIT-licensed Godot 4 beat-&#x27;em-up codebase.</div>
+              </div>
+              <div class="g-subhead">🎛️ Key Controls &amp; Shortcuts</div>
+              <div class="g-ctrl-list">
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              <div class="g-ctrl-item"><code></code> </div>
+              </div>
+              <div class="g-subhead">💡 Pro Tips</div>
+              <ul class="g-tip-list">
+              <li>Use vertical lane movement (`Up`/`Down`) to avoid linear enemy charges before counter-attacking with a dash-strike.</li>
+              <li>All sprites, lore, and GDScript combat controllers are 100% original and MIT-licensed—ideal as a starter template for your own 2.5D action game.</li>
+              <li>Adjust hitstop duration and screen-shake intensity in the combat controller script to tune game-feel.</li>
+              </ul>
+            </div>
+          </details>
           <div class="tide-actions">
-            <a class="tide-btn primary" href="https://github.com/Kayforkind/iron-axe-legacy">Open Tool →</a>
-            <a class="tide-btn" href="./detail.html?id=ironaxe">Video &amp; Examples</a>
+            <a class="tide-btn primary" href="./ironaxe.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=ironaxe">Full Guide &amp; Video</a>
           </div>
         </div>
       </article>
