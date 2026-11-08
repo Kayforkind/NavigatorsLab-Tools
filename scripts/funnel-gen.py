@@ -284,6 +284,14 @@ LAND_CSS = '''
       color: #64748b; font-size: 14px; }
     footer a { color: #94a3b8; }
     a { color: #7dd3fc; }
+    .io-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 18px 0 12px; }
+    .io-card { padding: 14px 16px; border-radius: 12px; background: rgba(9,13,22,.9); border: 1px solid rgba(148,163,184,.22); }
+    .io-card small { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; color: #2dd4bf; }
+    .io-card b { display: block; color: #f8fafc; font-size: 15px; margin-bottom: 4px; }
+    .io-card span { color: #94a3b8; font-size: 13px; }
+    .io-proof { background: #060911; border: 1px solid rgba(45,212,191,.35); border-radius: 10px; padding: 11px 14px; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; color: #2dd4bf; overflow-x: auto; margin-bottom: 24px; }
+    .vid-wrap { width: 100%; aspect-ratio: 16 / 9; background: #05070d; border-radius: 14px; overflow: hidden; border: 1px solid rgba(94,234,212,.35); margin: 22px 0 8px; }
+    .vid-wrap video { width: 100%; height: 100%; object-fit: contain; display: block; background: #05070d; }
 '''
 
 LAND_JS = ''  # landing is static; no script, no CSP exemptions needed
@@ -295,6 +303,12 @@ def landing(t, all_tools):
     pretty = f"https://navigatorslab.com/{PRETTY[t['id']]}"
     feats = '\n'.join(f'      <li>{f}</li>' for f in FEATURES[t['id']])
     steps = '\n'.join(f'      <li><b>Step {i + 1}.</b> {s}</li>' for i, s in enumerate(HOWTO[t['id']]))
+    ex_in = t.get('exampleInput', 'Drop your file locally in the browser')
+    ex_in_d = t.get('exampleInputDetail', 'Processed 100% in your browser tab.')
+    ex_eng = t.get('exampleEngine', TECH[t['id']])
+    ex_out = t.get('exampleOutput', 'Verified output downloaded directly to your device')
+    ex_out_d = t.get('exampleOutputDetail', 'Zero bytes uploaded to any server.')
+    ex_code = t.get('sampleOutputCode', 'CSP: default-src \'none\' | 0 bytes uploaded')
     others = []
     for x in all_tools:
         if x['id'] == t['id']:
@@ -307,9 +321,9 @@ def landing(t, all_tools):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{t['name']} â€” free, in your browser â€” NavigatorsLab</title>
+<title>{t['name']} — free, in your browser — NavigatorsLab</title>
 <meta name="description" content="{t['tagline']} Free, open-source (MIT), 100% on-device. No uploads, no accounts. Runs right here and on navigatorslab.com.">
-<meta property="og:title" content="{t['name']} â€” NavigatorsLab Tools">
+<meta property="og:title" content="{t['name']} — NavigatorsLab Tools">
 <meta property="og:description" content="{t['tagline']}">
 <meta property="og:image" content="./og.png">
 <meta name="theme-color" content="#0b0f17">
@@ -321,13 +335,40 @@ def landing(t, all_tools):
   <div class="tile" aria-hidden="true">{icon}</div>
   <h1>{t['name']}</h1>
   <p class="tag">{t['tagline']}</p>
-  <div class="badges"><span>ðŸ†“ free &amp; open source (MIT)</span><span>ðŸ”’ nothing is uploaded</span><span>ðŸ“¶ works offline</span><span>ðŸ“± mobile friendly</span></div>
+  <div class="badges"><span>🆓 free &amp; open source (MIT)</span><span>🔒 nothing is uploaded</span><span>📶 works offline</span><span>📱 mobile friendly</span></div>
   <div class="cta">
     <a class="btn primary" href="./demo.html">Run it right here &rarr;</a>
     <a class="btn ghost" href="{pretty}">navigatorslab.com/{PRETTY[t['id']]}</a>
+    <a class="btn ghost" href="{HUB}/videos/notebooklm-overview.mp4">🎙️ Watch Suite Video Overview</a>
   </div>
+
+  <h2>🎬 Step-by-Step Workflow Video &amp; Concrete Example</h2>
+  <div class="vid-wrap">
+    <video controls autoplay muted loop playsinline preload="metadata" poster="./poster.jpg" data-aspect="horizontal">
+      <source src="./demo.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="io-grid">
+    <div class="io-card">
+      <small>1 · Raw Input</small>
+      <b>{ex_in}</b>
+      <span>{ex_in_d}</span>
+    </div>
+    <div class="io-card">
+      <small>2 · On-Device Engine</small>
+      <b>{ex_eng}</b>
+      <span>Runs locally under strict Content-Security-Policy with zero network uploads.</span>
+    </div>
+    <div class="io-card">
+      <small>3 · Verified Output</small>
+      <b>{ex_out}</b>
+      <span>{ex_out_d}</span>
+    </div>
+  </div>
+  <div class="io-proof">{ex_code}</div>
+
   <img class="shot" src="./shot.png" alt="{t['name']} in action">
-  <p class="cap">{t['name']} mid-task â€” this demo runs entirely on this page's own GitHub Pages site.</p>
+  <p class="cap">{t['name']} mid-task — this demo runs entirely on this page's own GitHub Pages site.</p>
 
   <h2>What it does</h2>
   <ul class="feats">
@@ -343,15 +384,15 @@ def landing(t, all_tools):
   sent to any server. No accounts, no tracking, no cookies, nothing retained. Prefer the hub?
   The same tool lives at <a href="{tool_url}">{tool_url}</a>.</div>
 
-  <h2>The suite: 23 projects, one zero-upload promise</h2>
+  <h2>The suite: 24 projects, one zero-upload promise</h2>
   <div class="grid">
 {others}
   </div>
 
   <footer>
-    <b>NavigatorsLab Tools</b> â€” free &amp; open source (MIT).
-    <a href="{HUB}/">Hub</a> Â· <a href="{MAIN_REPO}">Source</a> Â·
-    <a href="{HUB}/agents.html">Agent mode</a> Â· <a href="{HUB}/llms.txt">llms.txt</a> Â·
+    <b>NavigatorsLab Tools</b> — free &amp; open source (MIT).
+    <a href="{HUB}/">Hub</a> · <a href="{MAIN_REPO}">Source</a> ·
+    <a href="{HUB}/agents.html">Agent mode</a> · <a href="{HUB}/llms.txt">llms.txt</a> ·
     MCP: <code>POST {HUB}/mcp</code>
   </footer>
 </main>
@@ -383,6 +424,12 @@ def readme(t, all_tools):
     pretty = f"https://navigatorslab.com/{PRETTY[t['id']]}"
     feats = '\n'.join(f'- {f}' for f in FEATURES[t['id']])
     steps = '\n'.join(f'{i + 1}. {s}' for i, s in enumerate(HOWTO[t['id']]))
+    ex_in = t.get('exampleInput', 'Local user file')
+    ex_in_d = t.get('exampleInputDetail', '')
+    ex_eng = t.get('exampleEngine', TECH[t['id']])
+    ex_out = t.get('exampleOutput', 'Verified local output')
+    ex_out_d = t.get('exampleOutputDetail', '')
+    ex_code = t.get('sampleOutputCode', '')
     rows = []
     for x in all_tools:
         xi = x['icon'].replace('\ufe0f', '')
@@ -397,49 +444,64 @@ def readme(t, all_tools):
 
 <h4 align="center">
   &#9654; <a href="{tool_url}">Open it on navigatorslab.com</a> &mdash; free, no sign-up, nothing uploaded<br>
-  <a href="https://navigatorslab.com/{PRETTY[t['id']]}">navigatorslab.com/{PRETTY[t['id']]}</a> &middot; same tool, shorter URL<br>
+  <a href="https://navigatorslab.com/{PRETTY[t['id']]}">navigatorslab.com/{PRETTY[t['id']]}</a> &middot; <a href="{HUB}/videos/{t['id']}.mp4">Watch 16:9 Workflow Video</a> &middot; <a href="{HUB}/videos/notebooklm-overview.mp4">Watch NotebookLM Deep Dive</a><br>
   This repo's Pages site runs the <em>actual tool</em>: <code>demo.html</code>
 </h4>
 
-![{t['name']} banner](og.png)
+![{t['name']} Input to Output Breakdown](poster.jpg)
 
 {t['detail']}
 
-## âœ… What it does
+## 🧪 Concrete Example: Input → Engine → Output
+
+| Stage | What Happens | Details |
+|---|---|---|
+| **1. Raw Input** | **{ex_in}** | {ex_in_d} |
+| **2. On-Device Engine** | **{ex_eng}** | Runs 100% client-side in your browser tab under strict `CSP` (`connect-src 'none'`). |
+| **3. Verified Output** | **{ex_out}** | {ex_out_d} |
+
+```text
+{ex_code}
+```
+
+- 🎬 **16:9 Tool Demo Video:** [`demo.mp4`](./demo.mp4) (also live at [`{HUB}/videos/{t['id']}.mp4`]({HUB}/videos/{t['id']}.mp4))
+- 🎙️ **NotebookLM Dual-Host Suite Video Overview:** [`{HUB}/videos/notebooklm-overview.mp4`]({HUB}/videos/notebooklm-overview.mp4)
+
+## ✅ What it does
 
 {feats}
 
-## ðŸš€ Try it in 30 seconds
+## 🚀 Try it in 30 seconds
 
 {steps}
 
-## ðŸ“¸ See it in action
+## 📸 Live UI in action
 
 ![{t['name']} in action](shot.png)
 
-## ðŸ”’ Private by design
+## 🔒 Private by design
 
-- **100% on-device** â€” files are processed in your browser and **never uploaded** to any server
-- **No accounts, no tracking, no cookies, nothing retained** â€” open the page and work
+- **100% on-device** — files are processed in your browser and **never uploaded** to any server
+- **No accounts, no tracking, no cookies, nothing retained** — open the page and work
 - **Works offline** once loaded; fully mobile-friendly
-- **Free & open source (MIT)** â€” use it at home, at work, anywhere
+- **Free & open source (MIT)** — use it at home, at work, anywhere
 
-## ðŸ¤– Built for humans *and* AI agents
+## 🤖 Built for humans *and* AI agents
 
-- Deep-linkable via URL parameters â€” see the [Agent Mode guide]({HUB}/agents.html)
-- Machine-readable catalog: [llms.txt]({HUB}/llms.txt) Â· [llms-full.txt]({HUB}/llms-full.txt)
-- MCP endpoint: `POST {HUB}/mcp` (tool catalog + deterministic text tools â€” see the [main repo]({MAIN_REPO}))
-- No build step required to *use* any tool â€” just the URL
+- Deep-linkable via URL parameters — see the [Agent Mode guide]({HUB}/agents.html)
+- Machine-readable catalog: [llms.txt]({HUB}/llms.txt) · [llms-full.txt]({HUB}/llms-full.txt)
+- MCP endpoint: `POST {HUB}/mcp` (tool catalog + deterministic text tools — see the [main repo]({MAIN_REPO}))
+- No build step required to *use* any tool — just the URL
 
-## ðŸ›  Under the hood
+## 🛠 Under the hood
 
 {TECH[t['id']]}
 
 Third-party components are catalogued in [NOTICE](NOTICE); this repo is MIT-licensed ([LICENSE](LICENSE)).
 
-## ðŸ—‚ The NavigatorsLab Tools suite
+## 🗂 The NavigatorsLab Tools suite
 
-The full catalog â€” every tool in the hub with the same zero-upload promise, plus the lab's apps, CLIs and engines:
+The full catalog — every tool in the hub with the same zero-upload promise, plus the lab's apps, CLIs and engines:
 
 | Tool | What it does | |
 |---|---|---|
@@ -448,7 +510,7 @@ The full catalog â€” every tool in the hub with the same zero-upload promis
 ---
 
 <p align="center">
-  <b>One hub, fifteen tools:</b> <a href="{HUB}/">{HUB}</a><br>
+  <b>One hub, twenty-four projects:</b> <a href="{HUB}/">{HUB}</a><br>
   <b>Source &amp; the whole suite:</b> <a href="{MAIN_REPO}">{MAIN_REPO}</a>
 </p>
 '''
@@ -478,9 +540,10 @@ def collect_assets(page_html):
 
 
 def build_demo(t):
-    """dist/<id>.html, minus the PWA manifest link â€” the exact tool, runnable anywhere."""
+    """dist/<id>.html, minus the PWA manifest link and registerSW script — the exact tool, runnable anywhere."""
     html = io.open(os.path.join(ROOT, 'dist', t['id'] + '.html'), encoding='utf-8').read()
     html = re.sub(r'\s*<link rel="manifest"[^>]*>', '', html, count=1)
+    html = re.sub(r'\s*<script id="vite-plugin-pwa:register-sw"[^>]*></script>', '', html, count=1)
     assert 'manifest' not in html.split('</head>')[0], 'manifest link still present'
     return html
 
@@ -545,6 +608,12 @@ def main():
             shot_src = os.path.join(ROOT, 'docs', 'shots', f"tool-{t['id']}.png")
         shutil.copyfile(shot_src, os.path.join(d, 'shot.png'))
         shutil.copyfile(os.path.join(dist, f"og-{t['id']}.png"), os.path.join(d, 'og.png'))
+        poster_src = os.path.join(ROOT, 'public', 'shots', f"{t['id']}.jpg")
+        if os.path.isfile(poster_src):
+            shutil.copyfile(poster_src, os.path.join(d, 'poster.jpg'))
+        video_src = os.path.join(ROOT, 'public', 'videos', f"{t['id']}.mp4")
+        if os.path.isfile(video_src):
+            shutil.copyfile(video_src, os.path.join(d, 'demo.mp4'))
         io.open(os.path.join(d, 'LICENSE'), 'w', encoding='utf-8', newline='\n').write(LICENSE)
         shutil.copyfile(os.path.join(ROOT, 'NOTICE'), os.path.join(d, 'NOTICE'))
         io.open(os.path.join(d, '.nojekyll'), 'w', encoding='utf-8', newline='\n').write('')

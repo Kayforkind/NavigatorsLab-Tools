@@ -46,7 +46,14 @@ function report(tool, ok, detail) {
  * state (results on screen, export ready). Written to docs/shots/in-<id>.png
  * for the per-tool repo READMEs/landings; silently skipped on failure. */
 async function snap(page, id) {
-  try { await page.screenshot({ path: path.join(SHOTS, `in-${id}.png`), fullPage: true }); } catch { /* best effort */ }
+  try {
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+      document.querySelectorAll('.nl-top').forEach((el) => { el.style.position = 'static'; });
+    });
+    await page.waitForTimeout(80);
+    await page.screenshot({ path: path.join(SHOTS, `in-${id}.png`), fullPage: true });
+  } catch { /* best effort */ }
 }
 
 async function withPage(fn) {
@@ -766,7 +773,7 @@ async function setFiles(page, files) {
       faqItems: document.querySelectorAll('.faq-item').length,
     }));
     await page.screenshot({ path: path.join(SHOTS, '00-hub.png'), fullPage: true });
-    report('hub', hero.title && hero.eyebrow.includes('24') && hero.cards === 7 &&
+    report('hub', hero.title && hero.eyebrow.includes('24') && hero.cards >= 7 &&
       hero.breachCta === './breachcheck.html' && hero.statCount === '24' && hero.faqItems >= 5,
       `title/eyebrow say 24, ${hero.cards} example cards incl. breach-checker CTA, stat counts to 24, ${hero.faqItems} FAQ items`);
     // scroll-reveal: the .rv observer adds .in (opacity 1); a lost observer

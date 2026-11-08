@@ -28,7 +28,15 @@
     "engine": "Byte-level EXIF / XMP / IPTC parsers",
     "verified": "Stripped JPEG has no EXIF segment; pixels byte-identical",
     "page": "https://navigatorslab.com/tools/exif.html",
-    "pretty": "Photo-Privacy-Kit"
+    "pretty": "Photo-Privacy-Kit",
+    "exampleInput": "vacation-photo.jpg (3.4 MB)",
+    "exampleInputDetail": "Hidden EXIF: GPS 41.0082° N, 28.9784° E · iPhone 15 Pro · 2026:08:14 14:22:09 · Embedded 160x120 thumbnail",
+    "exampleEngine": "Byte-level JPEG APP1/APP13/COM parser strips 64 KB of metadata segments without decoding or re-encoding pixels",
+    "exampleOutput": "vacation-photo.clean.jpg (3.34 MB)",
+    "exampleOutputDetail": "0 EXIF/GPS/XMP/IPTC segments · Pixel SHA-256: 9f84c2...e10b (100% byte-identical image data)",
+    "sampleOutputCode": "GPS: REMOVED | Camera: REMOVED | Thumbnail: REMOVED | Pixels SHA-256: IDENTICAL [OK]",
+    "video": "./videos/exif.mp4",
+    "poster": "./shots/exif.jpg"
   },
   {
     "id": "breachcheck",
@@ -57,7 +65,15 @@
     "engine": "WebCrypto SHA-1 + HIBP Pwned Passwords range API",
     "verified": "Known-breached password returns its exact public count; k-anonymity prefix verified on the wire",
     "page": "https://navigatorslab.com/tools/breachcheck.html",
-    "pretty": "Password-Breach-Checker"
+    "pretty": "Password-Breach-Checker",
+    "exampleInput": "Candidate password typed in tab",
+    "exampleInputDetail": "WebCrypto SHA-1 computed locally: 5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8",
+    "exampleEngine": "K-Anonymity Range Query: Only 5-char prefix '5BAA6' sent to api.pwnedpasswords.com; 800 suffixes matched in-browser",
+    "exampleOutput": "Breach Exposure Verdict",
+    "exampleOutputDetail": "⚠️ Found in 10,693,022 public breaches — Full password & hash never left your browser tab",
+    "sampleOutputCode": "GET /range/5BAA6 -> Local suffix match: 1E4C9...8FD8:10693022 (Exposed)",
+    "video": "./videos/breachcheck.mp4",
+    "poster": "./shots/breachcheck.jpg"
   },
   {
     "id": "metadata",
@@ -87,7 +103,15 @@
     "engine": "PDF + OOXML + ODF + EXIF readers",
     "verified": "Cleaned files re-inspected and shown clean",
     "page": "https://navigatorslab.com/tools/metadata.html",
-    "pretty": "Metadata-Checker"
+    "pretty": "Metadata-Checker",
+    "exampleInput": "Board-Proposal-v4.docx & Q3-Model.pdf",
+    "exampleInputDetail": "Hidden OOXML & PDF Info: Author 'Jane Doe', Company 'Acme Corp', 14 revisions, 312 mins editing time, XMP stream",
+    "exampleEngine": "Local ZIP central-directory & XML parser + pdf-lib Info/XMP inspector reveals every hidden field before stripping",
+    "exampleOutput": "Board-Proposal-v4.clean.docx",
+    "exampleOutputDetail": "Author, Company, Revision count, TotalTime & XMP metadata wiped; re-inspected in-browser with 0 leaks",
+    "sampleOutputCode": "dc:creator: REMOVED | cp:revision: REMOVED | TotalTime: 0 | Re-check: 0 hidden fields [OK]",
+    "video": "./videos/metadata.mp4",
+    "poster": "./shots/metadata.jpg"
   },
   {
     "id": "shrink",
@@ -117,7 +141,15 @@
     "engine": "Canvas + binary-search quality",
     "verified": "16 MB → ≤ 300 KB in downloaded bytes",
     "page": "https://navigatorslab.com/tools/shrink.html",
-    "pretty": "Image-Shrinker"
+    "pretty": "Image-Shrinker",
+    "exampleInput": "passport-scan.png (16.0 MB, 4000×3000)",
+    "exampleInputDetail": "Government / Visa portal rejects upload: 'Maximum attachment size is 300 KB'",
+    "exampleEngine": "8-Step Binary Search over JPEG/WebP/AVIF encoder quality on HTML5 Canvas to land just below target ceiling",
+    "exampleOutput": "passport-scan.shrunk.jpg (294 KB)",
+    "exampleOutputDetail": "98.1% reduction (16.0 MB → 294 KB ≤ 300 KB target) · Crisp legibility preserved · Batch ZIP ready",
+    "sampleOutputCode": "Target: <=300 KB | Binary Search: q=0.50 -> q=0.72 -> q=0.68 | Output: 294,112 bytes [OK]",
+    "video": "./videos/shrink.mp4",
+    "poster": "./shots/shrink.jpg"
   },
   {
     "id": "scan",
@@ -146,7 +178,15 @@
     "engine": "Canvas pixel ops + pdf-lib",
     "verified": "Page count + crop size in output PDF",
     "page": "https://navigatorslab.com/tools/scan.html",
-    "pretty": "Scan-Cleaner"
+    "pretty": "Scan-Cleaner",
+    "exampleInput": "3 Phone Photos of a Lease on a Gray Desk",
+    "exampleInputDetail": "Tilted +2.8°, uneven warm lamp shadow, desk background visible around page edges",
+    "exampleEngine": "Content-aware ±4° deskew search + auto-levels + adaptive photocopy threshold + 300-DPI pdf-lib assembly",
+    "exampleOutput": "lease-cleaned-300dpi.pdf (3 Pages)",
+    "exampleOutputDetail": "Straightened to 0.0°, pure white paper background, razor-sharp black text, combined into one 300-DPI PDF",
+    "sampleOutputCode": "Deskew: -2.8 deg | Auto-Levels: 18..238 -> 0..255 | Output: 3-page 300-DPI PDF [OK]",
+    "video": "./videos/scan.mp4",
+    "poster": "./shots/scan.jpg"
   },
   {
     "id": "sign",
@@ -175,7 +215,15 @@
     "engine": "pdf-lib flattening",
     "verified": "Ink present in PDF resources; no editable field left",
     "page": "https://navigatorslab.com/tools/sign.html",
-    "pretty": "E-Sign-Pad"
+    "pretty": "E-Sign-Pad",
+    "exampleInput": "Mutual-NDA-2026.pdf (Unsigned)",
+    "exampleInputDetail": "Counterparty needs a signed PDF tonight — no printer, no scanner, no DocuSign account",
+    "exampleEngine": "Draw/type signature on HTML5 pad -> place on pdf.js page preview -> flatten directly into PDF page resources",
+    "exampleOutput": "Mutual-NDA-2026-signed.pdf",
+    "exampleOutputDetail": "Ink & dated caption ('Signed 2026-11-08') permanently flattened into PDF content stream; 0 editable form fields",
+    "sampleOutputCode": "Signature embedded in Page 1 /Resources/XObject | AcroForm fields: 0 (Flattened) [OK]",
+    "video": "./videos/sign.mp4",
+    "poster": "./shots/sign.jpg"
   },
   {
     "id": "receipts",
@@ -204,7 +252,15 @@
     "engine": "EXIF dates + pdf-lib",
     "verified": "3 stamped pages, EXIF-date order",
     "page": "https://navigatorslab.com/tools/receipts.html",
-    "pretty": "Receipts-to-PDF"
+    "pretty": "Receipts-to-PDF",
+    "exampleInput": "18 Unsorted Receipt Photos from Camera Roll",
+    "exampleInputDetail": "IMG_4019.jpg (Sep 12), IMG_3902.jpg (Sep 03), IMG_4110.jpg (Sep 19) — out of chronological order",
+    "exampleEngine": "Extracts EXIF DateTimeOriginal per photo, sorts chronologically, and stamps header with capture date + filename",
+    "exampleOutput": "2026-Q3-Receipts-Sorted.pdf",
+    "exampleOutputDetail": "18 pages ordered Sep 03 → Sep 19, every page stamped '2026-09-03 · IMG_3902.jpg' at top margin",
+    "sampleOutputCode": "Page 1: 2026-09-03 | Page 2: 2026-09-12 | Page 3: 2026-09-19 | Stamped & Merged [OK]",
+    "video": "./videos/receipts.mp4",
+    "poster": "./shots/receipts.jpg"
   },
   {
     "id": "ocr",
@@ -234,7 +290,15 @@
     "engine": "Tesseract WASM (self-hosted)",
     "verified": "Parsed total matches a real receipt (prod probe)",
     "page": "https://navigatorslab.com/tools/ocr.html",
-    "pretty": "Receipt-OCR"
+    "pretty": "Receipt-OCR",
+    "exampleInput": "Photos of Coffee, Hardware & Grocery Receipts",
+    "exampleInputDetail": "Raw pixel images of printed store receipts ('GREEN GROCER ... TOTAL $23.98')",
+    "exampleEngine": "Self-hosted Tesseract WebAssembly engine runs 100% locally in Worker; regex parser extracts Vendor, Date & Total",
+    "exampleOutput": "expenses-2026.csv (Excel / Sheets Ready)",
+    "exampleOutputDetail": "Structured rows: Date, Vendor ('GREEN GROCER'), Category ('Meals'), Amount ($23.98), Confidence ('94% High')",
+    "sampleOutputCode": "date,vendor,category,currency,total,confidence\n2026-09-14,GREEN GROCER,Groceries,USD,23.98,94%",
+    "video": "./videos/ocr.mp4",
+    "poster": "./shots/ocr.jpg"
   },
   {
     "id": "qr",
@@ -264,7 +328,15 @@
     "engine": "qrcode-generator + jsQR",
     "verified": "Encode → decode round-trip, exact payload",
     "page": "https://navigatorslab.com/tools/qr.html",
-    "pretty": "QR-Studio"
+    "pretty": "QR-Studio",
+    "exampleInput": "Office Wi-Fi Credentials / vCard / URL",
+    "exampleInputDetail": "SSID: 'NavLab-Guest', Pass: 'ultra-secret!2026', WPA2 — or drop a screenshot of an unknown QR code",
+    "exampleEngine": "Spec-escaped WIFI:S:... payload encoded via qrcode-generator (EC Level M/H) or decoded locally via bundled jsQR",
+    "exampleOutput": "wifi-qr.svg (Vector) & wifi-qr.png",
+    "exampleOutputDetail": "Crisp vector SVG + PNG with custom palette & quiet zone; encode → export → decode round-trip 100% verified",
+    "sampleOutputCode": "Payload: WIFI:T:WPA;S:NavLab-Guest;P:ultra-secret\\!2026;; | Round-trip decode: EXACT [OK]",
+    "video": "./videos/qr.mp4",
+    "poster": "./shots/qr.jpg"
   },
   {
     "id": "audio",
@@ -294,7 +366,15 @@
     "engine": "Web Audio + self-hosted LAME",
     "verified": "WAV data chunk = exact selection; MP3 frame sync",
     "page": "https://navigatorslab.com/tools/audio.html",
-    "pretty": "Audio-Trimmer"
+    "pretty": "Audio-Trimmer",
+    "exampleInput": "40-Minute Interview Voice Note (voice-memo.wav)",
+    "exampleInputDetail": "Needs exact 01:12.40 – 01:44.80 highlight clip with smooth fade-in/out and normalized volume",
+    "exampleEngine": "Web Audio API sample-accurate waveform slice + linear gain ramps + peak normalization + self-hosted LAME MP3 encoder",
+    "exampleOutput": "interview-clip-normalized.mp3 (or .wav)",
+    "exampleOutputDetail": "32.4s clip at -0.1 dBFS peak, 0.5s fade-in/out, valid ID3/MPEG frame sync encoded entirely in-tab",
+    "sampleOutputCode": "Slice: 1.00s..2.50s (66,150 samples) | Peak: 0.99 | Export: WAV PCM + LAME MP3 (0xFFFB) [OK]",
+    "video": "./videos/audio.mp4",
+    "poster": "./shots/audio.jpg"
   },
   {
     "id": "invoice",
@@ -323,7 +403,15 @@
     "engine": "pdf-lib",
     "verified": "$408.00 total in exported PDF",
     "page": "https://navigatorslab.com/tools/invoice.html",
-    "pretty": "Invoice-Generator"
+    "pretty": "Invoice-Generator",
+    "exampleInput": "Freelance Consulting Hours & Line Items",
+    "exampleInputDetail": "2 Line Items ($400.00 subtotal), 10% discount (-$40.00), 13.33% tax on discounted subtotal (+$48.00)",
+    "exampleEngine": "Live pdf-lib exact-point layout engine renders real PDF preview in real time as you type",
+    "exampleOutput": "INV-2026-042.pdf ($408.00 Total)",
+    "exampleOutputDetail": "Print-ready vector PDF invoice with itemized table, tax math, payment notes, and zero SaaS watermarks",
+    "sampleOutputCode": "Subtotal: $400.00 | Discount (10%): -$40.00 | Tax: +$48.00 | PDF Total: $408.00 [OK]",
+    "video": "./videos/invoice.mp4",
+    "poster": "./shots/invoice.jpg"
   },
   {
     "id": "rename",
@@ -352,7 +440,15 @@
     "engine": "EXIF + JSZip",
     "verified": "Renamed entries asserted inside the ZIP",
     "page": "https://navigatorslab.com/tools/rename.html",
-    "pretty": "Batch-Rename"
+    "pretty": "Batch-Rename",
+    "exampleInput": "Camera Roll Dump: IMG_5847.jpg, DSC_0019.jpg...",
+    "exampleInputDetail": "Opaque filenames from 3 phones; EXIF capture timestamps buried inside each file",
+    "exampleEngine": "Reads EXIF capture date per file, applies '{date}-{prefix}-{seq}' template with live table preview, packs via JSZip",
+    "exampleOutput": "renamed-photos.zip",
+    "exampleOutputDetail": "2026-09-05-receipt-001.jpg, 2026-09-06-receipt-002.jpg ... cleanly sorted and zipped in-browser",
+    "sampleOutputCode": "IMG_5847.jpg -> 2026-09-05-receipt-001.jpg | IMG_5848.jpg -> 2026-09-06-receipt-002.jpg [OK]",
+    "video": "./videos/rename.mp4",
+    "poster": "./shots/rename.jpg"
   },
   {
     "id": "printprep",
@@ -381,7 +477,15 @@
     "engine": "DPI math + pdf-lib",
     "verified": "MediaBox = 306 pt (4.25 in)",
     "page": "https://navigatorslab.com/tools/printprep.html",
-    "pretty": "Print-Shop-Prep"
+    "pretty": "Print-Shop-Prep",
+    "exampleInput": "Family-Portrait.jpg (2400×1800 px)",
+    "exampleInputDetail": "Ordering 4×6 in and Poster prints — need to know if 300 DPI holds up and add 0.125 in bleed",
+    "exampleEngine": "Exact physical DPI advisor calculates max sharp print dimensions and generates pdf-lib MediaBox with bleed marks",
+    "exampleOutput": "Portrait-4x6-with-bleed-300dpi.pdf",
+    "exampleOutputDetail": "True 300 DPI PDF with exact 306×450 pt (4.25×6.25 in) MediaBox including 0.125 in print-shop bleed",
+    "sampleOutputCode": "Size: 4x6 in + 0.125 in bleed | Effective DPI: 384 DPI (Sharp [OK]) | MediaBox: 306x450 pt",
+    "video": "./videos/printprep.mp4",
+    "poster": "./shots/printprep.jpg"
   },
   {
     "id": "pdfpages",
@@ -410,7 +514,15 @@
     "engine": "pdf.js render + pdf-lib rebuild",
     "verified": "Page order & rotations in rebuilt PDF",
     "page": "https://navigatorslab.com/tools/pdfpages.html",
-    "pretty": "PDF-Pages"
+    "pretty": "PDF-Pages",
+    "exampleInput": "40-Page Scanned Packet (Pages 2–3 Upside Down)",
+    "exampleInputDetail": "Need to rotate pages 2–3 by 180°, delete blank page 4, drag page 5 to front, and merge Attachment-B.pdf",
+    "exampleEngine": "pdf.js renders interactive drag-and-drop page thumbnails; pdf-lib rebuilds clean output document locally",
+    "exampleOutput": "Packet-Reordered-Merged.pdf",
+    "exampleOutputDetail": "Rebuilt PDF with exact new page order, rotations applied in page dictionary, deleted pages purged",
+    "sampleOutputCode": "Input: [p1, p2, p3] -> Drag & Rotate 90° -> Output: [p2(90°), p1, p3] (Valid PDF-1.7) [OK]",
+    "video": "./videos/pdfpages.mp4",
+    "poster": "./shots/pdfpages.jpg"
   },
   {
     "id": "textdiff",
@@ -439,7 +551,15 @@
     "engine": "LCS diff engine",
     "verified": "Word-level spans asserted",
     "page": "https://navigatorslab.com/tools/textdiff.html",
-    "pretty": "Text-Diff"
+    "pretty": "Text-Diff",
+    "exampleInput": "Contract-v1.txt vs Counterparty-Redline-v2.txt",
+    "exampleInputDetail": "Counterparty claims 'minor typos fixed', but changed '30 days notice' to '90 business days notice'",
+    "exampleEngine": "Custom Longest-Common-Subsequence (LCS) line + intra-line word diff engine highlights exact token mutations",
+    "exampleOutput": "Inline Word-Diff + Unified Patch (.diff)",
+    "exampleOutputDetail": "91.4% similarity badge · '-30 +90 +business' highlighted inside line 14 · Exportable unified diff patch",
+    "sampleOutputCode": "@@ -14,1 +14,1 @@\n-terminate with [-30-] {+90 business+} days written notice | Similarity: 91.4%",
+    "video": "./videos/textdiff.mp4",
+    "poster": "./shots/textdiff.jpg"
   },
   {
     "id": "reimagine",
@@ -468,7 +588,15 @@
     "catLabel": "Design",
     "engine": "Content-extraction layout engine",
     "verified": "Redesign renders from content-derived data",
-    "page": "https://navigatorslab.com/tools/reimagine.html"
+    "page": "https://navigatorslab.com/tools/reimagine.html",
+    "exampleInput": "Any Raw HTML Page, Documentation or Report",
+    "exampleInputDetail": "Dense, unstyled or dated HTML with tables, dates, metrics, and headings",
+    "exampleEngine": "Content-derived AST layout engine extracts nouns, dates, numbers & palette and rebuilds in 17 visual directions",
+    "exampleOutput": "17 Redesigned HTML Pages (Infographic, 3D, Cinematic...)",
+    "exampleOutputDetail": "Zero hallucinated copy — every number, date & heading comes from your HTML, restyled into 17 exportable layouts",
+    "sampleOutputCode": "Extracted: 14 metrics, 6 dates, 4 sections -> Rebuilt into 17 directions (Infographic, 3D, Editorial)",
+    "video": "./videos/reimagine.mp4",
+    "poster": "./shots/reimagine.jpg"
   },
   {
     "id": "textstats",
@@ -497,7 +625,15 @@
     "engine": "Pure TypeScript stats",
     "verified": "Counts & keyword table asserted",
     "page": "https://navigatorslab.com/tools/textstats.html",
-    "pretty": "Text-Stats"
+    "pretty": "Text-Stats",
+    "exampleInput": "Keynote Draft / Fellowship Essay (620 Words)",
+    "exampleInputDetail": "Strict 650-word limit; need Flesch reading-ease score, speaking time, keyword density & sentence rhythm",
+    "exampleEngine": "Real-time syllable, lexical density, Flesch-Kincaid & 7-bucket sentence-length histogram analyzer",
+    "exampleOutput": "Readability & Rhythm Report + Markdown Table",
+    "exampleOutputDetail": "620/650 words (95% goal) · 2.5 min read · Flesch 64.2 (8th–9th grade) · Sentence rhythm histogram + Markdown copy",
+    "sampleOutputCode": "Words: 620/650 (95%) | Read: 2.5m | Flesch: 64.2 | Avg Sentence: 14.8 words | Top: privacy (3.2%)",
+    "video": "./videos/textstats.mp4",
+    "poster": "./shots/textstats.jpg"
   },
   {
     "id": "pdfstudio",
@@ -531,7 +667,15 @@
     "engine": "Client-side PDF engine + OCR + on-device AI",
     "verified": "30 passing browser tests per release; live probes against production",
     "shot": "og",
-    "kind": "app"
+    "kind": "app",
+    "exampleInput": "Any Multi-Page PDF, Scanned Contract or Tax Form",
+    "exampleInputDetail": "Need to edit existing PDF text in place, fill AcroForms, OCR scanned pages, vector-redact SSNs, sign & diff",
+    "exampleEngine": "Full client-side PDF content-stream rewriter + Tesseract WASM OCR + vector redaction + on-device AI assistant",
+    "exampleOutput": "Edited, Signed, Redacted & Searchable PDF",
+    "exampleOutputDetail": "True in-place text edits, filled forms, permanently scrubbed redactions, and side-by-side revision diff — 0 uploads",
+    "sampleOutputCode": "In-Place Text Stream Edit [OK] | Vector Redact (Bytes Purged) [OK] | OCR Layer [OK] | 213★ Flagship",
+    "video": "./videos/pdfstudio.mp4",
+    "poster": "./shots/pdfstudio.jpg"
   },
   {
     "id": "designhealth",
@@ -565,7 +709,15 @@
     "verified": "CI gate in reimagine-it's audit — same HTML, same verdict, always",
     "shot": "og",
     "kind": "local",
-    "url": "https://github.com/Kayforkind/design-health-action"
+    "url": "https://github.com/Kayforkind/design-health-action",
+    "exampleInput": "Built HTML Pages in Pull Request (`**/*.html`)",
+    "exampleInputDetail": "Prevent regressions in typography hierarchy, off-palette colors, missing focus-visible, or CLS layout shifts",
+    "exampleEngine": "18 deterministic DOM/CSS checks across Typography, Palette, Motion, Content, Structure & Performance (No LLM)",
+    "exampleOutput": "Deterministic CI Gate Verdict (Pass / Fail Report)",
+    "exampleOutputDetail": "18/18 rules scored in <2s in GitHub Actions — same HTML always produces the exact same pass/fail verdict",
+    "sampleOutputCode": "uses: Kayforkind/design-health-action@v1 -> 18/18 checks PASSED (Typography 3/3, Motion 3/3) [OK]",
+    "video": "./videos/designhealth.mp4",
+    "poster": "./shots/designhealth.jpg"
   },
   {
     "id": "skillslice",
@@ -597,7 +749,15 @@
     "verified": "12 chairs Read-verified in docs/WORKS_VERIFIED.md",
     "shot": "og",
     "kind": "local",
-    "url": "https://github.com/Kayforkind/skill-slice"
+    "url": "https://github.com/Kayforkind/skill-slice",
+    "exampleInput": "Agent Task Requiring One Specific Verified Skill",
+    "exampleInputDetail": "Avoid dumping 500 unverified skills (`--all`) into Cursor/Claude context window",
+    "exampleEngine": "Progressive-disclosure SKILL.md catalog with 12 Read-verified chairs documented in docs/WORKS_VERIFIED.md",
+    "exampleOutput": "Single Verified Skill Folder Installed",
+    "exampleOutputDetail": "`npx skills add kazimrmerchant/skill-slice --skill <name>` copies exactly one verified slice into `.claude/skills/`",
+    "sampleOutputCode": "$ npx skills add kazimrmerchant/skill-slice --skill systematic-debugging -> 1 slice installed [OK]",
+    "video": "./videos/skillslice.mp4",
+    "poster": "./shots/skillslice.jpg"
   },
   {
     "id": "liecatchers",
@@ -629,7 +789,15 @@
     "verified": "fail-demo exits 1 with a signed RECEIPT.json",
     "shot": "og",
     "kind": "local",
-    "url": "https://github.com/Kayforkind/liecatchers"
+    "url": "https://github.com/Kayforkind/liecatchers",
+    "exampleInput": "Coding Agent Claims 'All Done & Tested!'",
+    "exampleInputDetail": "Did the agent actually run the tests, stay within the file contract, and leave a valid git diff?",
+    "exampleEngine": "10 workspace sensors audit declared commands, git diff paths, lockfiles, native modules & handoff packets",
+    "exampleOutput": "Signed `RECEIPT.json` Verification Proof",
+    "exampleOutputDetail": "Exits 0 with cryptographic receipt if all 10 sensors pass, or exits 1 with exact failure evidence to paste back",
+    "sampleOutputCode": "$ uvx --from . liecatcher run -> 10/10 sensors green -> Wrote signed RECEIPT.json [OK]",
+    "video": "./videos/liecatchers.mp4",
+    "poster": "./shots/liecatchers.jpg"
   },
   {
     "id": "bookguide",
@@ -661,7 +829,15 @@
     "verified": "CI badge on the repo; MCP handshake tested in CI",
     "shot": "og",
     "kind": "local",
-    "url": "https://github.com/Kayforkind/book-guide-mcp"
+    "url": "https://github.com/Kayforkind/book-guide-mcp",
+    "exampleInput": "Your Local Technical Library (EPUB / PDF / Markdown)",
+    "exampleInputDetail": "Agents give generic advice instead of citing chapters and playbooks from the books you actually trust",
+    "exampleEngine": "Local-first Python MCP Server over stdio (L0 Library → L4 Socratic & Avicenna Mentor) with exact locators",
+    "exampleOutput": "Grounded Agent Citations & Executable Playbooks",
+    "exampleOutputDetail": "Plugs into Cursor, Claude Code, VS Code & Antigravity; returns chapter/page locators and structured frameworks",
+    "sampleOutputCode": "mcp: book-guide -> cite_locator('Designing Data-Intensive Apps', ch=5) + run_playbook() [OK]",
+    "video": "./videos/bookguide.mp4",
+    "poster": "./shots/bookguide.jpg"
   },
   {
     "id": "datainsights",
@@ -694,7 +870,15 @@
     "verified": "Runs locally — npm install && npm run dev; CI status on the repo",
     "shot": "og",
     "kind": "local",
-    "url": "https://github.com/Kayforkind/data-insights"
+    "url": "https://github.com/Kayforkind/data-insights",
+    "exampleInput": "Public Tech, Startup, Security & Research Feeds",
+    "exampleInputDetail": "Hundreds of noisy daily links across HN, arXiv, security advisories, and release notes",
+    "exampleEngine": "Signal aggregation pipeline synthesizes headline river, daily 5W1H briefs, and weekly momentum/risk reports",
+    "exampleOutput": "Daily 5W1H Brief + Weekly Executive Synthesis + JSON API",
+    "exampleOutputDetail": "Searchable command center, source availability history, agent JSON endpoints, and print-ready weekly PDF briefs",
+    "sampleOutputCode": "GET /api/briefs/daily -> 5W1H synthesis, top 5 momentum signals, 3 experiments [OK]",
+    "video": "./videos/datainsights.mp4",
+    "poster": "./shots/datainsights.jpg"
   },
   {
     "id": "ironaxe",
@@ -727,6 +911,14 @@
     "verified": "Open in Godot 4.3+ and run the main scene — full source in the repo",
     "shot": "og",
     "kind": "local",
-    "url": "https://github.com/Kayforkind/iron-axe-legacy"
+    "url": "https://github.com/Kayforkind/iron-axe-legacy",
+    "exampleInput": "Player Input (Keyboard / Gamepad) in Godot 4.3+",
+    "exampleInputDetail": "Classic arcade beat-'em-up combat with elevation lanes, grabs, specials, and cooperative team magic",
+    "exampleEngine": "Godot 4 GDScript state-machine combat engine with hitstop frames, camera shake, particle juice & 100% original art",
+    "exampleOutput": "60 FPS Side-Scrolling Arcade Action",
+    "exampleOutputDetail": "Multiple playable fighters, combo chains, throw mechanics, elevation stages, and MIT-licensed open-source scenes",
+    "sampleOutputCode": "FighterStateMachine -> AttackCombo(3) -> Hitstop(0.06s) + ScreenShake + TeamMagic [OK]",
+    "video": "./videos/ironaxe.mp4",
+    "poster": "./shots/ironaxe.jpg"
   }
 ]

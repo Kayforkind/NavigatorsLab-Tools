@@ -100,4 +100,41 @@ if(cv && !reduce){
 }
 if("requestIdleCallback" in window) requestIdleCallback(startVoid, {timeout: 2500});
 else setTimeout(startVoid, 60);
+
+/* ---- Scrolltide 24-Tool Video Library & NotebookLM Chapter Controls ---- */
+document.querySelectorAll(".tide-card").forEach(function(card){
+  var vid = card.querySelector("video");
+  if(!vid) return;
+  card.addEventListener("mouseenter", function(){ vid.play().catch(function(){}); });
+  card.addEventListener("mouseleave", function(){ vid.pause(); });
+});
+var nlmVid = document.getElementById("nlmHubVideo");
+document.querySelectorAll(".nlm-jump").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    if(!nlmVid) return;
+    nlmVid.currentTime = Number(btn.getAttribute("data-seek") || 0);
+    nlmVid.play().catch(function(){});
+  });
+});
+var tideTabs = document.querySelectorAll(".tide-tab");
+var tideSearch = document.getElementById("tideSearch");
+var tideCards = document.querySelectorAll(".tide-card");
+var activeTideCat = "all";
+function filterTide(){
+  var q = (tideSearch ? tideSearch.value : "").toLowerCase().trim();
+  tideCards.forEach(function(c){
+    var cm = (activeTideCat === "all") || (c.getAttribute("data-cat") === activeTideCat);
+    var sm = !q || (c.getAttribute("data-search") || "").indexOf(q) !== -1;
+    c.style.display = (cm && sm) ? "" : "none";
+  });
+}
+tideTabs.forEach(function(tab){
+  tab.addEventListener("click", function(){
+    tideTabs.forEach(function(x){ x.classList.remove("on"); });
+    tab.classList.add("on");
+    activeTideCat = tab.getAttribute("data-cat") || "all";
+    filterTide();
+  });
+});
+if(tideSearch) tideSearch.addEventListener("input", filterTide);
 })();

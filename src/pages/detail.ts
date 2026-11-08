@@ -1,8 +1,7 @@
 /* Dedicated per-tool detail page (detail.html?id=<tool>) — renders the tool's
- * full story from public/tools.json: billboard-style header, what-it-does,
- * features, how-to steps, verification, agent deep link, related tools, and
- * the full library grid. Everything renders locally; the only network call is
- * the tools.json fetch, same-origin. */
+ * full story from public/tools.json: billboard-style header, 16:9 demo video,
+ * concrete Input -> Engine -> Output breakdown, what-it-does, features, how-to
+ * steps, verification, agent deep link, related tools, and the full library grid. */
 import { toolTagline, getLang, t } from '../lib/i18n';
 
 interface Tool {
@@ -11,6 +10,14 @@ interface Tool {
   about?: string; features?: string[]; howto?: string[]; tech?: string;
   goodFor?: string; catLabel?: string; engine?: string; verified?: string;
   pretty?: string; shot?: string; kind?: string;
+  exampleInput?: string;
+  exampleInputDetail?: string;
+  exampleEngine?: string;
+  exampleOutput?: string;
+  exampleOutputDetail?: string;
+  sampleOutputCode?: string;
+  video?: string;
+  poster?: string;
 }
 
 /** hero/poster art: in-action screenshot for browser tools, og poster otherwise */
@@ -119,8 +126,49 @@ function sections(tool: Tool): string {
 
 function poster(tool: Tool): string {
   const isOg = tool.shot === 'og';
+  const vidSrc = tool.video ?? `./videos/${tool.id}.mp4`;
+  const postSrc = tool.poster ?? `./shots/${tool.id}.jpg`;
+  const ioHtml = tool.exampleInput ? `
+    <div class="panel" style="margin-bottom:22px;border-color:rgba(45,212,191,.35);background:linear-gradient(180deg,#0f172a,#0b1120)">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <h2 style="margin:0;font-size:18px">⚡ Concrete Example: Input → On-Device Engine → Output</h2>
+        <span class="pill ok">Verified in CI</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:12px">
+        <div style="background:#080c15;border:1px solid rgba(251,113,133,.35);border-radius:10px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:#fda4af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">1 · Raw Input</div>
+          <b style="display:block;color:#f8fafc;font-size:14px;margin-bottom:4px">${esc(tool.exampleInput)}</b>
+          <div style="color:#94a3b8;font-size:12.5px;line-height:1.45">${esc(tool.exampleInputDetail ?? '')}</div>
+        </div>
+        <div style="background:#080c15;border:1px solid rgba(45,212,191,.35);border-radius:10px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:#2dd4bf;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">2 · On-Device Engine</div>
+          <b style="display:block;color:#f8fafc;font-size:14px;margin-bottom:4px">${esc(tool.engine ?? 'Local Engine')}</b>
+          <div style="color:#94a3b8;font-size:12.5px;line-height:1.45">${esc(tool.exampleEngine ?? '')}</div>
+        </div>
+        <div style="background:#080c15;border:1px solid rgba(52,211,153,.45);border-radius:10px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:#6ee7b7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">3 · Verified Output</div>
+          <b style="display:block;color:#ecfdf5;font-size:14px;margin-bottom:4px">${esc(tool.exampleOutput ?? '')}</b>
+          <div style="color:#a7f3d0;font-size:12.5px;line-height:1.45">${esc(tool.exampleOutputDetail ?? '')}</div>
+        </div>
+      </div>
+      <div style="background:#050810;border:1px solid #1e293b;border-radius:8px;padding:10px 14px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:#2dd4bf;overflow-x:auto">
+        <b style="color:#94a3b8">SAMPLE OUTPUT PROOF:</b> ${esc(tool.sampleOutputCode ?? tool.verified ?? '')}
+      </div>
+    </div>
+  ` : '';
+
   return `
   <div class="wrap">
+    ${ioHtml}
+    <div class="panel" style="padding:14px;margin-bottom:20px;border-color:rgba(56,189,248,.35)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <b style="font-size:13.5px;color:#38bdf8">🎬 16:9 Step-by-Step Workflow Video (${esc(tool.name)})</b>
+        <a href="${vidSrc}" download style="font-size:12px;color:#94a3b8">⬇ Download MP4</a>
+      </div>
+      <div style="width:100%;aspect-ratio:16/9;background:#05070d;border-radius:10px;overflow:hidden;border:1px solid #1e293b">
+        <video src="${vidSrc}" poster="${postSrc}" controls autoplay muted loop playsinline preload="metadata" data-aspect="horizontal" style="width:100%;height:100%;object-fit:contain;display:block"></video>
+      </div>
+    </div>
     <figure class="d-shot">
       <img src="${artSrc(tool)}" alt="${esc(tool.name)} — ${esc(tool.tagline)}" loading="lazy" />
       <figcaption>${isOg

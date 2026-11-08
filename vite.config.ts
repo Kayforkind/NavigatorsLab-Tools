@@ -73,7 +73,7 @@ export default defineConfig({
         // held by the runtime NetworkFirst rule below — precaching them made
         // first-visit install ~58 MB and the SW activate slowly on real
         // networks (offline-pwa e2e flaked against production).
-        globIgnores: ['**/tess/**', '**/tessdata/**', '**/lamejs/**', '**/fx/**', '**/shots/**', 'reimagine.html'],
+        globIgnores: ['**/tess/**', '**/tessdata/**', '**/lamejs/**', '**/fx/**', '**/shots/**', '**/videos/**', 'reimagine.html'],
         maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
         navigateFallback: 'index.html',
         // match precache entries regardless of query params — so returning

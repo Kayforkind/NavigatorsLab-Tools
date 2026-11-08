@@ -26,6 +26,7 @@ const MIME = {
   '.pdf': 'application/pdf',
   '.wav': 'audio/wav',
   '.mp3': 'audio/mpeg',
+  '.mp4': 'video/mp4',
   '.json': 'application/json',
   '.webmanifest': 'application/manifest+json',
   '.woff2': 'font/woff2',

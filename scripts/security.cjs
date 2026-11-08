@@ -119,7 +119,7 @@ const PAGES = fs.readdirSync(path.resolve(__dirname, '..', 'dist')).filter((f) =
       };
       let hits = [];
       for (const f of files) {
-        if (/\.(png|jpg|jpeg|wasm|gz|woff2|webp)$/.test(f)) continue;
+        if (/\.(png|jpg|jpeg|wasm|gz|woff2|webp|mp4|mp3|wav)$/.test(f)) continue;
         if (vendored.test(f)) continue;
         const text = fs.readFileSync(f, 'utf8');
         for (const p of patterns) {

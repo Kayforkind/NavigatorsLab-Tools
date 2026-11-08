@@ -103,6 +103,52 @@ h2{font-size:clamp(30px,4vw,48px);line-height:1.08;letter-spacing:-.025em;font-w
 .rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}.rv-d4{transition-delay:.32s}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}#void{display:none}
   .scroll-hint,.eyebrow .dot{animation:none}html{scroll-behavior:auto}}
+
+/* ---- Scrolltide Library & NotebookLM Studio Styles ---- */
+.nlm-studio-box{background:linear-gradient(180deg,rgba(17,25,40,.92),rgba(11,15,25,.96));border:1px solid rgba(94,234,212,.32);border-radius:22px;padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.nlm-studio-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.nlm-studio-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:20px;align-items:stretch}
+.nlm-video-stage{width:100%;aspect-ratio:16/9;background:#05070d;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.nlm-video-stage video{width:100%;height:100%;object-fit:contain;display:block;background:#05070d}
+.nlm-chap-list{display:flex;flex-direction:column;gap:10px;justify-content:space-between}
+.nlm-jump{background:rgba(7,10,18,.85);border:1px solid var(--line);border-radius:12px;padding:11px 14px;text-align:left;color:var(--ink);cursor:pointer;transition:border-color .18s,background .18s}
+.nlm-jump:hover{border-color:#2dd4bf;background:rgba(20,30,50,.9)}
+.nlm-jump small{display:block;font-family:var(--mono);font-size:11px;color:#2dd4bf;margin-bottom:3px}
+.nlm-jump b{display:block;font-size:13.5px;margin-bottom:2px;color:var(--ink)}
+.nlm-jump span{display:block;font-size:12px;color:#94a3b8;line-height:1.4}
+
+.tide-controls{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:20px 0 24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.tide-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tide-tab{background:rgba(15,21,34,.85);border:1px solid var(--line);color:#94a3b8;padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
+.tide-tab:hover,.tide-tab.on{background:#2dd4bf;color:#041017;border-color:#2dd4bf;font-weight:700}
+.tide-search{background:rgba(15,21,34,.9);border:1px solid var(--line);color:var(--ink);padding:9px 14px;border-radius:10px;font-size:13.5px;min-width:280px}
+.tide-search:focus{outline:none;border-color:#2dd4bf}
+
+.tide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(360px,100%),1fr));gap:20px}
+.tide-card{background:linear-gradient(180deg,rgba(16,23,38,.92),rgba(10,15,25,.96));border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.tide-card:hover{transform:translateY(-3px);border-color:rgba(94,234,212,.45);box-shadow:0 20px 44px rgba(0,0,0,.55)}
+.tide-media{position:relative;display:block;width:100%;aspect-ratio:16/9;background:#05070d;border-bottom:1px solid var(--line);overflow:hidden}
+.tide-media video{width:100%;height:100%;object-fit:contain;display:block;background:#05070d}
+.tide-cat-pill{position:absolute;top:10px;left:10px;background:rgba(6,9,15,.86);border:1px solid rgba(94,234,212,.38);color:#2dd4bf;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;backdrop-filter:blur(8px)}
+.tide-play-pill{position:absolute;bottom:10px;right:10px;background:rgba(6,9,15,.85);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:6px}
+.tide-body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1}
+.tide-title-row h3{margin:0 0 4px;font-size:18px;font-weight:700}
+.tide-title-row h3 a{color:var(--ink);text-decoration:none}
+.tide-title-row h3 a:hover{color:#2dd4bf}
+.tide-tag{margin:0 0 12px;color:#94a3b8;font-size:13.5px;line-height:1.45}
+.tide-io{background:rgba(6,9,15,.88);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:12px}
+.tide-io-line{display:flex;gap:8px;align-items:baseline;margin:4px 0;color:#cbd5e1;line-height:1.4}
+.t-badge{font-family:var(--mono);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;flex-shrink:0}
+.t-badge.in{background:rgba(251,113,133,.16);color:#fda4af;border:1px solid rgba(251,113,133,.35)}
+.t-badge.out{background:rgba(52,211,153,.16);color:#6ee7b7;border:1px solid rgba(52,211,153,.35)}
+.tide-io-code{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(148,163,184,.18);font-family:var(--mono);font-size:11px;color:#2dd4bf;overflow-x:auto;white-space:nowrap}
+.tide-actions{margin-top:auto;display:flex;gap:10px}
+.tide-btn{flex:1;text-align:center;padding:8px 12px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);font-size:13px;font-weight:600;text-decoration:none;transition:all .15s}
+.tide-btn:hover{border-color:#2dd4bf;color:#2dd4bf}
+.tide-btn.primary{background:linear-gradient(135deg,#2dd4bf,#38bdf8);color:#041017;border-color:transparent;font-weight:700}
+.tide-btn.primary:hover{filter:brightness(1.08);color:#041017}
+@media(max-width:920px){.nlm-studio-grid{grid-template-columns:1fr}.tide-search{min-width:100%}}
+
 </style>
 </head>
 <body>
@@ -272,6 +318,611 @@ td.ver{color:var(--mut);font-size:14px}
 .tbl-note{margin-top:16px;font-size:14px;color:var(--mut)}
 .tbl-note strong{color:var(--ink)}
 </style>
+
+<section id="overview" class="sec" style="padding-top:36px;padding-bottom:28px">
+  <div class="wrap">
+    <div class="nlm-studio-box">
+      <div class="nlm-studio-head">
+        <div>
+          <span class="sec-tag" style="margin-bottom:6px;display:inline-block">🎙️ NotebookLM Audio &amp; Video Deep Dive</span>
+          <h2 class="sec-h" style="font-size:clamp(1.6rem,3vw,2.3rem);margin:4px 0 6px">Watch how all 24 local-first tools work — Input to Output.</h2>
+          <p class="sec-p" style="margin:0">Dual-host NotebookLM walkthrough of our zero-upload CSP architecture, PDF Studio, Reimagine, concrete browser tool outputs, and the MCP agent suite.</p>
+        </div>
+        <a class="btn-ghost" href="./videos/notebooklm-overview.mp4" download>⬇ Download MP4 Overview</a>
+      </div>
+      <div class="nlm-studio-grid">
+        <div class="nlm-video-stage">
+          <video id="nlmHubVideo" controls playsinline preload="metadata" poster="./shots/notebooklm-overview.jpg" data-aspect="horizontal">
+            <source src="./videos/notebooklm-overview.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="nlm-chap-list">
+          <button type="button" class="nlm-jump" data-seek="0">
+            <small>CHAPTER 01 · 00:00</small>
+            <b>Why Local-First &amp; CSP default-src 'none'</b>
+            <span>How browser network locks &amp; 5-char HIBP k-anonymity protect your files.</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="31">
+            <small>CHAPTER 02 · 00:31</small>
+            <span><b>Flagships: PDF Studio (213★) &amp; Reimagine</b></span>
+            <span>In-place PDF stream editing, Tesseract OCR, and 17-direction HTML redesign.</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="64">
+            <small>CHAPTER 03 · 01:04</small>
+            <b>Concrete Input → Output Walkthroughs</b>
+            <span>SHA-256 EXIF strip, 16 MB → 294 KB binary search, Receipt OCR to CSV &amp; E-Sign.</span>
+          </button>
+          <button type="button" class="nlm-jump" data-seek="98">
+            <small>CHAPTER 04 · 01:38</small>
+            <b>AI Agents, MCP Endpoint &amp; liecatchers</b>
+            <span>Stateless /tools/mcp server, Skill Slice verified folders &amp; 10-sensor RECEIPT.json.</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="library" class="sec" style="padding-top:24px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">// Complete 24-Project Visual Library</div>
+        <h2 class="sec-h">Every tool, its live 16:9 demo video &amp; real output.</h2>
+      </div>
+      <p class="sec-p">Hover any card to play its 3-step workflow video (<b>1. Raw Input → 2. On-Device Engine → 3. Verified Output</b>), inspect real sample output proof, or click right into the tool.</p>
+    </div>
+
+    <div class="tide-controls">
+      <div class="tide-tabs" role="tablist" aria-label="Filter tools by category">
+        <button type="button" class="tide-tab on" data-cat="all">All 24 Projects</button>
+        <button type="button" class="tide-tab" data-cat="privacy">Privacy &amp; Security</button>
+        <button type="button" class="tide-tab" data-cat="documents">PDF &amp; Documents</button>
+        <button type="button" class="tide-tab" data-cat="money">Money &amp; OCR</button>
+        <button type="button" class="tide-tab" data-cat="images">Images &amp; Print</button>
+        <button type="button" class="tide-tab" data-cat="media">Audio &amp; Media</button>
+        <button type="button" class="tide-tab" data-cat="files">Files &amp; QR</button>
+        <button type="button" class="tide-tab" data-cat="design">Design &amp; Flagships</button>
+        <button type="button" class="tide-tab" data-cat="agents">Agents &amp; MCP</button>
+      </div>
+      <input type="search" id="tideSearch" class="tide-search" placeholder="Search 24 tools, inputs, outputs (e.g. GPS, 300 KB, CSV, PDF, MCP)…" aria-label="Search all 24 tools" />
+    </div>
+
+    <div class="tide-grid">
+      <article class="tide-card" data-cat="privacy" data-search="exif photo privacy kit strip gps, camera model and timestamps before posting exif gps metadata photo privacy strip location camera vacation vacation-photo.jpg (3.4 mb) vacation-photo.clean.jpg (3.34 mb)">
+        <a class="tide-media" href="./detail.html?id=exif" aria-label="Watch Photo Privacy Kit demo and view output examples">
+          <video src="./videos/exif.mp4" poster="./shots/exif.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🛡️ Privacy</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./exif.html">Photo Privacy Kit</a></h3>
+          </div>
+          <p class="tide-tag">Strip GPS, camera model and timestamps before posting</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>vacation-photo.jpg (3.4 MB)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>vacation-photo.clean.jpg (3.34 MB)</span></div>
+            <div class="tide-io-code">GPS: REMOVED | Camera: REMOVED | Thumbnail: REMOVED | Pixels SHA-256: IDENTICAL [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./exif.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=exif">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="privacy" data-search="breachcheck password breach checker has this password been breached? — it never leaves your tab password breach pwned haveibeenpwned hibp leak check security k-anonymity candidate password typed in tab breach exposure verdict">
+        <a class="tide-media" href="./detail.html?id=breachcheck" aria-label="Watch Password Breach Checker demo and view output examples">
+          <video src="./videos/breachcheck.mp4" poster="./shots/breachcheck.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🔐 Privacy</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./breachcheck.html">Password Breach Checker</a></h3>
+          </div>
+          <p class="tide-tag">Has this password been breached? — it never leaves your tab</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Candidate password typed in tab</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Breach Exposure Verdict</span></div>
+            <div class="tide-io-code">GET /range/5BAA6 -&gt; Local suffix match: 1E4C9...8FD8:10693022 (Exposed)</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./breachcheck.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=breachcheck">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="privacy" data-search="metadata metadata &amp; hidden-data checker see what&#x27;s really inside a file — then strip it metadata hidden data docx xlsx pdf author company inspect ooxml board-proposal-v4.docx &amp;amp; q3-model.pdf board-proposal-v4.clean.docx">
+        <a class="tide-media" href="./detail.html?id=metadata" aria-label="Watch Metadata &amp; Hidden-Data Checker demo and view output examples">
+          <video src="./videos/metadata.mp4" poster="./shots/metadata.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🔍 Privacy</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./metadata.html">Metadata &amp; Hidden-Data Checker</a></h3>
+          </div>
+          <p class="tide-tag">See what&#x27;s really inside a file — then strip it</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Board-Proposal-v4.docx &amp; Q3-Model.pdf</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Board-Proposal-v4.clean.docx</span></div>
+            <div class="tide-io-code">dc:creator: REMOVED | cp:revision: REMOVED | TotalTime: 0 | Re-check: 0 hidden fields [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./metadata.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=metadata">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="images" data-search="shrink image shrinker hit “max 2 mb” portal limits without tinypng compress shrink resize convert jpeg png webp target size email passport-scan.png (16.0 mb, 4000×3000) passport-scan.shrunk.jpg (294 kb)">
+        <a class="tide-media" href="./detail.html?id=shrink" aria-label="Watch Image Shrinker demo and view output examples">
+          <video src="./videos/shrink.mp4" poster="./shots/shrink.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🗜️ Images</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./shrink.html">Image Shrinker</a></h3>
+          </div>
+          <p class="tide-tag">Hit “max 2 MB” portal limits without TinyPNG</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>passport-scan.png (16.0 MB, 4000×3000)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>passport-scan.shrunk.jpg (294 KB)</span></div>
+            <div class="tide-io-code">Target: &lt;=300 KB | Binary Search: q=0.50 -&gt; q=0.72 -&gt; q=0.68 | Output: 294,112 bytes [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./shrink.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=shrink">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="documents" data-search="scan scan &amp; screenshot cleaner phone photos of documents → clean, straight pdfs scan document straighten deskew crop grayscale pdf screenshot 3 phone photos of a lease on a gray desk lease-cleaned-300dpi.pdf (3 pages)">
+        <a class="tide-media" href="./detail.html?id=scan" aria-label="Watch Scan &amp; Screenshot Cleaner demo and view output examples">
+          <video src="./videos/scan.mp4" poster="./shots/scan.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">📄 Documents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./scan.html">Scan &amp; Screenshot Cleaner</a></h3>
+          </div>
+          <p class="tide-tag">Phone photos of documents → clean, straight PDFs</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>3 Phone Photos of a Lease on a Gray Desk</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>lease-cleaned-300dpi.pdf (3 Pages)</span></div>
+            <div class="tide-io-code">Deskew: -2.8 deg | Auto-Levels: 18..238 -&gt; 0..255 | Output: 3-page 300-DPI PDF [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./scan.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=scan">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="documents" data-search="sign local e-sign pad sign this lease tonight — not docusign signature sign pdf sign flatten lease contract draw mutual-nda-2026.pdf (unsigned) mutual-nda-2026-signed.pdf">
+        <a class="tide-media" href="./detail.html?id=sign" aria-label="Watch Local E-Sign Pad demo and view output examples">
+          <video src="./videos/sign.mp4" poster="./shots/sign.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">✍️ Documents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./sign.html">Local E-Sign Pad</a></h3>
+          </div>
+          <p class="tide-tag">Sign this lease tonight — not DocuSign</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Mutual-NDA-2026.pdf (Unsigned)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Mutual-NDA-2026-signed.pdf</span></div>
+            <div class="tide-io-code">Signature embedded in Page 1 /Resources/XObject | AcroForm fields: 0 (Flattened) [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./sign.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=sign">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="money" data-search="receipts receipts → one pdf shoebox of receipt photos → one date-sorted pdf receipts pdf expenses sort dates bookkeeping landlord freelancer 18 unsorted receipt photos from camera roll 2026-q3-receipts-sorted.pdf">
+        <a class="tide-media" href="./detail.html?id=receipts" aria-label="Watch Receipts → One PDF demo and view output examples">
+          <video src="./videos/receipts.mp4" poster="./shots/receipts.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🧾 Money</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./receipts.html">Receipts → One PDF</a></h3>
+          </div>
+          <p class="tide-tag">Shoebox of receipt photos → one date-sorted PDF</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>18 Unsorted Receipt Photos from Camera Roll</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>2026-Q3-Receipts-Sorted.pdf</span></div>
+            <div class="tide-io-code">Page 1: 2026-09-03 | Page 2: 2026-09-12 | Page 3: 2026-09-19 | Stamped &amp; Merged [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./receipts.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=receipts">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="money" data-search="ocr receipt ocr → csv read totals off receipt photos, export for expenses ocr receipt totals csv expenses tracking tesseract scan amounts photos of coffee, hardware &amp;amp; grocery receipts expenses-2026.csv (excel / sheets ready)">
+        <a class="tide-media" href="./detail.html?id=ocr" aria-label="Watch Receipt OCR → CSV demo and view output examples">
+          <video src="./videos/ocr.mp4" poster="./shots/ocr.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🔢 Money</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./ocr.html">Receipt OCR → CSV</a></h3>
+          </div>
+          <p class="tide-tag">Read totals off receipt photos, export for expenses</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Photos of Coffee, Hardware &amp; Grocery Receipts</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>expenses-2026.csv (Excel / Sheets Ready)</span></div>
+            <div class="tide-io-code">date,vendor,category,currency,total,confidence
+2026-09-14,GREEN GROCER,Groceries,USD,23.98,94%</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./ocr.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=ocr">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="files" data-search="qr qr studio generate qr codes and decode qr images — no site sees them qr code generate decode scan wifi url png svg barcode office wi-fi credentials / vcard / url wifi-qr.svg (vector) &amp;amp; wifi-qr.png">
+        <a class="tide-media" href="./detail.html?id=qr" aria-label="Watch QR Studio demo and view output examples">
+          <video src="./videos/qr.mp4" poster="./shots/qr.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🔳 Files</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./qr.html">QR Studio</a></h3>
+          </div>
+          <p class="tide-tag">Generate QR codes and decode QR images — no site sees them</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Office Wi-Fi Credentials / vCard / URL</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>wifi-qr.svg (Vector) &amp; wifi-qr.png</span></div>
+            <div class="tide-io-code">Payload: WIFI:T:WPA;S:NavLab-Guest;P:ultra-secret\!2026;; | Round-trip decode: EXACT [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./qr.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=qr">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="media" data-search="audio audio trimmer cut voice notes and clips on a waveform audio trim cut waveform voice podcast mp3 wav clip 40-minute interview voice note (voice-memo.wav) interview-clip-normalized.mp3 (or .wav)">
+        <a class="tide-media" href="./detail.html?id=audio" aria-label="Watch Audio Trimmer demo and view output examples">
+          <video src="./videos/audio.mp4" poster="./shots/audio.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🎧 Media</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./audio.html">Audio Trimmer</a></h3>
+          </div>
+          <p class="tide-tag">Cut voice notes and clips on a waveform</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>40-Minute Interview Voice Note (voice-memo.wav)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>interview-clip-normalized.mp3 (or .wav)</span></div>
+            <div class="tide-io-code">Slice: 1.00s..2.50s (66,150 samples) | Peak: 0.99 | Export: WAV PCM + LAME MP3 (0xFFFB) [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./audio.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=audio">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="money" data-search="invoice invoice / quote generator one-person shops: hours in, clean pdf out invoice quote billing pdf freelance tax hours template freelance consulting hours &amp;amp; line items inv-2026-042.pdf ($408.00 total)">
+        <a class="tide-media" href="./detail.html?id=invoice" aria-label="Watch Invoice / Quote Generator demo and view output examples">
+          <video src="./videos/invoice.mp4" poster="./shots/invoice.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🧮 Money</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./invoice.html">Invoice / Quote Generator</a></h3>
+          </div>
+          <p class="tide-tag">One-person shops: hours in, clean PDF out</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Freelance Consulting Hours &amp; Line Items</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>INV-2026-042.pdf ($408.00 Total)</span></div>
+            <div class="tide-io-code">Subtotal: $400.00 | Discount (10%): -$40.00 | Tax: +$48.00 | PDF Total: $408.00 [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./invoice.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=invoice">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="files" data-search="rename batch rename &amp; sort img_5847.jpg → 2026-09-05-receipt-home-depot.jpg rename batch exif date organize files photos sort zip camera roll dump: img_5847.jpg, dsc_0019.jpg... renamed-photos.zip">
+        <a class="tide-media" href="./detail.html?id=rename" aria-label="Watch Batch Rename &amp; Sort demo and view output examples">
+          <video src="./videos/rename.mp4" poster="./shots/rename.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🗂️ Files</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./rename.html">Batch Rename &amp; Sort</a></h3>
+          </div>
+          <p class="tide-tag">IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Camera Roll Dump: IMG_5847.jpg, DSC_0019.jpg...</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>renamed-photos.zip</span></div>
+            <div class="tide-io-code">IMG_5847.jpg -&gt; 2026-09-05-receipt-001.jpg | IMG_5848.jpg -&gt; 2026-09-06-receipt-002.jpg [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./rename.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=rename">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="images" data-search="printprep print-shop prep exact sizes, bleed, dpi checks, print-ready pdf print bleed dpi 4x6 a4 letter resize photo shop 300dpi family-portrait.jpg (2400×1800 px) portrait-4x6-with-bleed-300dpi.pdf">
+        <a class="tide-media" href="./detail.html?id=printprep" aria-label="Watch Print-Shop Prep demo and view output examples">
+          <video src="./videos/printprep.mp4" poster="./shots/printprep.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🖨️ Images</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./printprep.html">Print-Shop Prep</a></h3>
+          </div>
+          <p class="tide-tag">Exact sizes, bleed, DPI checks, print-ready PDF</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Family-Portrait.jpg (2400×1800 px)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Portrait-4x6-with-bleed-300dpi.pdf</span></div>
+            <div class="tide-io-code">Size: 4x6 in + 0.125 in bleed | Effective DPI: 384 DPI (Sharp [OK]) | MediaBox: 306x450 pt</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./printprep.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=printprep">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="documents" data-search="pdfpages pdf pages reorder, rotate, delete and extract pdf pages pdf pages reorder rotate delete extract merge organize split 40-page scanned packet (pages 2–3 upside down) packet-reordered-merged.pdf">
+        <a class="tide-media" href="./detail.html?id=pdfpages" aria-label="Watch PDF Pages demo and view output examples">
+          <video src="./videos/pdfpages.mp4" poster="./shots/pdfpages.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">📑 Documents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./pdfpages.html">PDF Pages</a></h3>
+          </div>
+          <p class="tide-tag">Reorder, rotate, delete and extract PDF pages</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>40-Page Scanned Packet (Pages 2–3 Upside Down)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Packet-Reordered-Merged.pdf</span></div>
+            <div class="tide-io-code">Input: [p1, p2, p3] -&gt; Drag &amp; Rotate 90° -&gt; Output: [p2(90°), p1, p3] (Valid PDF-1.7) [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./pdfpages.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=pdfpages">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="documents" data-search="textdiff text diff compare two texts with word-level highlights diff compare texts changes contract nda merge lines words contract-v1.txt vs counterparty-redline-v2.txt inline word-diff + unified patch (.diff)">
+        <a class="tide-media" href="./detail.html?id=textdiff" aria-label="Watch Text Diff demo and view output examples">
+          <video src="./videos/textdiff.mp4" poster="./shots/textdiff.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🔬 Documents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./textdiff.html">Text Diff</a></h3>
+          </div>
+          <p class="tide-tag">Compare two texts with word-level highlights</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Contract-v1.txt vs Counterparty-Redline-v2.txt</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Inline Word-Diff + Unified Patch (.diff)</span></div>
+            <div class="tide-io-code">@@ -14,1 +14,1 @@
+-terminate with [-30-] {+90 business+} days written notice | Similarity: 91.4%</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./textdiff.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=textdiff">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="design" data-search="reimagine reimagine redesign any html page from its own content reimagine redesign html infographic 3d threejs cinematic dashboard photography landing page generator content-derived design ai agent palette any raw html page, documentation or report 17 redesigned html pages (infographic, 3d, cinematic...)">
+        <a class="tide-media" href="./detail.html?id=reimagine" aria-label="Watch Reimagine demo and view output examples">
+          <video src="./videos/reimagine.mp4" poster="./shots/reimagine.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🎨 Design</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://navigatorslab.com/reimagine/">Reimagine</a></h3>
+          </div>
+          <p class="tide-tag">Redesign any HTML page from its own content</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Any Raw HTML Page, Documentation or Report</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>17 Redesigned HTML Pages (Infographic, 3D, Cinematic...)</span></div>
+            <div class="tide-io-code">Extracted: 14 metrics, 6 dates, 4 sections -&gt; Rebuilt into 17 directions (Infographic, 3D, Editorial)</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://navigatorslab.com/reimagine/">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=reimagine">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="documents" data-search="textstats text stats words, reading time, readability, keyword density word count characters reading time flesch readability keywords essay density keynote draft / fellowship essay (620 words) readability &amp;amp; rhythm report + markdown table">
+        <a class="tide-media" href="./detail.html?id=textstats" aria-label="Watch Text Stats demo and view output examples">
+          <video src="./videos/textstats.mp4" poster="./shots/textstats.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">📊 Documents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="./textstats.html">Text Stats</a></h3>
+          </div>
+          <p class="tide-tag">Words, reading time, readability, keyword density</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Keynote Draft / Fellowship Essay (620 Words)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Readability &amp; Rhythm Report + Markdown Table</span></div>
+            <div class="tide-io-code">Words: 620/650 (95%) | Read: 2.5m | Flesch: 64.2 | Avg Sentence: 14.8 words | Top: privacy (3.2%)</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="./textstats.html">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=textstats">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="documents" data-search="pdfstudio pdf studio edit the text inside your pdf — private, free, open source pdf editor text edit ocr sign redact forms merge split organize diff on-device ai documents any multi-page pdf, scanned contract or tax form edited, signed, redacted &amp;amp; searchable pdf">
+        <a class="tide-media" href="./detail.html?id=pdfstudio" aria-label="Watch PDF Studio demo and view output examples">
+          <video src="./videos/pdfstudio.mp4" poster="./shots/pdfstudio.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">📜 Documents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://navigatorslab.com/pdf-studio/">PDF Studio</a></h3>
+          </div>
+          <p class="tide-tag">Edit the text inside your PDF — private, free, open source</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Any Multi-Page PDF, Scanned Contract or Tax Form</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Edited, Signed, Redacted &amp; Searchable PDF</span></div>
+            <div class="tide-io-code">In-Place Text Stream Edit [OK] | Vector Redact (Bytes Purged) [OK] | OCR Layer [OK] | 213★ Flagship</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://navigatorslab.com/pdf-studio/">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=pdfstudio">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="design" data-search="designhealth design health 18 deterministic design-quality checks for html — no llm, no api key design quality audit html checks ci accessibility typography palette motion linter deterministic built html pages in pull request (`**/*.html`) deterministic ci gate verdict (pass / fail report)">
+        <a class="tide-media" href="./detail.html?id=designhealth" aria-label="Watch Design Health demo and view output examples">
+          <video src="./videos/designhealth.mp4" poster="./shots/designhealth.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🩺 Design</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://github.com/Kayforkind/design-health-action">Design Health</a></h3>
+          </div>
+          <p class="tide-tag">18 deterministic design-quality checks for HTML — no LLM, no API key</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Built HTML Pages in Pull Request (`**/*.html`)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Deterministic CI Gate Verdict (Pass / Fail Report)</span></div>
+            <div class="tide-io-code">uses: Kayforkind/design-health-action@v1 -&gt; 18/18 checks PASSED (Typography 3/3, Motion 3/3) [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://github.com/Kayforkind/design-health-action">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=designhealth">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="agents" data-search="skillslice skill slice copy one read-verified skill folder — a slice, not the pie skills agents claude cursor codex skills.md verified slice copy install agent task requiring one specific verified skill single verified skill folder installed">
+        <a class="tide-media" href="./detail.html?id=skillslice" aria-label="Watch Skill Slice demo and view output examples">
+          <video src="./videos/skillslice.mp4" poster="./shots/skillslice.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🔪 Agents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://github.com/Kayforkind/skill-slice">Skill Slice</a></h3>
+          </div>
+          <p class="tide-tag">Copy one Read-verified skill folder — a slice, not the pie</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Agent Task Requiring One Specific Verified Skill</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Single Verified Skill Folder Installed</span></div>
+            <div class="tide-io-code">$ npx skills add kazimrmerchant/skill-slice --skill systematic-debugging -&gt; 1 slice installed [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://github.com/Kayforkind/skill-slice">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=skillslice">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="agents" data-search="liecatchers liecatchers your agent said done. prove it — ten sensors, one receipt.json agent verification receipt proof completion git diff lockfiles handoff sensors cli coding agent claims &amp;#x27;all done &amp;amp; tested!&amp;#x27; signed `receipt.json` verification proof">
+        <a class="tide-media" href="./detail.html?id=liecatchers" aria-label="Watch liecatchers demo and view output examples">
+          <video src="./videos/liecatchers.mp4" poster="./shots/liecatchers.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🕵️ Agents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://github.com/Kayforkind/liecatchers">liecatchers</a></h3>
+          </div>
+          <p class="tide-tag">Your agent said Done. Prove it — ten sensors, one RECEIPT.json</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Coding Agent Claims &#x27;All Done &amp; Tested!&#x27;</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Signed `RECEIPT.json` Verification Proof</span></div>
+            <div class="tide-io-code">$ uvx --from . liecatcher run -&gt; 10/10 sensors green -&gt; Wrote signed RECEIPT.json [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://github.com/Kayforkind/liecatchers">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=liecatchers">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="agents" data-search="bookguide book guide mcp ship improvements with your books — agents cite, run playbooks, learn mcp books playbooks citations socratic avicenna tutors agents claude cursor local-first your local technical library (epub / pdf / markdown) grounded agent citations &amp;amp; executable playbooks">
+        <a class="tide-media" href="./detail.html?id=bookguide" aria-label="Watch Book Guide MCP demo and view output examples">
+          <video src="./videos/bookguide.mp4" poster="./shots/bookguide.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">📚 Agents</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://github.com/Kayforkind/book-guide-mcp">Book Guide MCP</a></h3>
+          </div>
+          <p class="tide-tag">Ship improvements with your books — agents cite, run playbooks, learn</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Your Local Technical Library (EPUB / PDF / Markdown)</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Grounded Agent Citations &amp; Executable Playbooks</span></div>
+            <div class="tide-io-code">mcp: book-guide -&gt; cite_locator(&#x27;Designing Data-Intensive Apps&#x27;, ch=5) + run_playbook() [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://github.com/Kayforkind/book-guide-mcp">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=bookguide">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="intelligence" data-search="datainsights data insights founder intelligence — daily &amp; weekly tech signal briefs intelligence signals startups research security weekly report daily briefs founders analytics public tech, startup, security &amp;amp; research feeds daily 5w1h brief + weekly executive synthesis + json api">
+        <a class="tide-media" href="./detail.html?id=datainsights" aria-label="Watch Data Insights demo and view output examples">
+          <video src="./videos/datainsights.mp4" poster="./shots/datainsights.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">📡 Intelligence</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://github.com/Kayforkind/data-insights">Data Insights</a></h3>
+          </div>
+          <p class="tide-tag">Founder intelligence — daily &amp; weekly tech signal briefs</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Public Tech, Startup, Security &amp; Research Feeds</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>Daily 5W1H Brief + Weekly Executive Synthesis + JSON API</span></div>
+            <div class="tide-io-code">GET /api/briefs/daily -&gt; 5W1H synthesis, top 5 momentum signals, 3 experiments [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://github.com/Kayforkind/data-insights">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=datainsights">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+      <article class="tide-card" data-cat="games" data-search="ironaxe iron axe: legacy an original side-scrolling beat &#x27;em up — godot 4 game godot beat em up side-scrolling golden axe fighters combos magic open source player input (keyboard / gamepad) in godot 4.3+ 60 fps side-scrolling arcade action">
+        <a class="tide-media" href="./detail.html?id=ironaxe" aria-label="Watch Iron Axe: Legacy demo and view output examples">
+          <video src="./videos/ironaxe.mp4" poster="./shots/ironaxe.jpg" muted loop playsinline preload="none" data-aspect="horizontal"></video>
+          <span class="tide-cat-pill">🪓 Games</span>
+          <span class="tide-play-pill">▶ Hover for 16:9 Demo</span>
+        </a>
+        <div class="tide-body">
+          <div class="tide-title-row">
+            <h3><a href="https://github.com/Kayforkind/iron-axe-legacy">Iron Axe: Legacy</a></h3>
+          </div>
+          <p class="tide-tag">An original side-scrolling beat &#x27;em up — Godot 4</p>
+          <div class="tide-io">
+            <div class="tide-io-line"><span class="t-badge in">INPUT</span><span>Player Input (Keyboard / Gamepad) in Godot 4.3+</span></div>
+            <div class="tide-io-line"><span class="t-badge out">OUTPUT</span><span>60 FPS Side-Scrolling Arcade Action</span></div>
+            <div class="tide-io-code">FighterStateMachine -&gt; AttackCombo(3) -&gt; Hitstop(0.06s) + ScreenShake + TeamMagic [OK]</div>
+          </div>
+          <div class="tide-actions">
+            <a class="tide-btn primary" href="https://github.com/Kayforkind/iron-axe-legacy">Open Tool →</a>
+            <a class="tide-btn" href="./detail.html?id=ironaxe">Video &amp; Examples</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
 <section id="examples" style="background:linear-gradient(180deg,transparent,rgba(167,139,250,.035) 30%,transparent)">
   <div class="wrap">
     <div class="sec-head">
