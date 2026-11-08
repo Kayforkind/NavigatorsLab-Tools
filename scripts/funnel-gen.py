@@ -1,13 +1,13 @@
-# Generates one full PRODUCT repo per tool under funnel/<slug>/ — each repo is
+# Generates one full PRODUCT repo per tool under funnel/<slug>/ â€” each repo is
 # about that tool, end to end:
-#   index.html   — branded product landing (hero, features, steps, screenshot)
-#   demo.html    — THE TOOL ITSELF, runnable on the repo's own GitHub Pages
+#   index.html   â€” branded product landing (hero, features, steps, screenshot)
+#   demo.html    â€” THE TOOL ITSELF, runnable on the repo's own GitHub Pages
 #                  (exact asset closure from dist/, meta-CSP preserved)
-#   assets/…     — the tool's JS/CSS chunks from the hub build
-#   tess/ tessdata/ lamejs/ — same-origin engines for the tools that need them
-#   shot.png     — in-action screenshot (docs/shots/tool-<id>.png)
-#   og.png       — 1200x630 social image
-#   README.md    — in-depth product README with screenshots + steps
+#   assets/â€¦     â€” the tool's JS/CSS chunks from the hub build
+#   tess/ tessdata/ lamejs/ â€” same-origin engines for the tools that need them
+#   shot.png     â€” in-action screenshot (docs/shots/tool-<id>.png)
+#   og.png       â€” 1200x630 social image
+#   README.md    â€” in-depth product README with screenshots + steps
 #   LICENSE, NOTICE, robots.txt, .nojekyll, topics.txt
 #
 # Prereqs:  npm run build  (dist/ must be current)
@@ -47,16 +47,16 @@ SLUGS = {
 }
 
 # Every browser tool that gets a funnel repo must appear here; the hub
-# catalog (tools.json) may list more than these 15 — the excess must be
+# catalog (tools.json) may list more than these 15 â€” the excess must be
 # in EXTERNAL. main() cross-checks all three sets so the funnel-sync CI
-# fails loudly here instead of shipping stale mirrors (see the 16→23
+# fails loudly here instead of shipping stale mirrors (see the 16â†’23
 # catalog growth that silently broke this script in Sep 2026).
 
 # Tools listed in tools.json but WITHOUT a funnel landing repo: they live
 # outside the hub (their card opens their own URL) and already have a
 # full-scale repo of their own, or are not browser tools at all.
 # Everything listed here is skipped by funnel-gen; keep it in sync with
-# tools.json — every tools.json id must be in FUNNEL_SLUGS or EXTERNAL,
+# tools.json â€” every tools.json id must be in FUNNEL_SLUGS or EXTERNAL,
 # which main() asserts so funnel-sync CI can never silently drift again.
 EXTERNAL = {
     'reimagine',    # lives at /reimagine/ via the reimagine-lab worker
@@ -67,6 +67,7 @@ EXTERNAL = {
     'bookguide',    # MCP server, not a browser tool
     'datainsights', # self-hosted Node app, not a browser tool
     'ironaxe',      # Godot game, not a browser tool
+    'breachcheck',  # hosted on /tools/breachcheck.html; no separate mirror repo
 }
 
 # GitHub repo name per tool id (for README badges)
@@ -87,7 +88,7 @@ ENGINES = {'ocr': ['tess', 'tessdata'], 'audio': ['lamejs']}
 
 FEATURES = {
     'exif': [
-        'See exactly what leaks — GPS coordinates, camera & lens, timestamps, embedded thumbnails — before you post',
+        'See exactly what leaks â€” GPS coordinates, camera & lens, timestamps, embedded thumbnails â€” before you post',
         'One-click clean copy: Exif, XMP, IPTC and comments removed, pixels untouched',
         'SHA-256 fingerprints + pixel comparison prove the clean file is the same picture, minus the data',
         'Paste screenshots directly (Ctrl/Cmd+V) or drop files; batch friendly',
@@ -96,7 +97,7 @@ FEATURES = {
         'See what is really inside any file: EXIF / IPTC / XMP, embedded thumbnails, document history',
         'Deep PDF inspection: Info dictionary *and* XMP metadata, shown before anything is stripped',
         'OOXML (docx/xlsx/pptx) and ODF (odt): authors, revisions, editing time, custom properties, thumbnails',
-        'Export a cleaned copy where the format allows — all parsed locally',
+        'Export a cleaned copy where the format allows â€” all parsed locally',
     ],
     'shrink': [
         'Hit an exact size target (e.g. "under 300 KB") with smart binary-searched quality',
@@ -110,13 +111,13 @@ FEATURES = {
     ],
     'sign': [
         'Draw or type a signature, place it anywhere on a PDF, optional dated caption',
-        'Fully local — contracts never leave your machine',
+        'Fully local â€” contracts never leave your machine',
         'Works with mouse, trackpad, stylus and touch',
     ],
     'receipts': [
         'Stack receipt photos into one tidy, print-ready PDF',
         'Ordered by EXIF date taken; rotate and re-shoot pages before export',
-        'Every page stamped with date and filename — expense reports, done',
+        'Every page stamped with date and filename â€” expense reports, done',
     ],
     'ocr': [
         'On-device OCR (no cloud): totals, dates and vendors parsed from receipt photos',
@@ -126,32 +127,32 @@ FEATURES = {
     'qr': [
         'Generate QR codes with Wi-Fi (spec-escaped), URL, email, phone and vCard presets',
         'Selectable error-correction, custom colors, spec quiet zone; PNG + vector SVG export',
-        'Decode QRs from images too — nothing is sent anywhere',
+        'Decode QRs from images too â€” nothing is sent anywhere',
     ],
     'audio': [
         'Trim voice notes and clips with sample-accurate precision on a waveform',
         'Fade in/out and one-click peak normalize',
-        'Export WAV or MP3 (self-hosted LAME) — 100% offline',
+        'Export WAV or MP3 (self-hosted LAME) â€” 100% offline',
     ],
     'invoice': [
         'Professional invoices and quotes: line items, tax on the discounted subtotal, discounts, notes',
         'Two templates, five currencies, live preview that mirrors the PDF exactly',
-        'No account, no cloud — your numbers stay yours',
+        'No account, no cloud â€” your numbers stay yours',
     ],
     'rename': [
-        'EXIF-dated batch renaming: IMG_5847.jpg → 2026-09-05-receipt-home-depot.jpg',
-        'Prefix, suffix and sequence start — previewed live before anything happens',
+        'EXIF-dated batch renaming: IMG_5847.jpg â†’ 2026-09-05-receipt-home-depot.jpg',
+        'Prefix, suffix and sequence start â€” previewed live before anything happens',
         'Download the organized files as a ZIP',
     ],
     'printprep': [
         'DPI advisor tells you the maximum sharp print size for any image',
-        '4×6 to A4 at true 300 DPI; warns before you pay for a blurry print',
+        '4Ã—6 to A4 at true 300 DPI; warns before you pay for a blurry print',
         'MediaBox at the exact physical size, optional bleed',
     ],
     'pdfpages': [
         'Visual page thumbnails: drag to reorder, rotate or delete',
         'Extract selected pages, insert blank pages, merge multiple PDFs',
-        'Rebuilt locally with pdf-lib — your originals stay untouched',
+        'Rebuilt locally with pdf-lib â€” your originals stay untouched',
     ],
     'textdiff': [
         'Compare two texts with word-level highlighting inside changed lines',
@@ -166,32 +167,32 @@ FEATURES = {
 }
 
 HOWTO = {
-    'exif': ['Drop a photo (or paste a screenshot with Ctrl/Cmd+V)', 'Read the leak report: GPS, camera, timestamps, thumbnails', 'Hit strip &amp; download — the SHA-256 proves pixels are unchanged'],
-    'metadata': ['Drop any file: PDF, Word, Excel, image…', 'Read the hidden-data report, section by section', 'Export a cleaned copy where the format allows'],
+    'exif': ['Drop a photo (or paste a screenshot with Ctrl/Cmd+V)', 'Read the leak report: GPS, camera, timestamps, thumbnails', 'Hit strip &amp; download â€” the SHA-256 proves pixels are unchanged'],
+    'metadata': ['Drop any file: PDF, Word, Excel, imageâ€¦', 'Read the hidden-data report, section by section', 'Export a cleaned copy where the format allows'],
     'shrink': ['Drop a batch of images', 'Type the target: "under 300 KB"', 'Download the results as one ZIP'],
     'scan': ['Photograph the document with your phone', 'Auto-straighten, auto-levels, threshold', 'Export PNG or a 300-DPI PDF'],
     'sign': ['Open the PDF', 'Draw or type your signature, click to place it', 'Download the flattened, signed PDF'],
-    'receipts': ['Drop the shoebox of receipt photos', 'They sort themselves by EXIF date — rotate if needed', 'Export one stamped PDF'],
+    'receipts': ['Drop the shoebox of receipt photos', 'They sort themselves by EXIF date â€” rotate if needed', 'Export one stamped PDF'],
     'ocr': ['Drop receipt photos', 'On-device OCR fills vendor, date and total rows', 'Export the CSV for your spreadsheet'],
-    'qr': ['Type text or pick the Wi-Fi / URL / vCard preset', 'Tune colors and error correction', 'Export PNG or SVG — or decode an existing QR image'],
+    'qr': ['Type text or pick the Wi-Fi / URL / vCard preset', 'Tune colors and error correction', 'Export PNG or SVG â€” or decode an existing QR image'],
     'audio': ['Drop a voice note', 'Drag the selection on the waveform, add fades', 'Export WAV or MP3'],
     'invoice': ['Fill in hours, rates and line items', 'Pick a template, currency, tax and discount', 'Print or save the PDF'],
     'rename': ['Drop the files', 'Set the EXIF-date pattern, prefix, suffix, sequence', 'Preview, then download the ZIP'],
-    'printprep': ['Drop an image', 'Pick the physical size: 4×6, A4, Letter…', 'Read the DPI verdict, export the print-ready PDF'],
+    'printprep': ['Drop an image', 'Pick the physical size: 4Ã—6, A4, Letterâ€¦', 'Read the DPI verdict, export the print-ready PDF'],
     'pdfpages': ['Drop one or more PDFs', 'Drag thumbnails: reorder, rotate, delete, merge', 'Download the rebuilt PDF'],
     'textdiff': ['Paste both texts', 'Read word-level highlights and the similarity %', 'Export a unified diff'],
     'textstats': ['Paste the text', 'Get words, Flesch grade and keyword density', 'Watch the sentence-rhythm histogram'],
 }
 
 TECH = {
-    'exif': 'Hand-written JPEG/PNG/WebP segment parsers — no library touches your pixels',
+    'exif': 'Hand-written JPEG/PNG/WebP segment parsers â€” no library touches your pixels',
     'metadata': 'pdf-lib (PDF Info + XMP) plus zip central-directory parsing for OOXML/ODF',
     'shrink': 'Canvas re-encode with binary-searched quality targeting',
     'scan': 'Canvas pixel ops (deskew, auto-levels, threshold); pdf-lib for the 300-DPI PDF',
     'sign': 'pdf-lib flattening; pointer events for mouse, touch and stylus',
     'receipts': 'EXIF capture-date extraction + pdf-lib, one stamped page per receipt',
-    'ocr': 'tesseract.js WASM engine, self-hosted same-origin — zero third-party requests',
-    'qr': 'qrcode-generator + jsQR, both bundled — no network at all',
+    'ocr': 'tesseract.js WASM engine, self-hosted same-origin â€” zero third-party requests',
+    'qr': 'qrcode-generator + jsQR, both bundled â€” no network at all',
     'audio': 'Web Audio API for decode/trim/fades; self-hosted lamejs for MP3 export',
     'invoice': 'pdf-lib rendering; the live preview is pixel-identical to the PDF',
     'rename': 'EXIF capture dates + client-side ZIP, nothing touches a server',
@@ -306,9 +307,9 @@ def landing(t, all_tools):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{t['name']} — free, in your browser — NavigatorsLab</title>
+<title>{t['name']} â€” free, in your browser â€” NavigatorsLab</title>
 <meta name="description" content="{t['tagline']} Free, open-source (MIT), 100% on-device. No uploads, no accounts. Runs right here and on navigatorslab.com.">
-<meta property="og:title" content="{t['name']} — NavigatorsLab Tools">
+<meta property="og:title" content="{t['name']} â€” NavigatorsLab Tools">
 <meta property="og:description" content="{t['tagline']}">
 <meta property="og:image" content="./og.png">
 <meta name="theme-color" content="#0b0f17">
@@ -320,13 +321,13 @@ def landing(t, all_tools):
   <div class="tile" aria-hidden="true">{icon}</div>
   <h1>{t['name']}</h1>
   <p class="tag">{t['tagline']}</p>
-  <div class="badges"><span>🆓 free &amp; open source (MIT)</span><span>🔒 nothing is uploaded</span><span>📶 works offline</span><span>📱 mobile friendly</span></div>
+  <div class="badges"><span>ðŸ†“ free &amp; open source (MIT)</span><span>ðŸ”’ nothing is uploaded</span><span>ðŸ“¶ works offline</span><span>ðŸ“± mobile friendly</span></div>
   <div class="cta">
     <a class="btn primary" href="./demo.html">Run it right here &rarr;</a>
     <a class="btn ghost" href="{pretty}">navigatorslab.com/{PRETTY[t['id']]}</a>
   </div>
   <img class="shot" src="./shot.png" alt="{t['name']} in action">
-  <p class="cap">{t['name']} mid-task — this demo runs entirely on this page's own GitHub Pages site.</p>
+  <p class="cap">{t['name']} mid-task â€” this demo runs entirely on this page's own GitHub Pages site.</p>
 
   <h2>What it does</h2>
   <ul class="feats">
@@ -348,9 +349,9 @@ def landing(t, all_tools):
   </div>
 
   <footer>
-    <b>NavigatorsLab Tools</b> — free &amp; open source (MIT).
-    <a href="{HUB}/">Hub</a> · <a href="{MAIN_REPO}">Source</a> ·
-    <a href="{HUB}/agents.html">Agent mode</a> · <a href="{HUB}/llms.txt">llms.txt</a> ·
+    <b>NavigatorsLab Tools</b> â€” free &amp; open source (MIT).
+    <a href="{HUB}/">Hub</a> Â· <a href="{MAIN_REPO}">Source</a> Â·
+    <a href="{HUB}/agents.html">Agent mode</a> Â· <a href="{HUB}/llms.txt">llms.txt</a> Â·
     MCP: <code>POST {HUB}/mcp</code>
   </footer>
 </main>
@@ -404,41 +405,41 @@ def readme(t, all_tools):
 
 {t['detail']}
 
-## ✅ What it does
+## âœ… What it does
 
 {feats}
 
-## 🚀 Try it in 30 seconds
+## ðŸš€ Try it in 30 seconds
 
 {steps}
 
-## 📸 See it in action
+## ðŸ“¸ See it in action
 
 ![{t['name']} in action](shot.png)
 
-## 🔒 Private by design
+## ðŸ”’ Private by design
 
-- **100% on-device** — files are processed in your browser and **never uploaded** to any server
-- **No accounts, no tracking, no cookies, nothing retained** — open the page and work
+- **100% on-device** â€” files are processed in your browser and **never uploaded** to any server
+- **No accounts, no tracking, no cookies, nothing retained** â€” open the page and work
 - **Works offline** once loaded; fully mobile-friendly
-- **Free & open source (MIT)** — use it at home, at work, anywhere
+- **Free & open source (MIT)** â€” use it at home, at work, anywhere
 
-## 🤖 Built for humans *and* AI agents
+## ðŸ¤– Built for humans *and* AI agents
 
-- Deep-linkable via URL parameters — see the [Agent Mode guide]({HUB}/agents.html)
-- Machine-readable catalog: [llms.txt]({HUB}/llms.txt) · [llms-full.txt]({HUB}/llms-full.txt)
-- MCP endpoint: `POST {HUB}/mcp` (tool catalog + deterministic text tools — see the [main repo]({MAIN_REPO}))
-- No build step required to *use* any tool — just the URL
+- Deep-linkable via URL parameters â€” see the [Agent Mode guide]({HUB}/agents.html)
+- Machine-readable catalog: [llms.txt]({HUB}/llms.txt) Â· [llms-full.txt]({HUB}/llms-full.txt)
+- MCP endpoint: `POST {HUB}/mcp` (tool catalog + deterministic text tools â€” see the [main repo]({MAIN_REPO}))
+- No build step required to *use* any tool â€” just the URL
 
-## 🛠 Under the hood
+## ðŸ›  Under the hood
 
 {TECH[t['id']]}
 
 Third-party components are catalogued in [NOTICE](NOTICE); this repo is MIT-licensed ([LICENSE](LICENSE)).
 
-## 🗂 The NavigatorsLab Tools suite
+## ðŸ—‚ The NavigatorsLab Tools suite
 
-The full catalog — every tool in the hub with the same zero-upload promise, plus the lab's apps, CLIs and engines:
+The full catalog â€” every tool in the hub with the same zero-upload promise, plus the lab's apps, CLIs and engines:
 
 | Tool | What it does | |
 |---|---|---|
@@ -477,7 +478,7 @@ def collect_assets(page_html):
 
 
 def build_demo(t):
-    """dist/<id>.html, minus the PWA manifest link — the exact tool, runnable anywhere."""
+    """dist/<id>.html, minus the PWA manifest link â€” the exact tool, runnable anywhere."""
     html = io.open(os.path.join(ROOT, 'dist', t['id'] + '.html'), encoding='utf-8').read()
     html = re.sub(r'\s*<link rel="manifest"[^>]*>', '', html, count=1)
     assert 'manifest' not in html.split('</head>')[0], 'manifest link still present'
@@ -486,7 +487,7 @@ def build_demo(t):
 
 def main():
     # Windows consoles default to cp1252 and die on the emoji icons in
-    # tool names — replace instead of crash so local runs match CI.
+    # tool names â€” replace instead of crash so local runs match CI.
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, 'reconfigure'):
             stream.reconfigure(encoding='utf-8', errors='replace')
@@ -494,7 +495,7 @@ def main():
     # The catalog may list any number of projects, but every id must be
     # classified: either it gets a funnel repo (in SLUGS) or it is
     # explicitly external (in EXTERNAL). A hard count broke here once the
-    # catalog grew 16→23 and funnel-sync CI crashed for two weeks; a set
+    # catalog grew 16â†’23 and funnel-sync CI crashed for two weeks; a set
     # check survives catalog growth while still failing on an unclassified id.
     ids = {t['id'] for t in tools}
     classified = set(SLUGS) | EXTERNAL
@@ -510,7 +511,7 @@ def main():
     dist = os.path.join(ROOT, 'dist')
     for t in tools:
         if t['id'] in EXTERNAL:
-            print(f'skip {t["id"]:32s} (external — no funnel repo)')
+            print(f'skip {t["id"]:32s} (external â€” no funnel repo)')
             continue
         slug = SLUGS[t['id']]
         d = os.path.join(OUT, slug)
